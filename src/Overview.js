@@ -48,13 +48,13 @@ class Overview extends Component {
         }
     }
 
-    changeVisible(flag) {
+    changeVisible = (flag) => {
         this.setState({
             visible: flag
         })
     }
 
-    onChange(value) {
+    onChange = (value) => {
         console.log(value);
     }
 

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Modal } from 'antd';
-import { ModalVisibleContext } from './context';
+import React, {Component} from 'react';
+import {Modal} from 'antd';
+import {ModalVisibleContext} from './context';
 
 class DetailView extends Component {
 

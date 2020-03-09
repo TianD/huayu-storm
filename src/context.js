@@ -1,5 +1,8 @@
 import React from 'react';
 
 export const ModalVisibleContext = React.createContext({
-    visible: false
+    visible: false,
+    changeVisible: (value) => {
+        this.visible = value
+    }
 });

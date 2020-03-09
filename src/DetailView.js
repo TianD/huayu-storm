@@ -19,11 +19,15 @@ class DetailView extends Component {
     render() {
         return (
             <ModalVisibleContext.Consumer>
-                {(visible, changeVisible) => (
+                {({visible, changeVisible}) => (
                     <Modal
                         title="Basic Modal"
                         visible={visible}
-                        onOk={() => (changeVisible(false))}
+                        onOk={
+                            () => {
+                                changeVisible(false)
+                            }
+                        }
                     >
                         <p>Some contents...</p>
                         <p>Some contents...</p>

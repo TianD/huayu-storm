@@ -9,8 +9,8 @@ class MyCard extends Component {
         return (
             <Card
                 hoverable
-                style={{ width: 240 }}
-                cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                style={{ width: 240 , margin: (10,10,10,10)}}
+                cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
                 onClick={(event)=>this.props.onClick(event)}
             >
                 <Meta title="Europe Street beat" description="www.instagram.com" />

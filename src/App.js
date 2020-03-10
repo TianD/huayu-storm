@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Layout, Menu } from 'antd';
-import Overview from './Overview';
+import Overview from './components/Overview';
 import Logo from './logo.png';
 
 const { Header, Content, Footer } = Layout;
@@ -44,7 +44,7 @@ class App extends Component {
                 style={{ lineHeight: '64px' }}
                 onClick = {(value)=>this.onChange(value)}
               >
-                <Menu.Item key="1" >Overview</Menu.Item>
+                <Menu.Item key="1" >Compositing</Menu.Item>
                 <Menu.Item key="2" >Maya批处理</Menu.Item>
                 <Menu.Item key="3" >Nuke模板</Menu.Item>
                 <Menu.Item key="4" >序列转视频</Menu.Item>
@@ -55,7 +55,7 @@ class App extends Component {
               {current_page}
               </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}><img src={Logo} height="50%" width="50%" alt=""/></Footer>
+            <Footer style={{ textAlign: 'center' }}><img src={Logo} height="10%" width="10%" alt=""/></Footer>
           </Layout>
         </header>
       </div>

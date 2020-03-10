@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Cascader, Col, Row, List} from 'antd';
+import {Cascader, List} from 'antd';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
-import {ModalVisibleContext} from './context';
+import {ModalVisibleContext} from '../context';
 
 
 const options = [
@@ -60,7 +60,6 @@ class Overview extends Component {
 
     render() {
         let visible = this.state.visible;
-        let range = [1, 2, 3, 4, 5, 6, 7, 8];
         return (
             <ModalVisibleContext.Provider value={{visible: visible, changeVisible: this.changeVisible}}>
                 <div>

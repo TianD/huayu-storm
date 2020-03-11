@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Layout, Menu } from 'antd';
 import Overview from './components/Overview';
+import BatchTable from './batchview/BatchTable';
 import Logo from './logo.png';
 
 const { Header, Content, Footer } = Layout;
@@ -28,7 +29,7 @@ class App extends Component {
       current_page = <Overview />
     }
     else {
-      current_page = <div>123144 </div>
+      current_page = <BatchTable />
     }
     return (
       <div className="App">

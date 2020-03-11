@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
-import { Card } from 'antd';
+import React, {Component} from 'react';
+import {Card, Button, Row, Col} from 'antd';
 
 
-const { Meta } = Card;
+const {Meta} = Card;
 
 class MyCard extends Component {
     render() {
         return (
             <Card
                 hoverable
-                style={{ width: 240 , margin: (10,10,10,10)}}
-                cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
-                onClick={(event)=>this.props.onClick(event)}
+                style={{width: 320, margin: (10, 10, 10, 10)}}
+                type={"inner"}
+                cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>}
+                onClick={(event) => this.props.onClick(event)}
             >
-                <Meta title="Europe Street beat" description="www.instagram.com" />
+                <Row>
+                    <Col span={8}><Button type={"link"}>EP012_S01</Button></Col>
+                    <Col span={8} offset={8}><Button type={"link"}>Tree01</Button></Col>
+                </Row>
             </Card>
         )
     }

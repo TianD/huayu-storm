@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Table } from 'antd';
+import React, {Component} from 'react';
+import {Table} from 'antd';
 
 const dataSource = [
     {
-      key: '1',
-      id: 1,
-      status: '就绪',
-      shot: 'EP509_s001_cp_001.nk',
-      thumbnail: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-      taskType: 'Nuke模板',
+        key: '1',
+        id: 1,
+        status: '就绪',
+        shot: 'EP509_s001_cp_001.nk',
+        thumbnail: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
+        taskType: 'Nuke模板',
     },
     {
         key: '2',
@@ -17,25 +17,25 @@ const dataSource = [
         shot: 'EP509_s002_cp_001.nk',
         thumbnail: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
         taskType: 'Nuke模板',
-      },
-  ]
-  
-  const columns = [
+    },
+]
+
+const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
-      key: 'id',
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
     },
     {
-      title: '预览',
-      dataIndex: 'thumbnail',
-      key: 'thumbnail',
-      render: (text)=><image src={text} />
+        title: '预览',
+        dataIndex: 'thumbnail',
+        key: 'thumbnail',
+        render: (text) => <image src={text}/>
     },
     {
         title: '镜头',
@@ -58,16 +58,16 @@ const dataSource = [
             </span>
         )
     }
-  ]
+]
 
-class BatchTable extends Component {
+class BatchTableForNuke extends Component {
     render() {
         return (
-            <Table 
-            dataSource={dataSource} 
-            columns={columns} />
+            <Table
+                dataSource={dataSource}
+                columns={columns}/>
         )
     }
 }
 
-export default BatchTable
+export default BatchTableForNuke

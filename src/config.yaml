@@ -1,0 +1,5 @@
+maya_layer_dir: "./lr" #maya layer files , some .ma .mb
+maya_render_dir: "./images" # maya render files
+nuke_template_dir: "./nuke" # set ./images to nuke template
+nuke_composition_dir: "./comp" # set nuke render images to here
+nuke_output_mov_dir: "./mov" # save mov file to here

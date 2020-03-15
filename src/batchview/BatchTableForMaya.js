@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {Table} from 'antd';
 
+//todo , read file from dir
+//todo , process maya file , rendering ?
+//todo , read maya layers , set to lr(dir)
+
 const dataSource = [
     {
         key: '1',

@@ -68,6 +68,7 @@ class BatchTableForMaya extends Component {
     render() {
         return (
             <Table
+                tableLayout={"fixed"}
                 dataSource={dataSource}
                 columns={columns}/>
         )

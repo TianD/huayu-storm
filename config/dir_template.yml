@@ -1,0 +1,8 @@
+
+TTT:
+  lr: E:/huayu-storm/TTT/lr/{episode}/{sequence}/{shot}
+  compositing: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
+  images: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
+  mov: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
+  nuke: E:/huayu-storm/TTT/nuke/{episode}/{sequence}/{shot}
+

@@ -1,26 +1,23 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import {Layout, Menu} from 'antd';
+import { Layout, Menu } from 'antd';
 import Overview from './components/Overview';
-import BatchTableForMaya from './batchview/BatchTableForMaya';
-import BatchTableForNuke from './batchview/BatchTableForNuke';
-import BatchTableForSeqToMov from './batchview/BatchTableForSeqToMov';
 import Logo from './logo.png';
 
-const {Header, Content, Footer} = Layout;
+const { Header, Content, Footer } = Layout;
 
 class App extends Component {
 
     constructor() {
         super()
         this.state = {
-            page: '4',
+            page: '1',
         }
     }
 
     onChange(event) {
         this.setState(
-            {page: event.key}
+            { page: event.key }
         )
     }
 
@@ -29,19 +26,17 @@ class App extends Component {
         let current_page;
         switch (current_key) {
             case "1":
-                current_page = <Overview/>
+                current_page = <Overview />
                 break
             case "2":
-                current_page = <BatchTableForMaya/>
+                current_page = <div />
                 break
             case "3":
-                current_page = <BatchTableForNuke/>
+                current_page = <div />
                 break
             case "4":
-                current_page = <BatchTableForSeqToMov/>
+                current_page = <div />
                 break
-
-
         }
 
         return (
@@ -49,13 +44,13 @@ class App extends Component {
                 <header className="App-header">
                     <Layout className="layout">
                         <Header>
-                            <div className="logo"/>
+                            <div className="logo" />
 
                             <Menu
                                 theme="dark"
                                 mode="horizontal"
                                 defaultSelectedKeys={[current_key]}
-                                style={{lineHeight: '64px'}}
+                                style={{ lineHeight: '64px' }}
                                 onClick={(value) => this.onChange(value)}
                             >
                                 <Menu.Item key="1">Compositing</Menu.Item>
@@ -64,12 +59,12 @@ class App extends Component {
                                 <Menu.Item key="4">序列转视频</Menu.Item>
                             </Menu>
                         </Header>
-                        <Content style={{padding: '0 50px'}}>
+                        <Content style={{ padding: '0 50px' }}>
                             <div className="site-layout-content">
                                 {current_page}
                             </div>
                         </Content>
-                        <Footer style={{textAlign: 'center'}}><img src={Logo} height="10%" width="10%" alt=""/></Footer>
+                        <Footer style={{ textAlign: 'center' }}><img src={Logo} height="10%" width="10%" alt="" /></Footer>
                     </Layout>
                 </header>
             </div>

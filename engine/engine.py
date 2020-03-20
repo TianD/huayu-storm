@@ -9,8 +9,14 @@ import re
 import yaml
 from flask import Flask, send_file, request
 from flask_cors import CORS
+from gevent import monkey
+from gevent.pywsgi import WSGIServer
+from werkzeug.debug import DebuggedApplication
+from werkzeug.serving import run_with_reloader
 
 from libs.lucidity import Template
+
+monkey.patch_all()
 
 app = Flask(__name__)
 CORS(app)
@@ -89,4 +95,10 @@ def get_thumbnail():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    @run_with_reloader
+    def run_server():
+        http_server = WSGIServer(('0.0.0.0', 5000), DebuggedApplication(app))
+        http_server.serve_forever()
+
+
+    run_server()

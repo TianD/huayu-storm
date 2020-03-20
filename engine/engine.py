@@ -7,7 +7,7 @@ import os
 import re
 
 import yaml
-from flask import Flask, send_file
+from flask import Flask, send_file, request
 from flask_cors import CORS
 
 from libs.lucidity import Template
@@ -16,6 +16,13 @@ app = Flask(__name__)
 CORS(app)
 
 config_yaml_path = 'E:/Project/huayu-storm/config/dir_template.yml'
+
+
+def get_first_image_of_dir(dir_path, ext='jpg'):
+    files = glob.glob('{}/*.jpg'.format(dir_path))
+    if len(files) == 0:
+        files = ['']
+    return files[0]
 
 
 @app.route('/api/get_project_list')
@@ -46,7 +53,12 @@ def get_project_list():
             for qk, qv in ev.items():
                 qc = []
                 for sk, sv in qv.items():
-                    qc.append({'label': '%s_%s_%s' % (ek, qk, sk), 'value': sk, 'dir': sv})
+                    qc.append(
+                        {
+                            'label': '%s_%s_%s' % (ek, qk, sk), 'value': sk,
+                            'dir': sv, 'preview': get_first_image_of_dir(sv)
+                        }
+                    )
                 ec_full_qc.extend(qc)
                 ec.append({'label': qk, 'value': qk, 'shots': qc})
             pc_full_qc.extend(ec_full_qc)
@@ -57,9 +69,14 @@ def get_project_list():
     return json.dumps(result)
 
 
-@app.route('/api/get_thumbnail', methods=['get'])
+DEFAULT_IMAGE = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
+
+
+@app.route('/api/get_thumbnail', methods=['post'])
 def get_thumbnail():
-    file_path = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
+    request_json = request.get_json()
+    file_path = request_json.get('path') or DEFAULT_IMAGE
+
     file_ext = file_path.split('.')[-1]
     file_base_name = os.path.basename(file_path)
     with open(file_path, 'rb') as f:

@@ -13,7 +13,7 @@ class MyCard extends Component {
         return (
             <Card
                 hoverable
-                style={{width: 320, margin: (10, 10, 10, 10)}}
+                style={{width: 280, margin: (10, 10, 10, 10)}}
                 type={"inner"}
                 cover={
                     <img

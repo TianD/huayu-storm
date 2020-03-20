@@ -1,11 +1,13 @@
 # coding: utf-8
 
-import re
 import glob
-import yaml
 import json
+import re
+
+import yaml
 from flask import Flask
 from flask_cors import CORS
+
 from libs.lucidity import Template
 
 app = Flask(__name__)
@@ -30,7 +32,8 @@ def get_project_list():
             episode = data.get('episode')
             sequence = data.get('sequence')
             shot = data.get('shot')
-            temp_dict.setdefault(project, dict()).setdefault(episode, dict()).setdefault(sequence, dict()).setdefault(shot, one_dir)
+            temp_dict.setdefault(project, dict()).setdefault(episode, dict()).setdefault(sequence, dict()).setdefault(
+                shot, one_dir)
     result = []
     for pk, pv in temp_dict.items():
         pc = [{'label': 'All', 'value': 'all'}]
@@ -52,12 +55,10 @@ def get_project_list():
     return json.dumps(result)
 
 
-@app.route('/api/get_thumbnail', methods=['POST'])
+@app.route('/api/get_thumbnail', methods=['get'])
 def get_thumbnail():
     return 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
 
 
-
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

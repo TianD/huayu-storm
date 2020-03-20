@@ -34,16 +34,29 @@ def get_project_list():
     result = []
     for pk, pv in temp_dict.items():
         pc = [{'label': 'All', 'value': 'all'}]
+        pc_full_qc = []
         for ek, ev in pv.items():
             ec = [{'label': 'All', 'value': 'all'}]
+            ec_full_qc = []
             for qk, qv in ev.items():
                 qc = []
                 for sk, sv in qv.items():
-                    qc.append({'label': sk, 'value': sk, 'dir': sv})
+                    qc.append({'label': '%s_%s_%s' % (ek, qk, sk), 'value': sk, 'dir': sv})
+                ec_full_qc.extend(qc)
                 ec.append({'label': qk, 'value': qk, 'shots': qc})
+            pc_full_qc.extend(ec_full_qc)
+            ec[0].setdefault('shots', ec_full_qc)
             pc.append({'label': ek, 'value': ek, 'children': ec})
+        pc[0].setdefault('shots', pc_full_qc)
         result.append({'label': pk, 'value': pk, 'children': pc})
     return json.dumps(result)
+
+
+@app.route('/api/get_thumbnail', methods=['POST'])
+def get_thumbnail():
+    return 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
+
+
 
 
 if __name__ == '__main__':

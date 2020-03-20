@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import {Card, Button, Row, Col} from 'antd';
 
-
 const {Meta} = Card;
 
 class MyCard extends Component {
+
+    componentDidMount() {
+
+    }
+
     render() {
         return (
             <Card
@@ -15,8 +19,8 @@ class MyCard extends Component {
                 onClick={(event) => this.props.onClick(event)}
             >
                 <Row>
-                    <Col span={8}><Button type={"link"}>EP012_S01</Button></Col>
-                    <Col span={8} offset={8}><Button type={"link"}>Tree01</Button></Col>
+                    <Col span={8}><Button type={"link"}>{this.props.shot["label"]}</Button></Col>
+                    {/* <Col span={8} offset={8}><Button type={"link"}>Tree01</Button></Col> */}
                 </Row>
             </Card>
         )

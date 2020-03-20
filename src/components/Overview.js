@@ -3,17 +3,15 @@ import { Cascader, List } from 'antd';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
 import { ModalVisibleContext } from '../context';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'http://127.0.0.1:5000/api'
+import api from '../api'
 
 class Overview extends Component {
     constructor() {
         super()
         this.state = {
             visible: false,
-            project: null,
             project_list: null,
+            shots: [],
         }
     }
 
@@ -23,53 +21,72 @@ class Overview extends Component {
         })
     }
 
-    changeProject = (value) => {
+    filterShots = (value) => {
+        let project_list = this.state.project_list
+        let shot_list;
+        if (value.length > 0) {
+            let project = project_list.filter((element) => {
+                return element["value"] === value[0]
+            })[0]
+            let episode = project["children"].filter((element) => {
+                return element["value"] === value[1]
+            })[0]
+            if (value[1] === 'all') {
+                shot_list = episode["shots"]
+            } else {
+                let sequence = episode["children"].filter((element) => {
+                    return element["value"] === value[2]
+                })[0]
+                shot_list = sequence["shots"]
+            }
+        } else {
+            shot_list = [];
+        }
         this.setState({
-            project: value
+            shots: shot_list
         })
     }
 
     changeProjectList = (value) => {
-        console.log(value)
         this.setState({
             project_list: value
         })
     }
 
     componentDidMount() {
-        axios.get('/get_project_list')
-            .then((response) => {
-                this.changeProjectList(response.data)
-            })
+        api.get_project_list((response) => {
+            this.changeProjectList(response.data)
+        })
     }
 
     render() {
-        let { visible, project_list, project } = this.state;
+        let { visible, project_list, shots} = this.state;
+        console.log(shots)
         return (
             <ModalVisibleContext.Provider
                 value={
                     {
                         visible: visible,
                         project_list: project_list,
-                        project: project,
                         changeVisible: this.changeVisible,
                         changeProjectList: this.changeProjectList,
-                        changeProject: this.changeProject
                     }
                 }>
                 <div>
                     <Cascader
                         options={project_list}
-                        onChange={(value) => this.changeProject(value)}
+                        onChange={(value) => this.filterShots(value)}
                         placeholder="Please select" />
                     <List
                         itemLayout={'horizontal'}
-                        dataSource={[1, 2, 3, 4, 66, 88, 8, 8, 8, 8, 8, 8, 8]}
+                        dataSource={shots}
                         grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
                         column={4}
                         renderItem={
                             item => (
-                                <MyCard onClick={(event) => this.changeVisible(true)} />
+                                <List.Item>
+                                    <MyCard shot={item} onClick={(event) => this.changeVisible(true)} />
+                                </List.Item>
                             )
                         }
                     >

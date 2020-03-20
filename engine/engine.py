@@ -1,11 +1,13 @@
 # coding: utf-8
 
 import glob
+import io
 import json
+import os
 import re
 
 import yaml
-from flask import Flask
+from flask import Flask, send_file
 from flask_cors import CORS
 
 from libs.lucidity import Template
@@ -57,7 +59,15 @@ def get_project_list():
 
 @app.route('/api/get_thumbnail', methods=['get'])
 def get_thumbnail():
-    return 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
+    file_path = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
+    file_ext = file_path.split('.')[-1]
+    file_base_name = os.path.basename(file_path)
+    with open(file_path, 'rb') as f:
+        content = f.read()
+    return send_file(
+        io.BytesIO(content),
+        attachment_filename=file_base_name, mimetype='image/{}'.format(file_ext)
+    )
 
 
 if __name__ == '__main__':

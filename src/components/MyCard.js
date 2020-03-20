@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, Button, Row, Col} from 'antd';
+import {Button, Card, Col, Row} from 'antd';
 
 const {Meta} = Card;
 
@@ -15,7 +15,13 @@ class MyCard extends Component {
                 hoverable
                 style={{width: 320, margin: (10, 10, 10, 10)}}
                 type={"inner"}
-                cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>}
+                cover={
+                    <img
+                        alt="example"
+                        //todo use global url
+                        src={"http://localhost:5000/api/get_thumbnail?preview=" + this.props.shot["preview"]}
+                    />
+                }
                 onClick={(event) => this.props.onClick(event)}
             >
                 <Row>

@@ -11,6 +11,9 @@ class Api {
             .then(callback)
     }
 
+    get_thumbnail_url(shot) {
+        return axios.defaults.baseURL + "/get_thumbnail?preview=" + shot["preview"]
+    }
 }
 
 const api = new Api()

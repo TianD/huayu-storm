@@ -78,7 +78,7 @@ def get_project_list():
 DEFAULT_IMAGE = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
 
 
-@app.route('/api/get_thumbnail', methods=['get'])
+@app.route('/api/get_thumbnail')
 def get_thumbnail():
     request_json = request.args
     file_path = request_json.get('preview') or DEFAULT_IMAGE

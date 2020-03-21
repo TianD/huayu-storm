@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import {Layout, Menu} from 'antd';
+import { Layout, Menu } from 'antd';
 import Overview from './components/Overview';
 import Logo from './logo.png';
 
-const {Header, Content, Footer} = Layout;
+const { Header, Content, Footer } = Layout;
 
 class App extends Component {
 
@@ -17,7 +17,7 @@ class App extends Component {
 
     onChange(event) {
         this.setState(
-            {page: event.key}
+            { page: event.key }
         )
     }
 
@@ -26,30 +26,32 @@ class App extends Component {
         let current_page;
         switch (current_key) {
             case "1":
-                current_page = <Overview/>
+                current_page = <Overview />
                 break
             case "2":
-                current_page = <div/>
+                current_page = <div />
                 break
             case "3":
-                current_page = <div/>
+                current_page = <div />
                 break
             case "4":
-                current_page = <div/>
+                current_page = <div />
                 break
+            default:
+                current_page = <Overview />
         }
 
         return (
             <div className="App">
                 <Layout className="layout">
                     <Header>
-                        <div className="logo"/>
+                        <div className="logo" />
 
                         <Menu
                             theme="dark"
                             mode="horizontal"
                             defaultSelectedKeys={[current_key]}
-                            style={{lineHeight: '64px'}}
+                            style={{ lineHeight: '64px' }}
                             onClick={(value) => this.onChange(value)}
                         >
                             <Menu.Item key="1">Compositing</Menu.Item>
@@ -58,12 +60,12 @@ class App extends Component {
                             <Menu.Item key="4">序列转视频</Menu.Item>
                         </Menu>
                     </Header>
-                    <Content style={{padding: '20px 50px'}}>
+                    <Content style={{ padding: '20px 50px' }}>
                         <div className="site-layout-content">
                             {current_page}
                         </div>
                     </Content>
-                    <Footer style={{textAlign: 'center'}}><img src={Logo} height="10%" width="10%" alt=""/></Footer>
+                    <Footer style={{ textAlign: 'center' }}><img src={Logo} height="10%" width="10%" alt="" /></Footer>
                 </Layout>
             </div>
         );

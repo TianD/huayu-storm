@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Table, message } from 'antd';
 import copy from 'copy-to-clipboard';
 import { ModalVisibleContext } from '../context';
+import api from '../api'
 
 const columns = [
     {
@@ -42,21 +43,18 @@ class DetailView extends Component {
     };
 
     copy2clipboard(e) {
-        copy('abc')
+        copy(e['path'])
         message.info("复制到剪贴板.")
     }
 
     render() {
-        let { selectedRowKeys } = this.state
-        let rowSelection = {
-            selectedRowKeys,
-            onChange: this.copy2clipboard,
-        };
         return (
             <ModalVisibleContext.Consumer>
                 {({ visible, changeVisible }) => (
                     <Modal
-                        title="Basic Modal"
+                        title={this.props.shot['label']}
+                        width={'70%'}
+                        height={'80%'}
                         visible={visible}
                         closable={false}
                         centered={true}
@@ -71,17 +69,26 @@ class DetailView extends Component {
                             }
                         }
                     >
-                        <Table
-                            columns={columns}
-                            dataSource={data}
-                            pagination={false}
-                            onRow={record => {
-                                return {
-                                    onClick: (e) => { this.copy2clipboard(record) }, // 点击行
+                        <div>
+                            <img
+                                alt="example"
+                                //todo use global url
+                                style = {{width: '100%', height: '100%'}}
+                                src={api.get_thumbnail_url(this.props.shot)}
+                            />
+                            <Table
+                                columns={columns}
+                                dataSource={data}
+                                pagination={false}
+                                onRow={record => {
+                                    return {
+                                        onClick: (e) => { this.copy2clipboard(record) }, // 点击行
+                                    }
                                 }
-                            }
-                            }
-                        />
+                                }
+                            />
+                        </div>
+
                     </Modal>
                 )}
             </ModalVisibleContext.Consumer>

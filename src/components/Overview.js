@@ -12,6 +12,7 @@ class Overview extends Component {
             visible: false,
             project_list: null,
             shots: [],
+            current_shot: {}
         }
     }
 
@@ -19,6 +20,13 @@ class Overview extends Component {
         this.setState({
             visible: flag
         })
+    }
+
+    onCardClick(item) {
+        this.setState({
+            current_shot: item
+        },
+            this.changeVisible(true))
     }
 
     filterShots = (value) => {
@@ -60,8 +68,7 @@ class Overview extends Component {
     }
 
     render() {
-        let { visible, project_list, shots} = this.state;
-        console.log(shots)
+        let { visible, project_list, shots, current_shot } = this.state;
         return (
             <ModalVisibleContext.Provider
                 value={
@@ -80,18 +87,18 @@ class Overview extends Component {
                     <List
                         itemLayout={'horizontal'}
                         dataSource={shots}
-                        grid={{ gutter: 24, lg: 6, md: 2, sm: 1, xs: 1 }}
+                        grid={{ gutter: 360, lg: 6, md: 2, sm: 1, xs: 1 }}
                         column={4}
                         renderItem={
                             item => (
                                 <List.Item>
-                                    <MyCard shot={item} onClick={(event) => this.changeVisible(true)} />
+                                    <MyCard shot={item} onClick={(e) => this.onCardClick(item)} />
                                 </List.Item>
                             )
                         }
                     >
                     </List>
-                    <DetailView visible={visible} />
+                    <DetailView shot={current_shot} visible={visible} />
                 </div>
             </ModalVisibleContext.Provider>
         )

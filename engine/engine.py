@@ -20,7 +20,6 @@ from libs.lucidity import Template
 from libs.AdvFormatter import AdvFormatter
 from libs import clique
 
-
 fmt = AdvFormatter()
 monkey.patch_all()
 
@@ -33,22 +32,23 @@ config_yaml_path = 'E:/Project/huayu-storm/config/dir_template.yml'
 def get_preview_cache_path(origin_image_path):
     NEW_FORMAT_EXT = 'jpg'
 
-    preview_path =  utils.get_file_new_ext_path(origin_image_path,NEW_FORMAT_EXT)
+    preview_path = utils.get_file_new_ext_path(origin_image_path, NEW_FORMAT_EXT)
     utils.ensure_file_dir_exists(preview_path)
 
     if not utils.is_file_exits(preview_path):
-        converter_bin = utils.get_sibling_file_path(__file__,'../bin/ffmpeg.exe')
+        converter_bin = utils.get_sibling_file_path(__file__, '../bin/ffmpeg.exe')
         preview_width = 640
 
         command_arg_dict = {
-            'ffmpeg_bin':utils.get_file_native_abs_path(converter_bin),
-            'origin_image_path':utils.get_file_native_abs_path(origin_image_path),
-            'preview_width':preview_width,
-            'preview_path':utils.get_file_native_abs_path(preview_path),
+            'ffmpeg_bin': utils.get_file_native_abs_path(converter_bin),
+            'origin_image_path': utils.get_file_native_abs_path(origin_image_path),
+            'preview_width': preview_width,
+            'preview_path': utils.get_file_native_abs_path(preview_path),
         }
         CONVERT_COMMAND = \
-            '{ffmpeg_bin} -i "{origin_image_path}" -vs scale={preview_width}:-1 {preview_path}'.format(**command_arg_dict)
-        child = subprocess.Popen('ping -c4 blog.linuxeye.com',shell=True)
+            '{ffmpeg_bin} -i "{origin_image_path}" -vs scale={preview_width}:-1 {preview_path}'.format(
+                **command_arg_dict)
+        child = subprocess.Popen('ping -c4 blog.linuxeye.com', shell=True)
         child.wait()
     return preview_path
 

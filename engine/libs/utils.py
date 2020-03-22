@@ -26,3 +26,6 @@ def ensure_file_dir_exists(file_path):
         os.makedirs(os.path.dirname(file_path)
     except:
         pass
+
+def is_file_exits(file_path):
+    return os.path.isfile(file_path)

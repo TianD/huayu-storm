@@ -5,7 +5,6 @@ import io
 import json
 import os
 import re
-import subprocess
 
 import yaml
 from flask import Flask, send_file, request
@@ -27,30 +26,6 @@ app = Flask(__name__)
 CORS(app)
 
 config_yaml_path = 'E:/Project/huayu-storm/config/dir_template.yml'
-
-
-def get_preview_cache_path(origin_image_path):
-    NEW_FORMAT_EXT = 'jpg'
-
-    preview_path = utils.get_file_new_ext_path(origin_image_path, NEW_FORMAT_EXT)
-    utils.ensure_file_dir_exists(preview_path)
-
-    if not utils.is_file_exits(preview_path):
-        converter_bin = utils.get_sibling_file_path(__file__, '../bin/ffmpeg.exe')
-        preview_width = 640
-
-        command_arg_dict = {
-            'ffmpeg_bin': utils.get_file_native_abs_path(converter_bin),
-            'origin_image_path': utils.get_file_native_abs_path(origin_image_path),
-            'preview_width': preview_width,
-            'preview_path': utils.get_file_native_abs_path(preview_path),
-        }
-        CONVERT_COMMAND = \
-            '{ffmpeg_bin} -i "{origin_image_path}" -vs scale={preview_width}:-1 {preview_path}'.format(
-                **command_arg_dict)
-        child = subprocess.Popen('ping -c4 blog.linuxeye.com', shell=True)
-        child.wait()
-    return preview_path
 
 
 def get_first_image_of_dir(**shot_info):
@@ -134,7 +109,8 @@ def get_thumbnail():
     file_path = request_json.get('preview') or DEFAULT_IMAGE
 
     # get file preview path
-    file_path = get_preview_cache_path(file_path)
+    file_path = utils.get_preview_cache_path(file_path)
+    print(file_path)
 
     file_ext = file_path.split('.')[-1]
     file_base_name = os.path.basename(file_path)

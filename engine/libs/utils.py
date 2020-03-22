@@ -46,7 +46,7 @@ def get_preview_cache_path(origin_image_path):
     ensure_file_dir_exists(preview_path)
 
     if not is_file_exits(preview_path):
-        converter_bin = get_sibling_file_path(__file__, '../bin/ffmpeg.exe')
+        converter_bin = get_sibling_file_path(__file__, '../../bin/ffmpeg.exe')
         preview_width = 640
 
         command_arg_dict = {
@@ -56,8 +56,12 @@ def get_preview_cache_path(origin_image_path):
             'preview_path': get_file_native_abs_path(preview_path),
         }
         CONVERT_COMMAND = \
-            '{ffmpeg_bin} -i "{origin_image_path}" -vs scale={preview_width}:-1 {preview_path}'.format(
+            '"{ffmpeg_bin}" -i "{origin_image_path}" -vs scale={preview_width}:-1 "{preview_path}"'.format(
                 **command_arg_dict)
         child = subprocess.Popen(CONVERT_COMMAND, shell=True)
         child.wait()
     return preview_path
+
+
+if __name__ == '__main__':
+    get_preview_cache_path(r'E:\codeLib\___test___\my_proj\huayu_project\huayu-storm\examples\huayu-storm\TTT\compositing\EP01\Q01\S01\ttt_EP01_Q01_S01_cp_c001.1002.jpg')

@@ -6,28 +6,21 @@ import api from '../api'
 
 const columns = [
     {
-        key: 'Type',
-        title: 'type',
+        key: 'type',
+        title: '类型',
         dataIndex: 'type'
     },
     {
-        key: 'Path',
-        title: 'path',
+        key: 'path',
+        title: '文件',
         dataIndex: 'path'
-    }
-]
-
-const data = [
-    {
-        type: 'maya',
-        path: 'd:/abc.ma'
     }
 ]
 
 class DetailView extends Component {
     state = {
         visible: false,
-        selectedRowKeys: [],
+        dataSource: [],
     };
 
     handleOk(e) {
@@ -47,7 +40,18 @@ class DetailView extends Component {
         message.info("复制到剪贴板.")
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(this.props) !== JSON.stringify(nextProps)){
+            api.get_detail(nextProps.shot, (response)=>{
+                this.setState({
+                    dataSource: response.data
+                })
+            })
+        }
+    }
+
     render() {
+        let {dataSource} = this.state
         return (
             <ModalVisibleContext.Consumer>
                 {({ visible, changeVisible }) => (
@@ -78,7 +82,7 @@ class DetailView extends Component {
                             />
                             <Table
                                 columns={columns}
-                                dataSource={data}
+                                dataSource={dataSource}
                                 pagination={false}
                                 onRow={record => {
                                     return {

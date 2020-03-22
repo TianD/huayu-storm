@@ -14,6 +14,10 @@ class Api {
     get_thumbnail_url(shot) {
         return axios.defaults.baseURL + "/get_thumbnail?preview=" + shot["preview"]
     }
+
+    get_detail(shot, callback) {
+        axios.post('/get_detail', shot).then(callback)
+    }
 }
 
 const api = new Api()

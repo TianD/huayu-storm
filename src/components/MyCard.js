@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card, Col, Row } from 'antd';
+import { PictureOutlined } from '@ant-design/icons';
 import api from '../api'
 
 const { Meta } = Card;

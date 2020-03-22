@@ -1,8 +1,19 @@
-
 TTT:
-  lr: E:/huayu-storm/TTT/lr/{episode}/{sequence}/{shot}
-  compositing: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
-  images: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
-  mov: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
-  nuke: E:/huayu-storm/TTT/nuke/{episode}/{sequence}/{shot}
-
+  lr:
+    dir: E:/huayu-storm/TTT/lr/{episode}/{sequence}/{shot}
+    file: ttt_{episode}_{sequence}_{shot}_{layer}_{version}.mb
+  compositing:
+    dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
+    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg
+  images:
+    dir: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
+    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg
+  mov:
+    dir: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
+    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.mov
+  nuke:
+    dir: E:/huayu-storm/TTT/nuke/{episode}/{sequence}/{shot}
+    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.nk
+  an:
+    dir: E:/huayu-storm/TTT/an
+    file: ttt_{episode}_{sequence}_{shot}_an_{version}.mov

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const {exec } = require('child_process')
 
 exec("E:/Project/huayu-storm/python/Scripts/python.exe E:/Project/huayu-storm/engine/engine.py")
@@ -7,8 +7,8 @@ exec("react-scripts start")
 function createWindow () {   
   // 创建浏览器窗口
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: true
     }
@@ -18,8 +18,11 @@ function createWindow () {
 //   win.loadFile('index.html')
 win.loadURL('http://localhost:3000/');
 
-  // 打开开发者工具
-  win.webContents.openDevTools()
+  // // 打开开发者工具
+  // win.webContents.openDevTools()
+
+Menu.setApplicationMenu(null)
+
 }
 
 // This method will be called when Electron has finished

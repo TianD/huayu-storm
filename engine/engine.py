@@ -5,6 +5,7 @@ import io
 import json
 import os
 import re
+import subprocess
 
 import yaml
 from flask import Flask, send_file, request
@@ -13,12 +14,11 @@ from gevent import monkey
 from gevent.pywsgi import WSGIServer
 from werkzeug.debug import DebuggedApplication
 from werkzeug.serving import run_with_reloader
-import subprocess
 
-from libs import utils
-from libs.lucidity import Template
-from libs.AdvFormatter import AdvFormatter
 from libs import clique
+from libs import utils
+from libs.AdvFormatter import AdvFormatter
+from libs.lucidity import Template
 
 fmt = AdvFormatter()
 monkey.patch_all()
@@ -132,6 +132,10 @@ DEFAULT_IMAGE = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp
 def get_thumbnail():
     request_json = request.args
     file_path = request_json.get('preview') or DEFAULT_IMAGE
+
+    # get file preview path
+    file_path = get_preview_cache_path(file_path)
+
     file_ext = file_path.split('.')[-1]
     file_base_name = os.path.basename(file_path)
     with open(file_path, 'rb') as f:

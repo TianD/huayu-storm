@@ -63,6 +63,7 @@ def get_preview_cache_path(origin_image_path):
     preview_path = \
         get_file_new_path_with_new_dir_and_new_ext(origin_image_path, CACHE_PATH, NEW_FORMAT_EXT, use_md5_name=True)
     ensure_file_dir_exists(preview_path)
+    preview_path = get_file_native_abs_path(preview_path)
 
     if not is_file_exits(preview_path):
         converter_bin = get_sibling_file_path(__file__, '../../bin/ffmpeg.exe')
@@ -71,7 +72,7 @@ def get_preview_cache_path(origin_image_path):
             'ffmpeg_bin': get_file_native_abs_path(converter_bin),
             'origin_image_path': get_file_native_abs_path(origin_image_path),
             'preview_width': PREVIEW_WIDTH,
-            'preview_path': get_file_native_abs_path(preview_path),
+            'preview_path': preview_path,
         }
         CONVERT_COMMAND = \
             '"{ffmpeg_bin}" -i "{origin_image_path}" -vf scale={preview_width}:-1 "{preview_path}"'.format(

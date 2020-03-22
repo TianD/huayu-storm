@@ -110,7 +110,6 @@ def get_thumbnail():
 
     # get file preview path
     file_path = utils.get_preview_cache_path(file_path)
-    print(file_path)
 
     file_ext = file_path.split('.')[-1]
     file_base_name = os.path.basename(file_path)

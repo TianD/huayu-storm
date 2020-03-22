@@ -57,7 +57,7 @@ def get_string_hash(string):
 
 def get_preview_cache_path(origin_image_path):
     NEW_FORMAT_EXT = 'jpg'
-    CACHE_PATH = '../../cache_dir'
+    CACHE_PATH = '../cache_dir'
     PREVIEW_WIDTH = 640
 
     preview_path = \

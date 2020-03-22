@@ -29,7 +29,7 @@ def get_file_native_abs_path(file_path):
 
 def ensure_file_dir_exists(file_path):
     try:
-        os.makedirs(os.path.dirname(file_path)
+        os.makedirs(os.path.dirname(file_path))
     except:
         pass
 

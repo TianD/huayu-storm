@@ -107,7 +107,6 @@ DEFAULT_IMAGE = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp
 def get_thumbnail():
     request_json = request.args
     file_path = request_json.get('preview') or DEFAULT_IMAGE
-
     # get file preview path
     file_path = utils.get_preview_cache_path(file_path)
 

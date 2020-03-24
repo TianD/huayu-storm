@@ -57,8 +57,8 @@ class DetailView extends Component {
                 {({ visible, changeVisible }) => (
                     <Modal
                         title={this.props.shot['label']}
-                        width={'70%'}
-                        height={'80%'}
+                        width={960}
+                        height={'50%'}
                         visible={visible}
                         closable={false}
                         centered={true}

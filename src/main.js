@@ -1,10 +1,32 @@
 const { app, BrowserWindow, Menu } = require('electron')
-const {exec } = require('child_process')
+const { spawn, exec } = require('child_process')
+const path = require('path')
 
-exec("E:/Project/huayu-storm/python/Scripts/python.exe E:/Project/huayu-storm/engine/engine.py")
-exec("react-scripts start")
+let pyProc = null;
+// let nodeProc = null;
 
-function createWindow () {   
+function createSubProc() {
+  let pyfile = path.resolve(__dirname, '../engine/engine.py')
+  let pyexe = path.resolve(__dirname, '../python/Scripts/python.exe')
+  console.log(pyfile, pyexe)
+  pyProc = spawn(pyexe, [pyfile])
+  if (pyProc != null) {
+    console.log('python process success')
+  }
+  exec("react-scripts start")
+}
+
+function exitSubProc() {
+  pyProc.kill()
+  // nodeProc.kill()
+  pyProc = null
+  // nodeProc = null
+}
+
+// exec("E:/Project/huayu-storm/python/Scripts/python.exe E:/Project/huayu-storm/engine/engine.py")
+// exec("react-scripts start")
+
+function createWindow() {
   // 创建浏览器窗口
   const win = new BrowserWindow({
     width: 1280,
@@ -15,13 +37,13 @@ function createWindow () {
   })
 
   // 并且为你的应用加载index.html
-//   win.loadFile('index.html')
-win.loadURL('http://localhost:3000/');
+    // win.loadFile('build/index.html')
+  win.loadURL('http://localhost:3000/');
 
-  // // 打开开发者工具
-  // win.webContents.openDevTools()
+  // 打开开发者工具
+  win.webContents.openDevTools()
 
-Menu.setApplicationMenu(null)
+  Menu.setApplicationMenu(null)
 
 }
 
@@ -46,3 +68,6 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+app.on('ready', createSubProc)
+app.on('will-quit', exitSubProc)

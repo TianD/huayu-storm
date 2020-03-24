@@ -1,3 +1,4 @@
+# coding: utf-8
 import hashlib
 import os
 import subprocess
@@ -51,14 +52,14 @@ def is_file_exits(file_path):
 
 def get_string_hash(string):
     md5 = hashlib.md5()
-    md5.update(string)
+    md5.update(string.encode('utf-8'))
     return md5.hexdigest()
 
 
 def get_preview_cache_path(origin_image_path):
     NEW_FORMAT_EXT = 'jpg'
     CACHE_PATH = '../cache_dir'
-    PREVIEW_WIDTH = 640
+    PREVIEW_WIDTH = 960
 
     preview_path = \
         get_file_new_path_with_new_dir_and_new_ext(origin_image_path, CACHE_PATH, NEW_FORMAT_EXT, use_md5_name=True)

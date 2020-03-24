@@ -4,7 +4,7 @@ TTT:
     file: ttt_{episode}_{sequence}_{shot}_{layer}_{version}.mb
   compositing:
     dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
-    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg
+    file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.{ext}
   images:
     dir: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
     file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg

@@ -27,3 +27,5 @@ yarn-error.log*
 /python
 
 cache_dir
+
+/dist

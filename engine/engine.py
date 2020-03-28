@@ -140,10 +140,10 @@ def get_detail():
         for i, collection in enumerate(collections):
             temp_str = collection.format()
             temp_str = temp_str.replace('\\', '/').split(key_dir)[-1][1:]
-            dataSource.append({'key': str(i), 'type': key, 'path': temp_str, 'index': i, 'rowSpan': length})
+            dataSource.append({'key': str(i), 'type': key, 'path': temp_str, 'dir': key_dir, 'index': i, 'rowSpan': length})
         for j, remainder in enumerate(remainders):
             remainder = remainder.replace('\\', '/').split(key_dir)[-1][1:]
-            dataSource.append({'key': str(i), 'type': key, 'path': remainder, 'index': j, 'rowSpan': length})
+            dataSource.append({'key': str(i), 'type': key, 'path': remainder, 'dir': key_dir, 'index': j, 'rowSpan': length})
     return json.dumps(dataSource)
 
 

@@ -51,7 +51,7 @@ class DetailView extends Component {
     };
 
     copy2clipboard(e) {
-        copy(e['path'])
+        copy(e['dir'])
         message.info("复制到剪贴板.")
     }
 

@@ -2,6 +2,7 @@
   "name": "huayu-storm",
   "version": "0.1.0",
   "private": true,
+  "main": "src/main.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -13,10 +14,11 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "package": "electron-packager ./ huayu-storm --out ./dist --app-version 0.1.0 --overwrite --icon=build/favicon.ico"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -34,6 +36,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^8.1.1"
+    "electron": "^8.1.1",
+    "electron-packager": "^14.2.1"
   }
 }

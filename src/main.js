@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu } = require('electron')
-const { spawn, exec } = require('child_process')
+const { spawn } = require('child_process')
 const path = require('path')
 
 let pyProc = null;
@@ -13,7 +13,7 @@ function createSubProc() {
   if (pyProc != null) {
     console.log('python process success')
   }
-  exec("react-scripts start")
+  // exec("react-scripts start")
 }
 
 function exitSubProc() {
@@ -37,8 +37,8 @@ function createWindow() {
   })
 
   // 并且为你的应用加载index.html
-    // win.loadFile('build/index.html')
-  win.loadURL('http://localhost:3000/');
+    win.loadFile('build/index.html')
+  // win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
   // win.webContents.openDevTools()

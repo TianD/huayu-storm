@@ -1,9 +1,11 @@
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, BrowserWindow, Menu, Tray } = require('electron')
 const { spawn } = require('child_process')
 const path = require('path')
 
 let pyProc = null;
 // let nodeProc = null;
+
+let tray = null;
 
 function createSubProc() {
   let pyfile = path.resolve(__dirname, '../engine/engine.py')
@@ -56,9 +58,9 @@ app.whenReady().then(createWindow)
 app.on('window-all-closed', () => {
   // 在 macOS 上，除非用户用 Cmd + Q 确定地退出，
   // 否则绝大部分应用及其菜单栏会保持激活。
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  // if (process.platform !== 'darwin') {
+  //   app.quit()
+  // }
 })
 
 app.on('activate', () => {
@@ -69,5 +71,15 @@ app.on('activate', () => {
   }
 })
 
-app.on('ready', createSubProc)
 app.on('will-quit', exitSubProc)
+
+app.on('ready', () => {
+  tray = new Tray('public/favicon.ico')
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Main', click: createWindow},
+    { label: 'Quit', click: app.quit}
+  ])
+  tray.setToolTip('Huayu-Storm.')
+  tray.setContextMenu(contextMenu)
+  createSubProc()
+})

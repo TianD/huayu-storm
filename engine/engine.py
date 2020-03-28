@@ -25,7 +25,9 @@ monkey.patch_all()
 app = Flask(__name__)
 CORS(app)
 
-config_yaml_path = 'E:/Project/huayu-storm/config/dir_template.yml'
+config_yaml_path = os.path.join(os.path.dirname(__file__), '../config/dir_template.yml')
+
+DEFAULT_IMAGE = os.path.join(os.path.dirname(__file__), '../public/default.png')
 
 
 def get_first_image_of_dir(**shot_info):
@@ -98,9 +100,6 @@ def get_project_list():
         pc[0].setdefault('shots', pc_full_qc)
         result.append({'label': pk, 'value': pk, 'children': pc})
     return json.dumps(result)
-
-
-DEFAULT_IMAGE = 'E:/huayu-storm/TTT/compositing/EP01/Q01/S01/ttt_EP01_Q01_S01_cp_c001.1001.jpg'
 
 
 @app.route('/api/get_thumbnail')

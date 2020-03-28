@@ -136,15 +136,14 @@ def get_detail():
         format_key_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', key_path)
         files = glob.glob(format_key_path)
         collections, remainders = clique.assemble(files)
-        temp_data = []
-        for collection in collections:
+        length = len(collections)+len(remainders)
+        for i, collection in enumerate(collections):
             temp_str = collection.format()
             temp_str = temp_str.replace('\\', '/').split(key_dir)[-1][1:]
-            temp_data.append(temp_str)
-        for remainder in remainders:
+            dataSource.append({'key': str(i), 'type': key, 'path': temp_str, 'index': i, 'rowSpan': length})
+        for j, remainder in enumerate(remainders):
             remainder = remainder.replace('\\', '/').split(key_dir)[-1][1:]
-            temp_data.append(remainder)
-        dataSource.append({'key': str(i), 'type': key, 'path': temp_data})
+            dataSource.append({'key': str(i), 'type': key, 'path': remainder, 'index': j, 'rowSpan': length})
     return json.dumps(dataSource)
 
 

@@ -41,7 +41,7 @@ function createWindow() {
   win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   Menu.setApplicationMenu(null)
 

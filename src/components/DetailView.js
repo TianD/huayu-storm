@@ -8,7 +8,22 @@ const columns = [
     {
         key: 'type',
         title: '类型',
-        dataIndex: 'type'
+        dataIndex: 'type',
+        render: (value, row, index) => {
+            console.log(value, row, index)
+            const obj = {
+                children: value,
+                props: {}
+            };
+            if (row['index'] === 0) {
+                obj.props.rowSpan = row['rowSpan'];
+            }
+            else {
+                obj.props.rowSpan = 0
+            }
+            console.log(obj)
+            return obj;
+        }
     },
     {
         key: 'path',
@@ -41,8 +56,8 @@ class DetailView extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(this.props) !== JSON.stringify(nextProps)){
-            api.get_detail(nextProps.shot, (response)=>{
+        if (JSON.stringify(this.props) !== JSON.stringify(nextProps)) {
+            api.get_detail(nextProps.shot, (response) => {
                 this.setState({
                     dataSource: response.data
                 })
@@ -51,7 +66,7 @@ class DetailView extends Component {
     }
 
     render() {
-        let {dataSource} = this.state
+        let { dataSource } = this.state
         return (
             <ModalVisibleContext.Consumer>
                 {({ visible, changeVisible }) => (
@@ -77,7 +92,7 @@ class DetailView extends Component {
                             <img
                                 alt="example"
                                 //todo use global url
-                                style = {{width: '100%', height: '100%'}}
+                                style={{ width: '100%', height: '100%' }}
                                 src={api.get_thumbnail_url(this.props.shot)}
                             />
                             <Table

@@ -20,7 +20,7 @@ class MyCard extends Component {
                 cover={
                     <div>
                         <img
-                            style={{width: "auto", maxHeight: 93.75, alignItems: "center", position: "flex"}}
+                            style={{width: "auto", maxHeight: 93.75, alignItems: "center"}}
                             alt="example"
                             src={api.get_thumbnail_url(this.props.shot)}
                         />

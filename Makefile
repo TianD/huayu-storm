@@ -72,5 +72,5 @@ run_flask:
 
 release:
 	@make set_nodejs_env command=' \
-		npm run package.json;\
+		npm run package;\
 	';

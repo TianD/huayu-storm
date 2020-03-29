@@ -31,6 +31,9 @@ set_nodejs_env:
 	@export PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):/usr/bin:/c/windows/system32;\
 		$(command)
 
+npm_run:
+	@make set_nodejs_env command='$(command)'
+
 del_app:
 	@rm -rf $(project_name)
 
@@ -45,6 +48,11 @@ create_app:
 run_app:
 	@make set_nodejs_env command=' \
 		npm start ;\
+ 	';
+
+run_app_electron:
+	@make set_nodejs_env command=' \
+		npm run start_electron;\
  	';
 
 setup_deps:

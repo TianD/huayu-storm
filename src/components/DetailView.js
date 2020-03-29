@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Modal, Table, message } from 'antd';
+import React, {Component} from 'react';
+import {Modal, Table, message} from 'antd';
 import copy from 'copy-to-clipboard';
-import { ModalVisibleContext } from '../context';
+import {ModalVisibleContext} from '../context';
 import api from '../api'
 
 const columns = [
@@ -16,8 +16,7 @@ const columns = [
             };
             if (row['index'] === 0) {
                 obj.props.rowSpan = row['rowSpan'];
-            }
-            else {
+            } else {
                 obj.props.rowSpan = 0
             }
             return obj;
@@ -64,10 +63,10 @@ class DetailView extends Component {
     }
 
     render() {
-        let { dataSource } = this.state
+        let {dataSource} = this.state
         return (
             <ModalVisibleContext.Consumer>
-                {({ visible, changeVisible }) => (
+                {({visible, changeVisible}) => (
                     <Modal
                         title={this.props.shot['label']}
                         width={960}
@@ -87,19 +86,25 @@ class DetailView extends Component {
                         }
                     >
                         <div>
-                            <img
-                                alt="example"
-                                //todo use global url
-                                style={{ width: '100%', height: '100%' }}
-                                src={api.get_thumbnail_url(this.props.shot)}
-                            />
+                            <div
+                                style={{textAlign: "center"}}
+                            >
+                                <img
+                                    style={{width: "auto", maxHeight:200}}
+                                    alt="example"
+                                    src={api.get_thumbnail_url(this.props.shot)}
+                                />
+                            </div>
+
                             <Table
                                 columns={columns}
                                 dataSource={dataSource}
                                 pagination={false}
                                 onRow={record => {
                                     return {
-                                        onClick: (e) => { this.copy2clipboard(record) }, // 点击行
+                                        onClick: (e) => {
+                                            this.copy2clipboard(record)
+                                        }, // 点击行
                                     }
                                 }
                                 }

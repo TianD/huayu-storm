@@ -38,21 +38,21 @@ create_app:
 	@make set_nodejs_env command=' \
 		node -v;\
 		npx create-react-app $(project_name) &&\
-		pushd $(project_name) ;\
-			npm install antd --save ;\
-		popd ;\
+		mv $(project_name)/* ./ &&\
+		npm install antd --save ;\
  	';
 
 run_app:
 	@make set_nodejs_env command=' \
-		pushd $(project_name) ;\
-			npm start ;\
-		popd ;\
+		npm start ;\
  	';
 
 setup_deps:
 	@make set_nodejs_env command=' \
-		pushd $(project_name) ;\
-			npm i ;\
-		popd ;\
+		  npm i ;\
+ 	';
+
+install_electron:
+	@make set_nodejs_env command=' \
+		npm install electron --save-dev;\
  	';

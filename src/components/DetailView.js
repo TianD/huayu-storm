@@ -10,7 +10,6 @@ const columns = [
         title: '类型',
         dataIndex: 'type',
         render: (value, row, index) => {
-            console.log(value, row, index)
             const obj = {
                 children: value,
                 props: {}
@@ -21,7 +20,6 @@ const columns = [
             else {
                 obj.props.rowSpan = 0
             }
-            console.log(obj)
             return obj;
         }
     },
@@ -73,7 +71,7 @@ class DetailView extends Component {
                     <Modal
                         title={this.props.shot['label']}
                         width={960}
-                        height={'50%'}
+                        height={'70%'}
                         visible={visible}
                         closable={false}
                         centered={true}

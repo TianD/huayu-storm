@@ -8,10 +8,8 @@ let pyProc = null;
 let tray = null;
 
 function createSubProc() {
-  let pyfile = path.resolve(__dirname, '../engine/engine.py')
-  let pyexe = path.resolve(__dirname, '../python/Scripts/python.exe')
-  console.log(pyfile, pyexe)
-  pyProc = spawn(pyexe, [pyfile])
+  let pycmd = path.resolve(__dirname, '../engine/run.bat')
+  pyProc = spawn(pycmd)
   if (pyProc != null) {
     console.log('python process success')
   }
@@ -39,7 +37,7 @@ function createWindow() {
   })
 
   // 并且为你的应用加载index.html
-    win.loadFile('build/index.html')
+  win.loadFile('./build/index.html')
   // win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
@@ -74,10 +72,10 @@ app.on('activate', () => {
 app.on('will-quit', exitSubProc)
 
 app.on('ready', () => {
-  tray = new Tray('public/favicon.ico')
+  tray = new Tray('./favicon.ico')
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Main', click: createWindow},
-    { label: 'Quit', click: app.quit}
+    { label: 'Main', click: createWindow },
+    { label: 'Quit', click: app.quit }
   ])
   tray.setToolTip('Huayu-Storm.')
   tray.setContextMenu(contextMenu)

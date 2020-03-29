@@ -8,7 +8,7 @@ import re
 import functools
 from collections import defaultdict
 
-import lucidity.error
+from . import error
 
 # Type of a RegexObject for isinstance check.
 _RegexType = type(re.compile(''))

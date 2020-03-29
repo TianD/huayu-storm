@@ -24,8 +24,10 @@ yarn-error.log*
 
 *.pyc
 .idea
-/python
+/engine/python
 
 cache_dir
 
 /dist
+
+.vscode

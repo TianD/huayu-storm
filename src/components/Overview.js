@@ -3,7 +3,7 @@ import { Cascader, List } from 'antd';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
 import { ModalVisibleContext } from '../context';
-import api from '../api'
+import api from '../api';
 
 class Overview extends Component {
     constructor() {
@@ -68,7 +68,8 @@ class Overview extends Component {
     }
 
     render() {
-        let { visible, project_list, shots, current_shot } = this.state;
+        let { visible, project_list, shots, current_shot, column } = this.state;
+        console.log(column)
         return (
             <ModalVisibleContext.Provider
                 value={
@@ -81,23 +82,26 @@ class Overview extends Component {
                 }>
                 <div>
                     <Cascader
+                        style={{ position: 'absolute', left: '30px' }}
                         options={project_list}
                         onChange={(value) => this.filterShots(value)}
                         placeholder="Please select" />
-                    <List
-                        itemLayout={'horizontal'}
-                        dataSource={shots}
-                        grid={{ gutter: 240, lg: 4, md: 2, sm: 1, xs: 1 }}
-                        column={4}
-                        renderItem={
-                            item => (
-                                <List.Item>
-                                    <MyCard shot={item} onClick={(e) => this.onCardClick(item)} />
-                                </List.Item>
-                            )
-                        }
-                    >
-                    </List>
+                    <div style={{ padding: '50px' }}>
+                        <List
+                            itemLayout={'horizontal'}
+                            dataSource={shots}
+                            grid={{ gutter: 36, lg: 3, md: 2, sm: 1, xs: 1 }}
+                            renderItem={
+                                item => (
+                                    <List.Item>
+                                        <MyCard shot={item} onClick={(e) => this.onCardClick(item)} />
+                                    </List.Item>
+                                )
+                            }
+                        >
+                        </List>
+                    </div>
+
                     <DetailView shot={current_shot} visible={visible} />
                 </div>
             </ModalVisibleContext.Provider>

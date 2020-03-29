@@ -4,12 +4,13 @@ nodejs_version='12.16.1'
 nodejs_filename=node-v$(nodejs_version)-win-x64
 nodejs_url=https://npm.taobao.org/mirrors/node/v$(nodejs_version)/$(nodejs_filename).7z
 nodejs_bin_dir=nodejs_bin
+PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):/usr/bin:/mingw64/bin:/c/windows/system32
 
 help:
 	echo help
 
 write_bat:
-	echo 'set PATH=%cd%/$(nodejs_bin_dir)/$(nodejs_filename)' > nodejs_env.bat
+	echo "set PATH=$(PATH)" > nodejs_env.bat
 
 setup_nodejs:
 	@mkdir $(nodejs_bin_dir) ;\
@@ -19,11 +20,10 @@ setup_nodejs:
 		rm -f $(nodejs_version) ;\
 	popd
 	@make set_mirror_taobao
-	echo 'set PATH=%cd%/$(nodejs_bin_dir)/$(nodejs_filename)' > nodejs_env.bat
 	@make write_bat
 
 set_nodejs_env:
-	@export PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):/usr/bin:/c/windows/system32;\
+	@export PATH=$(PATH);\
 		$(command)
 
 set_mirror_taobao:

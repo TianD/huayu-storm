@@ -56,3 +56,7 @@ install_electron:
 	@make set_nodejs_env command=' \
 		npm install electron --save-dev;\
  	';
+
+run_flask:
+	pushd engine ;\
+		python engine.py

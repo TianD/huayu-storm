@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { Card } from 'antd';
+import React, {Component} from 'react';
+import {Button, Card, Col, Row} from 'antd';
+import {PictureOutlined} from '@ant-design/icons';
 import api from '../api'
 
-const { Meta } = Card;
+const {Meta} = Card;
 
 class MyCard extends Component {
 
@@ -14,13 +15,16 @@ class MyCard extends Component {
         return (
             <Card
                 hoverable
-                style={{ width: 300, margin: (10, 10, 10, 10) }}
+                style={{width: 300, height: 144.75, margin: (10, 10, 10, 10)}}
                 type={"inner"}
                 cover={
-                    <img
-                        alt="example"
-                        src={api.get_thumbnail_url(this.props.shot)}
-                    />
+                    <div>
+                        <img
+                            style={{width: "auto", maxHeight: 93.75, alignItems: "center", position: "flex"}}
+                            alt="example"
+                            src={api.get_thumbnail_url(this.props.shot)}
+                        />
+                    </div>
                 }
                 onClick={(event) => this.props.onClick(event)}
             >

@@ -8,14 +8,8 @@ nodejs_bin_dir=nodejs_bin
 help:
 	echo help
 
-set_mirror_taobao:
-	npm config set registry http://registry.npm.taobao.org
-
-set_mirror_origin:
-	npm config set registry http://registry.npmjs.org
-
-get_mirror:
-	npm config get registry
+write_bat:
+	echo 'set PATH=%cd%/$(nodejs_bin_dir)/$(nodejs_filename)' > nodejs_env.bat
 
 setup_nodejs:
 	@mkdir $(nodejs_bin_dir) ;\
@@ -26,10 +20,23 @@ setup_nodejs:
 	popd
 	@make set_mirror_taobao
 	echo 'set PATH=%cd%/$(nodejs_bin_dir)/$(nodejs_filename)' > nodejs_env.bat
+	@make write_bat
 
 set_nodejs_env:
 	@export PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):/usr/bin:/c/windows/system32;\
 		$(command)
+
+set_mirror_taobao:
+	command='npm config set registry http://registry.npm.taobao.org';\
+ 		make set_nodejs_env command="$${command}"
+
+set_mirror_origin:
+	command='npm config set registry http://registry.npmjs.org';\
+ 		make set_nodejs_env command="$${command}"
+
+get_mirror:
+	command='npm config get registry';\
+ 		make set_nodejs_env command="$${command}"
 
 npm_run:
 	@make set_nodejs_env command='$(command)'
@@ -72,5 +79,5 @@ run_flask:
 
 release:
 	@make set_nodejs_env command=' \
-		npm run package;\
+		npm run package ;\
 	';

@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "package": "electron-packager ./ huayu-storm --out ./dist --app-version 0.1.0 --overwrite --icon=build/favicon.ico"
+    "package": "electron-packager ./ huayu-storm --out ./dist --app-version 0.1.0 --overwrite --icon=public/favicon.ico"
   },
   "eslintConfig": {
     "extends": "react-app"

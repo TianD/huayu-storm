@@ -1,16 +1,17 @@
 
 project_name='huayu-storm'
-nodejs_version='12.16.1'
+nodejs_version=12.16.1
 nodejs_filename=node-v$(nodejs_version)-win-x64
 nodejs_url=https://npm.taobao.org/mirrors/node/v$(nodejs_version)/$(nodejs_filename).7z
 nodejs_bin_dir=nodejs_bin
-PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):/usr/bin:/mingw64/bin:/c/windows/system32
+PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/usr/bin:/mingw64/bin:/c/windows/system32
+PATH_WIN=%cd%/$(nodejs_bin_dir)/$(nodejs_filename);%cd%/node_modules/.bin;c:/windows/system32
 
 help:
 	echo help
 
 write_bat:
-	echo "set PATH=$(PATH)" > nodejs_env.bat
+	echo "set PATH=$(PATH_WIN)" > environ.bat
 
 setup_nodejs:
 	@mkdir $(nodejs_bin_dir) ;\
@@ -25,6 +26,9 @@ setup_nodejs:
 set_nodejs_env:
 	@export PATH=$(PATH);\
 		$(command)
+
+find_electron:
+	@make set_nodejs_env command='which electron'
 
 set_mirror_taobao:
 	command='npm config set registry http://registry.npm.taobao.org';\

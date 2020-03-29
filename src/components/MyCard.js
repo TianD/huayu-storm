@@ -18,9 +18,11 @@ class MyCard extends Component {
                 style={{width: 300, height: 144.75, margin: (10, 10, 10, 10)}}
                 type={"inner"}
                 cover={
-                    <div>
+                    <div
+                        style={{textAlign: "center"}}
+                    >
                         <img
-                            style={{width: "auto", maxHeight: 93.75, alignItems: "center"}}
+                            style={{width: "auto", maxHeight: 93.75}}
                             alt="example"
                             src={api.get_thumbnail_url(this.props.shot)}
                         />

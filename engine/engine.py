@@ -5,6 +5,7 @@ import io
 import json
 import os
 import re
+import sys
 
 import yaml
 from flask import Flask, send_file, request
@@ -13,6 +14,8 @@ from gevent import monkey
 from gevent.pywsgi import WSGIServer
 from werkzeug.debug import DebuggedApplication
 from werkzeug.serving import run_with_reloader
+
+sys.path.insert(0, './libs')
 
 from libs import clique
 from libs import utils
@@ -135,14 +138,16 @@ def get_detail():
         format_key_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', key_path)
         files = glob.glob(format_key_path)
         collections, remainders = clique.assemble(files)
-        length = len(collections)+len(remainders)
+        length = len(collections) + len(remainders)
         for i, collection in enumerate(collections):
             temp_str = collection.format()
             temp_str = temp_str.replace('\\', '/').split(key_dir)[-1][1:]
-            dataSource.append({'key': str(i), 'type': key, 'path': temp_str, 'dir': key_dir, 'index': i, 'rowSpan': length})
+            dataSource.append(
+                {'key': str(i), 'type': key, 'path': temp_str, 'dir': key_dir, 'index': i, 'rowSpan': length})
         for j, remainder in enumerate(remainders):
             remainder = remainder.replace('\\', '/').split(key_dir)[-1][1:]
-            dataSource.append({'key': str(i), 'type': key, 'path': remainder, 'dir': key_dir, 'index': j, 'rowSpan': length})
+            dataSource.append(
+                {'key': str(i), 'type': key, 'path': remainder, 'dir': key_dir, 'index': j, 'rowSpan': length})
     return json.dumps(dataSource)
 
 

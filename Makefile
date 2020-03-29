@@ -5,7 +5,7 @@ nodejs_filename=node-v$(nodejs_version)-win-x64
 nodejs_url=https://npm.taobao.org/mirrors/node/v$(nodejs_version)/$(nodejs_filename).7z
 nodejs_bin_dir=nodejs_bin
 PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/usr/bin:/mingw64/bin:/c/windows/system32
-PATH_WIN=%cd%/$(nodejs_bin_dir)/$(nodejs_filename);%cd%/node_modules/.bin;c:/windows/system32
+PATH_WIN=%cd%/$(nodejs_bin_dir)/$(nodejs_filename);%cd%/node_modules/.bin;%GIT_INSTALL_ROOT%/mingw64/bin;c:/windows/system32
 
 help:
 	echo help

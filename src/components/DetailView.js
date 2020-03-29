@@ -69,7 +69,7 @@ class DetailView extends Component {
                 {({visible, changeVisible}) => (
                     <Modal
                         title={this.props.shot['label']}
-                        width={960}
+                        width={800}
                         height={'70%'}
                         visible={visible}
                         closable={false}
@@ -90,7 +90,7 @@ class DetailView extends Component {
                                 style={{textAlign: "center"}}
                             >
                                 <img
-                                    style={{width: "auto", maxHeight:200}}
+                                    style={{width: "auto", maxHeight:360, height: "auto", maxWidth: 700}}
                                     alt="example"
                                     src={api.get_thumbnail_url(this.props.shot)}
                                 />

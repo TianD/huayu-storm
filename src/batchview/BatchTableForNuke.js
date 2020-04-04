@@ -54,8 +54,8 @@ const columns = [
         key: 'action',
         render: (text, record) => (
             <span>
-                <Button ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
-                <Button ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
+                <Button style={{margin: 3}} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
+                <Button style={{margin: 3}} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
             </span>
         )
     }
@@ -69,17 +69,20 @@ class BatchTableForNuke extends Component {
                     <Col span={8}>
                         <Cascader placeholder="选择项目" style={{ margin: 12 }}></Cascader>
                     </Col>
-                    <Col span={8} offset={8}>
+                    <Col span={8}>
                         <Radio.Group value={1}>
                             <Radio value={1} style={{ margin: 12 }}>生成Nuke工程</Radio>
                             <Radio value={2} style={{ margin: 12 }}>提交渲染</Radio>
                         </Radio.Group>
+                        
                     </Col>
+                    <Col span={8}><Button style={{ margin: 12 }}>全部开始</Button></Col>
                 </Row>
                 <Table
                     tableLayout={"fixed"}
                     dataSource={dataSource}
                     columns={columns}
+                    pagination={false}
                 />
             </div>
         )

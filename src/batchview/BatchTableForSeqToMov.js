@@ -43,8 +43,8 @@ const columns = [
         key: 'action',
         render: (text, record) => (
             <span>
-                <Button ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
-                <Button ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
+                <Button style={{margin: 3}} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
+                <Button style={{margin: 3}} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
             </span>
         )
     }
@@ -71,6 +71,7 @@ class BatchTableForSeqToMov extends Component {
                     tableLayout={"fixed"}
                     dataSource={dataSource}
                     columns={columns}
+                    pagination={false}
                 />
             </div>
         )

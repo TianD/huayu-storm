@@ -53,8 +53,8 @@ const columns = [
         key: 'action',
         render: (text, record) => (
             <span>
-                <Button style={{margin: 3}} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
-                <Button style={{margin: 3}} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
+                <Button style={{ margin: 3 }} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
+                <Button style={{ margin: 3 }} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
             </span>
         )
     }
@@ -66,15 +66,15 @@ class BatchTableForMaya extends Component {
             <div>
                 <Row>
                     <Col span={8}>
-                        <Select placeholder="选择项目" style={{margin: 12}}></Select>
+                        <Select placeholder="选择项目" style={{ margin: 12 }}></Select>
                         <Upload
                             showUploadList={false}>
-                            <Button  style={{margin: 12}}>选择文件</Button>
+                            <Button style={{ margin: 12 }}>选择文件</Button>
                         </Upload>
                     </Col>
                     <Col span={8} offset={8}>
-                        <Button  style={{margin: 12}}>清空</Button>
-                        <Button  style={{margin: 12}}>全部开始</Button>
+                        <Button style={{ margin: 12 }}>清空</Button>
+                        <Button style={{ margin: 12 }}>全部开始</Button>
                     </Col>
                 </Row>
                 <Table

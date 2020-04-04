@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {Table} from 'antd';
+import React, { Component } from 'react';
+import { Table, Upload, Button, Select, Col, Row } from 'antd';
+import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 
 const dataSource = [
     {
@@ -32,20 +33,9 @@ const columns = [
         key: 'status',
     },
     {
-        title: '预览',
-        dataIndex: 'thumbnail',
-        key: 'thumbnail',
-        render: (text) => <image src={text}/>
-    },
-    {
-        title: '镜头',
-        dataIndex: 'shot',
-        key: 'shot'
-    },
-    {
-        title: '任务类型',
-        dataIndex: 'taskType',
-        key: 'taskType'
+        title: '文件',
+        dataIndex: 'filepath',
+        key: 'Filepath',
     },
     {
         title: 'Action',
@@ -53,8 +43,8 @@ const columns = [
         key: 'action',
         render: (text, record) => (
             <span>
-              <a>Start {record.name}</a>
-              <a>Delete</a>
+                <Button ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
+                <Button ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
             </span>
         )
     }
@@ -63,11 +53,26 @@ const columns = [
 class BatchTableForSeqToMov extends Component {
     render() {
         return (
-            <Table
-                tableLayout={"fixed"}
-                dataSource={dataSource}
-                columns={columns}/>
-
+            <div>
+                <Row>
+                    <Col span={8}>
+                        <Select placeholder="选择项目" style={{ margin: 12 }}></Select>
+                        <Upload
+                            showUploadList={false}>
+                            <Button style={{ margin: 12 }}>选择文件</Button>
+                        </Upload>
+                    </Col>
+                    <Col span={8} offset={8}>
+                        <Button style={{ margin: 12 }}>清空</Button>
+                        <Button style={{ margin: 12 }}>全部开始</Button>
+                    </Col>
+                </Row>
+                <Table
+                    tableLayout={"fixed"}
+                    dataSource={dataSource}
+                    columns={columns}
+                />
+            </div>
         )
     }
 }

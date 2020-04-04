@@ -23,9 +23,6 @@ function exitSubProc() {
   // nodeProc = null
 }
 
-// exec("E:/Project/huayu-storm/python/Scripts/python.exe E:/Project/huayu-storm/engine/engine.py")
-// exec("react-scripts start")
-
 function createWindow() {
   // 创建浏览器窗口
   const win = new BrowserWindow({
@@ -33,7 +30,8 @@ function createWindow() {
     height: 720,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    icon: path.join(__dirname, './favicon.ico')
   })
 
   // 并且为你的应用加载index.html

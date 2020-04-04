@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {Table} from 'antd';
+import React, { Component } from 'react';
+import { Table, Row, Col, Radio, Cascader, Button } from 'antd';
+import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 
 const dataSource = [
     {
@@ -35,7 +36,7 @@ const columns = [
         title: '预览',
         dataIndex: 'thumbnail',
         key: 'thumbnail',
-        render: (text) => <image src={text}/>
+        render: (text) => <image src={text} />
     },
     {
         title: '镜头',
@@ -53,8 +54,8 @@ const columns = [
         key: 'action',
         render: (text, record) => (
             <span>
-              <a>Start {record.name}</a>
-              <a>Delete</a>
+                <Button ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
+                <Button ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
             </span>
         )
     }
@@ -63,10 +64,24 @@ const columns = [
 class BatchTableForNuke extends Component {
     render() {
         return (
-            <Table
-                tableLayout={"fixed"}
-                dataSource={dataSource}
-                columns={columns}/>
+            <div>
+                <Row>
+                    <Col span={8}>
+                        <Cascader placeholder="选择项目" style={{ margin: 12 }}></Cascader>
+                    </Col>
+                    <Col span={8} offset={8}>
+                        <Radio.Group value={1}>
+                            <Radio value={1} style={{ margin: 12 }}>生成Nuke工程</Radio>
+                            <Radio value={2} style={{ margin: 12 }}>提交渲染</Radio>
+                        </Radio.Group>
+                    </Col>
+                </Row>
+                <Table
+                    tableLayout={"fixed"}
+                    dataSource={dataSource}
+                    columns={columns}
+                />
+            </div>
         )
     }
 }

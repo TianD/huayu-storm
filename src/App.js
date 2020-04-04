@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 import { Layout, Menu } from 'antd';
 import Overview from './components/Overview';
+import BatchTableForMaya from './batchview/BatchTableForMaya';
+import BatchTableForNuke from './batchview/BatchTableForNuke';
+import BatchTableForSeqToMov from './batchview/BatchTableForSeqToMov';
 import Logo from './logo.png';
 
 const { Header, Content, Footer } = Layout;
@@ -29,13 +32,13 @@ class App extends Component {
                 current_page = <Overview />
                 break
             case "2":
-                current_page = <div />
+                current_page = <BatchTableForMaya />
                 break
             case "3":
-                current_page = <div />
+                current_page = <BatchTableForNuke />
                 break
             case "4":
-                current_page = <div />
+                current_page = <BatchTableForSeqToMov />
                 break
             default:
                 current_page = <Overview />

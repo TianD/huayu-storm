@@ -28,6 +28,8 @@ monkey.patch_all()
 app = Flask(__name__)
 CORS(app)
 
+config_dir = os.path.join(os.path.dirname(__file__), '../config')
+
 config_yaml_path = os.path.join(os.path.dirname(__file__), '../config/dir_template.yml')
 
 DEFAULT_IMAGE = os.path.join(os.path.dirname(__file__), '../public/default.png')
@@ -49,11 +51,13 @@ def get_first_image_of_dir(**shot_info):
 
 @app.route('/api/get_project_list')
 def get_project_list():
-    config = dict()
-    with open(config_yaml_path, 'r') as f:
-        config = yaml.load(f)
+    # import pydevd
+    # pydevd.settrace('localhost', port=1567, stdoutToServer=True, stderrToServer=True)
     temp_dict = {}
-    for project, project_config in config.items():
+    for project in os.listdir(config_dir):
+        project_config_path = os.path.join(config_dir, project, 'dir_template.yml')
+        with open(project_config_path, 'r') as f:
+            project_config = yaml.load(f)
         compositing = project_config.get('compositing') or {}
         comp_dir = compositing.get('dir')
         format_comp_dir = re.sub("{[0-9a-zA-Z]*}", '*', comp_dir)

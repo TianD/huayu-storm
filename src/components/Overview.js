@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import { Cascader, List } from 'antd';
+import { connect } from 'react-redux';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
-import { ModalVisibleContext } from '../context';
-import api from '../api';
+
+
+function mapStateToProps(state) {
+    return {
+        project_list:state.project_list,
+        get_project_list_failed: state.get_project_list_failed,
+        get_project_list_loading: state.get_project_list_loading
+    }
+}
 
 class Overview extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             visible: false,
-            project_list: null,
             shots: [],
             current_shot: {}
         }
@@ -30,7 +37,7 @@ class Overview extends Component {
     }
 
     filterShots = (value) => {
-        let project_list = this.state.project_list
+        let project_list = this.props.project_list
         let shot_list;
         if (value.length > 0) {
             let project = project_list.filter((element) => {
@@ -55,58 +62,34 @@ class Overview extends Component {
         })
     }
 
-    changeProjectList = (value) => {
-        this.setState({
-            project_list: value
-        })
-    }
-
-    componentDidMount() {
-        api.get_project_list((response) => {
-            this.changeProjectList(response.data)
-        })
-    }
-
     render() {
-        let { visible, project_list, shots, current_shot, column } = this.state;
-        console.log(column)
+        let { visible, shots, current_shot } = this.state;
         return (
-            <ModalVisibleContext.Provider
-                value={
-                    {
-                        visible: visible,
-                        project_list: project_list,
-                        changeVisible: this.changeVisible,
-                        changeProjectList: this.changeProjectList,
-                    }
-                }>
-                <div>
-                    <Cascader
-                        style={{ position: 'absolute', left: '30px' }}
-                        options={project_list}
-                        onChange={(value) => this.filterShots(value)}
-                        placeholder="Please select" />
-                    <div style={{ padding: '50px' }}>
-                        <List
-                            itemLayout={'horizontal'}
-                            dataSource={shots}
-                            grid={{ gutter: 36, lg: 3, md: 2, sm: 1, xs: 1 }}
-                            renderItem={
-                                item => (
-                                    <List.Item>
-                                        <MyCard shot={item} onClick={(e) => this.onCardClick(item)} />
-                                    </List.Item>
-                                )
-                            }
-                        >
-                        </List>
-                    </div>
-
-                    <DetailView shot={current_shot} visible={visible} />
+            <div>
+                <Cascader
+                    style={{ position: 'absolute', left: '30px' }}
+                    options={this.props.project_list}
+                    onChange={(value) => this.filterShots(value)}
+                    placeholder="Please select" />
+                <div style={{ padding: '50px' }}>
+                    <List
+                        itemLayout={'horizontal'}
+                        dataSource={shots}
+                        grid={{ gutter: 36, lg: 3, md: 2, sm: 1, xs: 1 }}
+                        renderItem={
+                            item => (
+                                <List.Item>
+                                    <MyCard shot={item} onClick={(e) => this.onCardClick(item)} />
+                                </List.Item>
+                            )
+                        }
+                    >
+                    </List>
                 </div>
-            </ModalVisibleContext.Provider>
+                {/* <DetailView shot={current_shot} visible={visible} /> */}
+            </div>
         )
     }
 }
 
-export default Overview;
+export default connect(mapStateToProps)(Overview);

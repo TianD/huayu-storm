@@ -6,9 +6,8 @@ axios.defaults.baseURL = 'http://127.0.0.1:5000/api'
 
 class Api {
 
-    get_project_list(callback) {
-        axios.get('/get_project_list')
-            .then(callback)
+    get_project_list() {
+        return axios.get('/get_project_list')
     }
 
     get_thumbnail_url(shot) {

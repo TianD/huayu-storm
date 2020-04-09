@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import './App.css';
 import { Layout, Menu } from 'antd';
 import Overview from './components/Overview';
@@ -6,13 +7,20 @@ import BatchTableForMaya from './batchview/BatchTableForMaya';
 import BatchTableForNuke from './batchview/BatchTableForNuke';
 import BatchTableForSeqToMov from './batchview/BatchTableForSeqToMov';
 import Logo from './logo.png';
+import {get_project_list} from './actions/get_project_list'
 
 const { Header, Content, Footer } = Layout;
 
+function mapDispatchToProps(dispatch) {
+    return {
+        get_project_list: ()=> dispatch(get_project_list())
+    }
+}
+
 class App extends Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             page: '1',
         }
@@ -22,6 +30,10 @@ class App extends Component {
         this.setState(
             { page: event.key }
         )
+    }
+
+    componentDidMount(){
+        this.props.get_project_list()
     }
 
     render() {
@@ -76,4 +88,4 @@ class App extends Component {
 
 }
 
-export default App;
+export default connect(null, mapDispatchToProps)(App);

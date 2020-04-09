@@ -25,7 +25,7 @@ class PathHelper(LogHelper):
 
 class SceneHelper(LogHelper):
     NAME_SPLITTER = '_'
-    EPISODE_SCENE_SHOT_REGX = '(SEA_0[0-9]_T[0-9a-z]+)_(P[0-9a-z]+)_(S[0-9]+_?[0-9]+)'
+    EPISODE_SCENE_SHOT_REGX = '(SEA_0[0-9]_T[0-9a-z]+)_(P[0-9a-z]+)_(S[0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)

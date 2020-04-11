@@ -46,4 +46,5 @@ class ConfigHelper(LogHelper):
 
 
 if __name__ == '__main__':
-    pass
+    config_helper = ConfigHelper()
+    config_helper.load_config_json_from_file()

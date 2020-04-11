@@ -29,5 +29,20 @@ class PathAndFileHelper(LogHelper):
 
         return content
 
-    def join_file_path(self, *args):
-        return os.path.join(args)
+    KEY_IS_GET_ABSOLUTE_PATH = 'GET_ABSOLUTE_PATH'
+
+    def join_file_path(self, *args, **kwargs):
+        is_get_absolute = kwargs.get(PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH, False)
+        joined_file_path = os.path.join(*args)
+        if is_get_absolute:
+            joined_file_path = os.path.abspath(joined_file_path)
+        return joined_file_path
+
+
+if __name__ == '__main__':
+    path_and_file_helper = PathAndFileHelper()
+    file_path = path_and_file_helper.join_file_path(
+        __file__, '../../../../',
+        **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+    )
+    print(file_path)

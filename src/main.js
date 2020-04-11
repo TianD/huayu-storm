@@ -35,8 +35,8 @@ function createWindow() {
   })
 
   // 并且为你的应用加载index.html
-  win.loadFile('./build/index.html')
-  // win.loadURL('http://localhost:3000/');
+  // win.loadFile('./build/index.html')
+  win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
   // win.webContents.openDevTools()
@@ -70,7 +70,7 @@ app.on('activate', () => {
 app.on('will-quit', exitSubProc)
 
 app.on('ready', () => {
-  tray = new Tray('./favicon.ico')
+  tray = new Tray(path.join(__dirname, './favicon.ico'))
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Main', click: createWindow },
     { label: 'Quit', click: app.quit }

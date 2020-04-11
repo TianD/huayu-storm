@@ -2,20 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Upload, Select, Row, Col } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
-
+import {set_mayabatch_filters} from '../actions/mayabatch'
 
 function mapStateToProps(state) {
     return {
         project_list: state.project_list,
         get_project_list_failed: state.get_project_list_failed,
-        get_project_list_loading: state.get_project_list_loading
+        get_project_list_loading: state.get_project_list_loading,
+        mayabatch_filters: state.mayabatch_filters
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        set_mayabatch_filters: (data)=>dispatch(set_mayabatch_filters(data))
     }
 }
 
 class BatchTableForMaya extends Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.columns = [
             {
                 title: 'Id',
@@ -68,6 +75,7 @@ class BatchTableForMaya extends Component {
     }
 
     upload(e) {
+        console.log(e)
         let file_list = [];
         for (let i = 0; i < e.fileList.length; i++) {
             let file_data = {
@@ -89,6 +97,10 @@ class BatchTableForMaya extends Component {
         })
     }
 
+    change_project(value) {
+        this.props.set_mayabatch_filters(value)
+    }
+
     render() {
         let { file_list } = this.state;
         return (
@@ -98,6 +110,8 @@ class BatchTableForMaya extends Component {
                         <Select
                             placeholder="选择项目"
                             options={this.props.project_list}
+                            defaultValue={this.props.mayabatch_filters}
+                            onChange={(value)=>{this.change_project(value)}}
                             style={{ margin: 12, width: 140 }} />
                         <Upload
                             showUploadList={false}
@@ -124,4 +138,4 @@ class BatchTableForMaya extends Component {
     }
 }
 
-export default connect(mapStateToProps)(BatchTableForMaya);
+export default connect(mapStateToProps, mapDispatchToProps)(BatchTableForMaya);

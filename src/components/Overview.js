@@ -3,13 +3,21 @@ import { Cascader, List } from 'antd';
 import { connect } from 'react-redux';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
+import {set_overview_filters} from '../actions/overview_filters'
 
 
 function mapStateToProps(state) {
     return {
         project_list:state.project_list,
         get_project_list_failed: state.get_project_list_failed,
-        get_project_list_loading: state.get_project_list_loading
+        get_project_list_loading: state.get_project_list_loading,
+        overview_filters: state.overview_filters
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        set_overview_filters: (data)=>dispatch(set_overview_filters(data))
     }
 }
 
@@ -37,6 +45,7 @@ class Overview extends Component {
     }
 
     filterShots = (value) => {
+        this.props.set_overview_filters(value)
         let project_list = this.props.project_list
         let shot_list;
         if (value.length > 0) {
@@ -62,11 +71,16 @@ class Overview extends Component {
         })
     }
 
+    componentDidMount(){
+        this.filterShots(this.props.overview_filters)
+    }
+
     render() {
         let { visible, shots, current_shot } = this.state;
         return (
             <div>
                 <Cascader
+                defaultValue = {this.props.overview_filters}
                     style={{ position: 'absolute', left: '30px' }}
                     options={this.props.project_list}
                     onChange={(value) => this.filterShots(value)}
@@ -92,4 +106,4 @@ class Overview extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Overview);
+export default connect(mapStateToProps, mapDispatchToProps)(Overview);

@@ -101,7 +101,7 @@ if __name__ == '__main__':
         for maya_batch_config_file in maya_batch_config_file_list:
             maya_batch_config_file_base_name = path_and_file_helper.get_base_name(maya_batch_config_file)
             config_json = config_helper.load_config_json_from_file(maya_batch_config_file)
-            config_helper.show_json(config_json)
+            # config_helper.show_json(config_json)
 
             # get "__*common*.yml" files
             if maya_batch_config_file_base_name.startswith('__') and 'common' in maya_batch_config_file_base_name:

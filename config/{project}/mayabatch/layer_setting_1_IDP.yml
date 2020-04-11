@@ -1,4 +1,4 @@
-basic_config: ___redshift_common.ymll
+basic_config: ___redshift_common.yml
 layer_setting:
     -   layer_name: IDP
         layer_setting:

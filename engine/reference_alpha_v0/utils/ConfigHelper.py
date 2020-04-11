@@ -33,7 +33,7 @@ class ConfigHelper(LogHelper):
     def load_config_json_from_file(self, config_file_path):
         file_ext_name = self.path_and_file_helper.get_file_ext(config_file_path)
         config_helper = None
-        if file_ext_name.lower in ['yml', 'yaml']:
+        if file_ext_name.lower() in ['yml', 'yaml']:
             config_helper = YamlHelper(logger=self.logger)
 
         config_json = {}
@@ -46,12 +46,27 @@ class ConfigHelper(LogHelper):
 
 
 if __name__ == '__main__':
+
     path_and_file_helper = PathAndFileHelper()
-    config_file_dir = path_and_file_helper.join_file_path(
+    config_helper = ConfigHelper(logger=path_and_file_helper.logger)
+
+    config_dir_root = path_and_file_helper.join_file_path(
         __file__, '../../../../config',
         **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
     )
-    project_list = path_and_file_helper.list_dir(config_file_dir, file_filter_list=['T*'], only_dir=True)
-    print(project_list)
+    project_list = path_and_file_helper.list_dir(config_dir_root, only_dir=True)
+    for project in project_list:
+        project_dir = path_and_file_helper.join_file_path(config_dir_root, project)
+        maya_batch_config_file_list = path_and_file_helper.list_dir(
+            path_and_file_helper.join_file_path(
+                project_dir, 'mayabatch',
+                **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+            )
+            , file_filter_list=['*.yml', '*.yaml'], only_file=True
+        )
+        for maya_batch_config_file in maya_batch_config_file_list:
+            print(config_helper.load_config_json_from_file(maya_batch_config_file))
+
+    # print(project_list)
     config_helper = ConfigHelper(logger=path_and_file_helper.logger)
-    config_helper.load_config_json_from_file()
+    # config_helper.load_config_json_from_file()

@@ -79,7 +79,7 @@ install_electron:
 
 run_flask:
 	pushd engine ;\
-		python engine.py
+		venv/Scripts/python engine.py
 
 release:
 	@make set_nodejs_env command=' \

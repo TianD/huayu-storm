@@ -51,6 +51,7 @@ if __name__ == '__main__':
         __file__, '../../../../config',
         **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
     )
-    print(config_file_dir)
+    project_list = path_and_file_helper.list_dir(config_file_dir, only_dir=True)
+    print(project_list)
     config_helper = ConfigHelper(logger=path_and_file_helper.logger)
     config_helper.load_config_json_from_file()

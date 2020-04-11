@@ -46,5 +46,11 @@ class ConfigHelper(LogHelper):
 
 
 if __name__ == '__main__':
-    config_helper = ConfigHelper()
+    path_and_file_helper = PathAndFileHelper()
+    config_file_dir = path_and_file_helper.join_file_path(
+        __file__, '../../../../config',
+        **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+    )
+    print(config_file_dir)
+    config_helper = ConfigHelper(logger=path_and_file_helper.logger)
     config_helper.load_config_json_from_file()

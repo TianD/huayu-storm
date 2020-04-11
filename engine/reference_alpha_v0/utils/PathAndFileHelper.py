@@ -16,6 +16,9 @@ class PathAndFileHelper(LogHelper):
     def get_base_name(self, file_path):
         return os.path.basename(file_path)
 
+    def get_file_ext(self, file_path):
+        return file_path.split('.')[-1]
+
     def get_file_content(self, file_path):
         content = ''
         try:

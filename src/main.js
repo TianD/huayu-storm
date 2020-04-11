@@ -29,7 +29,7 @@ function createWindow() {
     width: 1280,
     height: 720,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
     },
     icon: path.join(__dirname, './favicon.ico')
   })
@@ -39,7 +39,7 @@ function createWindow() {
   win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   Menu.setApplicationMenu(null)
 

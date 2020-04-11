@@ -4,6 +4,8 @@ import { Table, Button, Upload, Select, Row, Col } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import {set_mayabatch_filters} from '../actions/mayabatch'
 
+const {remote } = window.electron;
+
 function mapStateToProps(state) {
     return {
         project_list: state.project_list,
@@ -74,14 +76,16 @@ class BatchTableForMaya extends Component {
         })
     }
 
-    upload(e) {
-        console.log(e)
+    async upload(e) {
+        let result = await remote.dialog.showOpenDialog({
+            properties: ['openFile'],
+        });
         let file_list = [];
-        for (let i = 0; i < e.fileList.length; i++) {
+        for (let i = 0; i < result.filePaths.length; i++) {
             let file_data = {
                 key: i,
                 id: i + 1,
-                name: e.fileList[i].name,
+                name: result.filePaths[i],
                 status: '就绪'
             }
             file_list.push(file_data)
@@ -108,19 +112,11 @@ class BatchTableForMaya extends Component {
                 <Row>
                     <Col span={6}>
                         <Select
-                            placeholder="选择项目"
                             options={this.props.project_list}
                             defaultValue={this.props.mayabatch_filters}
                             onChange={(value)=>{this.change_project(value)}}
                             style={{ margin: 12, width: 140 }} />
-                        <Upload
-                            showUploadList={false}
-                            customRequest={(e) => { }}
-                            onChange={(e) => { this.upload(e) }}
-                            multiple={true}>
-                            <Button style={{ margin: 12 }}
-                            >选择文件</Button>
-                        </Upload>
+                            <Button onClick={(e)=>{this.upload(e)}} style={{ margin: 12 }}>选择文件</Button>
                     </Col>
                     <Col span={6} offset={12}>
                         <Button style={{ margin: 12 }} onClick={()=>{this.clearlist()}}>清空</Button>

@@ -1,5 +1,4 @@
-render_type: redshift
-render_plugin_name: redshift4maya.mll
+basic_config: ___redshift_common.yml
 layer_setting:
     -   layer_name: LGT
         layer_setting:

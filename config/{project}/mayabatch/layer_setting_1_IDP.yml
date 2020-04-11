@@ -1,5 +1,4 @@
-render_type: redshift
-render_plugin_name: redshift4maya.mll
+basic_config: ___redshift_common.ymll
 layer_setting:
     -   layer_name: IDP
         layer_setting:

@@ -74,6 +74,20 @@ class ConfigHelper(LogHelper):
     def show_json(self, json_dict):
         print(json.dumps(json_dict, indent=2))
 
+    def get_json_value_with_key_path(self, key_path, default_value, json_dict):
+        try:
+            key_list = key_path.split('.')
+            if len(key_list) > 1:
+                value = self.get_json_value_with_key_path(
+                    '.'.join(key_list[1:]), default_value, json_dict.get(key_list[0])
+                )
+            else:
+                value = json_dict.get(key_list[0]) or default_value
+        except Exception as e:
+            self.error(e)
+            value = default_value
+        return value
+
 
 if __name__ == '__main__':
 
@@ -115,8 +129,35 @@ if __name__ == '__main__':
                 layer_setting_dict['basic_config'] = common_config_dict.get(layer_setting_basic_config_file_name, {})
                 all_layer_setting_dict[layer_setting_file_base_name] = layer_setting_dict
 
-    config_helper.show_json(all_layer_setting_dict)
+    # config_helper.show_json(all_layer_setting_dict)
 
-    # print(project_list)
-    config_helper = ConfigHelper(logger=path_and_file_helper.logger)
-    # config_helper.load_config_json_from_file()
+    # convert layer config to command list
+    layer_setting_command_dict = OrderedDict()
+    for layer_setting_dict in all_layer_setting_dict.values():
+        plugin_name = config_helper.get_json_value_with_key_path(
+            'basic_config.render_plugin_name', '', layer_setting_dict
+        )
+        render_setting_command_arg_dict = config_helper.get_json_value_with_key_path(
+            'basic_config.render_setting', {}, layer_setting_dict
+        )
+
+        print('----basic--------------')
+        for render_setting_command_arg_item in render_setting_command_arg_dict.items():
+            print('setAttr {} {}'.format(*render_setting_command_arg_item))
+
+        layer_setting_list = config_helper.get_json_value_with_key_path(
+            'layer_setting', [], layer_setting_dict
+        )
+
+        layer_render_setting_command_arg_dict = OrderedDict()
+        for layer_setting in layer_setting_list:
+            layer_name = config_helper.get_json_value_with_key_path(
+                'layer_name', '', layer_setting
+            )
+            layer_render_setting_command_arg_dict = config_helper.get_json_value_with_key_path(
+                'layer_setting.render_setting', {}, layer_setting
+            )
+
+            print('----layer------{}--------'.format(layer_name))
+            for layer_render_setting_command_arg_item in layer_render_setting_command_arg_dict.items():
+                print('setAttr {} {}'.format(*layer_render_setting_command_arg_item))

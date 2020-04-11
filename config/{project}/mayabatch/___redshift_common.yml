@@ -27,8 +27,12 @@ render_setting:
     #           renderable camera:
     "perspShape.renderable": 1 # "perspShape.rnd"
     #       resolution [row layout]
-    #           presets: # this change defaultResolution.width/height/device aspect ratio / pixel aspect ratio
-    # todo
+    #           presets: # this change defaultResolution.width / height /device aspect ratio / pixel aspect ratio
+    # { hd 1080 : 1920 1080 1.778 1.00 }
+    "defaultResolution.width": 1920
+    "defaultResolution.height": 1080
+    "defaultResolution.deviceAspectRatio": 1.778
+    "defaultResolution.pixelAspect": 1.00
     #       misc [row layout]
     #           enable default light
     "defaultRenderGlobals.enableDefaultLight": 0

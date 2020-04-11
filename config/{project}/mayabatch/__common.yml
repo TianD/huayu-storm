@@ -1,0 +1,67 @@
+render_type: redshift
+render_plugin_name: redshift4maya.mll
+render_setting:
+    ### common setting [tab]
+    #       file output [row layout ]
+    #           file_name_prefix: ""
+    "defaultRenderGlobals.ifp": ""
+    #           image format: ""
+    "redshiftOptions.imageFormat": "" #0,1,2,3,4
+    #           bits per channel: ""
+    "redshiftOptions.exrBits": 32 #16,32
+    #           compression: default
+    "redshiftOptions.exrCompression": 0 #0,1,2,3,4
+    #           force combine beauty and AOVS into single file:
+    "redshiftOptions.exrForceMultilayer": 0 #0,1 only valid for exr
+    #           animation:
+    "defaultRenderGlobals.animation": 1
+    #           start frame:
+    "defaultRenderGlobals.fs": 1
+    #           end frame:
+    "defaultRenderGlobals.ef": 1
+    #           by frame:
+    "defaultRenderGlobals.bfs": 1
+    #           frame padding:
+    "defaultRenderGlobals.extensionPadding": 4
+    #       renderable camera [row layout]
+    #           renderable camera:
+    "perspShape.renderable": 1 # "perspShape.rnd"
+    #       resolution [row layout]
+    #           presets:
+    # todo
+    #       misc [row layout]
+    #           enable default light
+    "defaultRenderGlobals.enableDefaultLight": 0
+    ### output [tab]
+    #       unified sampling [row layout]
+    #           min samples:
+    "redshiftOptions.unifiedMinSamples": 4
+    #           max samples:
+    "redshiftOptions.unifiedMaxSamples": 16
+    #           adaptive error threshold:
+    "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.010
+    ### opt [tab]
+    #       maximum trace depth [row layout]
+    #           reflection:
+    "redshiftOptions.reflectionMaxTraceDepth": 4
+    #           refraction:
+    "redshiftOptions.refractionMaxTraceDepth": 6
+    #           combined:
+    "redshiftOptions.combinedMaxTraceDepth": 6
+    ### GI [tab]
+    #       general [row layout]
+    #           primary gi engine:
+    "redshiftOptions.primaryGIEngine": 0 #0,1,2,,3,4
+    #           secondary gi engine:
+    "redshiftOptions.secondaryGIEngine": 0
+    #       brute force gi [row layout]
+    #           num rays:
+    "redshiftOptions.bruteForceGINumRays": 16
+    ### AOV [tab]
+    #       general [row layout]
+    #           mode:
+    "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+    ### System [tab]
+    #       Material Override [row layout]
+    #           enable:
+    "redshiftOptions.materialOverrideEnable": 0 #0,1

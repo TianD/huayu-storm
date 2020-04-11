@@ -3,7 +3,7 @@ import { Cascader, List } from 'antd';
 import { connect } from 'react-redux';
 import MyCard from './MyCard';
 import DetailView from './DetailView';
-import {set_overview_filters} from '../actions/overview_filters'
+import {set_overview_filters} from '../actions/overview'
 
 
 function mapStateToProps(state) {

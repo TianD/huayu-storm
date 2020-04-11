@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { project_list, get_project_list_failed, get_project_list_loading } from './project_list';
-import { overview_filters } from './overview_filters';
-import { mayabatch_filters } from './mayabatch_filters';
-import { nukebatch_filters, nukebatch_taskid } from './nukebatch_filters';
-import { seq2movbatch_filters } from './seq2movbatch_filters';
+import { overview_filters } from './overview';
+import { mayabatch_filters } from './mayabatch';
+import { nukebatch_filters, nukebatch_taskid } from './nukebatch';
+import { seq2movbatch_filters } from './seq2movbatch';
 
 const rootReducer = combineReducers({
     project_list,

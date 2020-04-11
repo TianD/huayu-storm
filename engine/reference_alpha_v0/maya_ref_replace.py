@@ -1,7 +1,6 @@
 # coding=utf8
 
 
-import os
 import re
 
 import maya.cmds as maya_cmds
@@ -13,14 +12,7 @@ import LogHelper
 reload(LogHelper)
 
 from LogHelper import LogHelper
-
-
-class PathHelper(LogHelper):
-    def __init__(self, logger=None):
-        LogHelper.__init__(self, logger)
-
-    def get_base_name(self, file_path):
-        return os.path.basename(file_path)
+from utils.PathAndFileHelper import PathAndFileHelper
 
 
 class SceneHelper(LogHelper):
@@ -29,7 +21,7 @@ class SceneHelper(LogHelper):
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
-        self.path_helper = PathHelper(logger)
+        self.path_helper = PathAndFileHelper(logger)
 
         # scene info
         self.episode = ''

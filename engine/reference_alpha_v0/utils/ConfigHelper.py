@@ -2,6 +2,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+from collections import OrderedDict
+
 import yaml
 
 from LogHelper import LogHelper
@@ -13,12 +15,36 @@ class YamlHelper(LogHelper):
         super(YamlHelper, self).__init__(logger=logger)
         self.path_and_file_helper = PathAndFileHelper(logger=logger)
 
-    def load_file_to_json(self, yaml_file_path):
-        yaml_file_content = self.path_and_file_helper.get_file_content(yaml_file_path)
+    def ordered_yaml_load(self, yaml_path, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
+        class OrderedLoader(Loader):
+            pass
 
+        def construct_mapping(loader, node):
+            loader.flatten_mapping(node)
+            return object_pairs_hook(loader.construct_pairs(node))
+
+        OrderedLoader.add_constructor(
+            yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+            construct_mapping)
+        with open(yaml_path) as stream:
+            return yaml.load(stream, OrderedLoader)
+
+    def ordered_yaml_dump(self, data, stream=None, Dumper=yaml.SafeDumper, **kwds):
+        class OrderedDumper(Dumper):
+            pass
+
+        def _dict_representer(dumper, data):
+            return dumper.represent_mapping(
+                yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+                data.items())
+
+        OrderedDumper.add_representer(OrderedDict, _dict_representer)
+        return yaml.dump(data, stream, OrderedDumper, **kwds)
+
+    def load_file_to_json(self, yaml_file_path):
         data = {}
         try:
-            data = yaml.load(yaml_file_content)
+            data = self.ordered_yaml_load(yaml_file_path)
         except Exception as e:
             self.error(e)
 

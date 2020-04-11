@@ -64,6 +64,7 @@ class PathAndFileHelper(LogHelper):
             all_path_list = os.listdir(dir_path)
 
             for path in all_path_list:
+                __origin_path = path
                 path = self.join_file_path(dir_path, path)
                 current_path = ''
                 if only_dir and self.is_dir(path):
@@ -79,7 +80,7 @@ class PathAndFileHelper(LogHelper):
                     # filter list enabled
                     if len(file_filter_list) > 0:
                         for file_filter in file_filter_list:
-                            matched_list = fnmatch.filter([current_path], file_filter)
+                            matched_list = fnmatch.filter([__origin_path], file_filter)
                             if len(matched_list) > 0:
                                 matched = True
                                 break

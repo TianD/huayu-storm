@@ -86,7 +86,7 @@ class Overview extends Component {
                     >
                     </List>
                 </div>
-                {/* <DetailView shot={current_shot} visible={visible} /> */}
+                <DetailView shot={current_shot} visible={visible} changeVisible={this.changeVisible}/>
             </div>
         )
     }

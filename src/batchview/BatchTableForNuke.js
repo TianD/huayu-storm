@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Table, Row, Col, Radio, Cascader, Button } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
+
+
+function mapStateToProps(state) {
+    return {
+        project_list: state.project_list,
+        get_project_list_failed: state.get_project_list_failed,
+        get_project_list_loading: state.get_project_list_loading
+    }
+}
+
 
 const dataSource = [
     {
@@ -67,7 +78,10 @@ class BatchTableForNuke extends Component {
             <div>
                 <Row>
                     <Col span={8}>
-                        <Cascader placeholder="选择项目" style={{ margin: 12 }}></Cascader>
+                        <Cascader
+                            placeholder="选择项目"
+                            options={this.props.project_list}
+                            style={{ margin: 12 }} />
                     </Col>
                     <Col span={8}>
                         <Radio.Group value={1}>
@@ -89,4 +103,4 @@ class BatchTableForNuke extends Component {
     }
 }
 
-export default BatchTableForNuke
+export default connect(mapStateToProps)(BatchTableForNuke)

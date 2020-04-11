@@ -1,7 +1,6 @@
-import React, {Component} from 'react';
-import {Modal, Table, message} from 'antd';
+import React, { Component } from 'react';
+import { Modal, Table, message } from 'antd';
 import copy from 'copy-to-clipboard';
-import {ModalVisibleContext} from '../context';
 import api from '../api'
 
 const columns = [
@@ -31,20 +30,15 @@ const columns = [
 
 class DetailView extends Component {
     state = {
-        visible: false,
         dataSource: [],
     };
 
     handleOk(e) {
-        this.setState({
-            visible: false,
-        });
+        this.props.changeVisible(false);
     };
 
     handleCancel(e) {
-        this.setState({
-            visible: false,
-        });
+        this.props.changeVisible(false);
     };
 
     copy2clipboard(e) {
@@ -63,57 +57,52 @@ class DetailView extends Component {
     }
 
     render() {
-        let {dataSource} = this.state
+        let { dataSource } = this.state
         return (
-            <ModalVisibleContext.Consumer>
-                {({visible, changeVisible}) => (
-                    <Modal
-                        title={this.props.shot['label']}
-                        width={800}
-                        height={'70%'}
-                        visible={visible}
-                        closable={false}
-                        centered={true}
-                        onOk={
-                            () => {
-                                changeVisible(false)
-                            }
-                        }
-                        onCancel={
-                            () => {
-                                changeVisible(false)
-                            }
-                        }
+            <Modal
+                title={this.props.shot['label']}
+                width={800}
+                height={'70%'}
+                visible={this.props.visible}
+                closable={false}
+                centered={true}
+                onOk={
+                    () => {
+                        this.props.changeVisible(false)
+                    }
+                }
+                onCancel={
+                    () => {
+                        this.props.changeVisible(false)
+                    }
+                }
+            >
+                <div>
+                    <div
+                        style={{ textAlign: "center" }}
                     >
-                        <div>
-                            <div
-                                style={{textAlign: "center"}}
-                            >
-                                <img
-                                    style={{width: "auto", maxHeight:360, height: "auto", maxWidth: 700}}
-                                    alt="example"
-                                    src={api.get_thumbnail_url(this.props.shot)}
-                                />
-                            </div>
+                        <img
+                            style={{ width: "auto", maxHeight: 360, height: "auto", maxWidth: 700 }}
+                            alt="example"
+                            src={api.get_thumbnail_url(this.props.shot)}
+                        />
+                    </div>
 
-                            <Table
-                                columns={columns}
-                                dataSource={dataSource}
-                                pagination={false}
-                                onRow={record => {
-                                    return {
-                                        onClick: (e) => {
-                                            this.copy2clipboard(record)
-                                        }, // 点击行
-                                    }
-                                }
-                                }
-                            />
-                        </div>
-
-                    </Modal>
-                )}
-            </ModalVisibleContext.Consumer>
+                    <Table
+                        columns={columns}
+                        dataSource={dataSource}
+                        pagination={false}
+                        onRow={record => {
+                            return {
+                                onClick: (e) => {
+                                    this.copy2clipboard(record)
+                                }, // 点击行
+                            }
+                        }
+                        }
+                    />
+                </div>
+            </Modal>
         )
     }
 }

@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Table, Upload, Button, Select, Col, Row } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
+
+function mapStateToProps(state) {
+    return {
+        project_list:state.project_list,
+        get_project_list_failed: state.get_project_list_failed,
+        get_project_list_loading: state.get_project_list_loading
+    }
+}
 
 const dataSource = [
     {
@@ -56,7 +65,10 @@ class BatchTableForSeqToMov extends Component {
             <div>
                 <Row>
                     <Col span={8}>
-                        <Select placeholder="选择项目" style={{ margin: 12 }}></Select>
+                        <Select 
+                        placeholder="选择项目" 
+                        options={this.props.project_list}
+                        style={{ margin: 12, width:140 }} />
                         <Upload
                             showUploadList={false}>
                             <Button style={{ margin: 12 }}>选择文件</Button>
@@ -78,4 +90,4 @@ class BatchTableForSeqToMov extends Component {
     }
 }
 
-export default BatchTableForSeqToMov
+export default connect(mapStateToProps)(BatchTableForSeqToMov)

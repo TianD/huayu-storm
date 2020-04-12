@@ -212,9 +212,10 @@ class ReferenceExporter(ReferenceHelper):
         #   override render layer
         # todo , if layer in [ IDP ] , create idp layer
         #   override render layer
-        #   BGCLR -> [aov] Puzzle Matte , id : 1
-        #   CHCLR -> Puzzle Matte , id : 2
-        #   PRO -> Puzzle Matte , id : 3
+        #   Puzzle Matte , rename to idp
+        #       BGCLR -> [aov]  , id : 1 [R]
+        #       CHCLR -> Puzzle Matte , id : 2 [G]
+        #       PRO -> Puzzle Matte , id : 3 [B]
         # todo , if layer in [ LGT ]
         #   override render layer
         for override_layer_name in ['BGColor', 'CHColor']:

@@ -53,7 +53,8 @@ class SceneHelper(LogHelper):
         else:
             self.error('no enough match item for episode_scene_shot')
 
-    def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='', create_if_not_existed=True):
+    def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='',
+                                        create_if_not_existed=True):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
@@ -68,7 +69,8 @@ class SceneHelper(LogHelper):
                 render_settings_collection_existed = True
                 break
         if not render_settings_collection_existed:
-            legacy_render_layer = maya_cmds.listConnections('{}.{}'.format(input_render_layer_name, 'legacyRenderLayer'))[0]
+            legacy_render_layer = \
+                maya_cmds.listConnections('{}.{}'.format(input_render_layer_name, 'legacyRenderLayer'))[0]
             sys.modules['maya.app.renderSetup.model.renderSetup'].instance(). \
                 switchToLayerUsingLegacyName(legacy_render_layer)
             override_utils.createAbsoluteOverride(node_name, node_attr)
@@ -105,14 +107,15 @@ class SceneHelper(LogHelper):
 
     DEFAULT_RENDER_LAYER_NAME = 'masterLayer'
 
-    def set_attr_with_command_batch_list(self, command_batch_list, override_render_layer_name=DEFAULT_RENDER_LAYER_NAME):
+    def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list,
+                                                    override_render_layer_name=DEFAULT_RENDER_LAYER_NAME):
         if override_render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
-            for command_arg in command_batch_list:
-                attr_key, attr_value = command_arg
+            for command_param_list in command_param_list_batch_list:
+                attr_key, attr_value = command_param_list
                 maya_cmds.setAttr(attr_key, attr_value)
         else:
-            for command_arg in command_batch_list:
-                attr_key, attr_value = command_arg
+            for command_param_list in command_param_list_batch_list:
+                attr_key, attr_value = command_param_list
                 self.__set_override_for_render_layer(
                     attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
                 )
@@ -168,11 +171,12 @@ class ReferenceExporter(ReferenceHelper):
     def post_reference(self, reference_source, reference_target):
         super(ReferenceExporter, self).post_reference(reference_source, reference_target)
         # todo , set common render setting
-        self.scene_helper.set_attr_with_command_batch_list([('defaultResolution.width', 1920)])
+        self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
         # todo , set layer override setting
         for override_layer_name in ['BGColor', 'CHColor']:
-            self.scene_helper.set_attr_with_command_batch_list(
-                [('defaultResolution.width', 1920)], override_render_layer_name=override_layer_name
+            command_param_list = [('defaultResolution.width', 1920)]
+            self.scene_helper.set_attr_with_command_param_list_batch_list(
+                command_param_list, override_render_layer_name=override_layer_name
             )
 
         self.debug('set render setting', reference_source, reference_target)

@@ -7,6 +7,7 @@ import os
 import re
 import sys
 
+import subprocess
 import yaml
 from flask import Flask, send_file, request
 from flask_cors import CORS
@@ -29,8 +30,6 @@ app = Flask(__name__)
 CORS(app)
 
 config_dir = os.path.join(os.path.dirname(__file__), '../config')
-
-config_yaml_path = os.path.join(os.path.dirname(__file__), '../config/dir_template.yml')
 
 DEFAULT_IMAGE = os.path.join(os.path.dirname(__file__), '../public/default.png')
 
@@ -92,6 +91,7 @@ def get_project_list():
                             'episode': ek,
                             'sequence': qk,
                             'config': sv,
+                            'status': 'Ready',
                             'preview': get_first_image_of_dir(shot=sk,
                                                               project=pk,
                                                               episode=ek,
@@ -153,6 +153,37 @@ def get_detail():
             dataSource.append(
                 {'key': str(i), 'type': key, 'path': remainder, 'dir': key_dir, 'index': j, 'rowSpan': length})
     return json.dumps(dataSource)
+
+
+@app.route('/api/nuke_setup_process', methods=['POST'])
+def nuke_setup_process():
+    shot_info = json.loads(request.data)
+    project = shot_info.get('project')
+    nuke_config_path = os.path.join(config_dir, project, 'nukebatch/config.yml')
+    with open(nuke_config_path, 'r') as f:
+        nuke_config = yaml.load(f)
+    nuke_exe = nuke_config.get('nuke_exe') or '{nuke_exe}'
+    nuke_template = nuke_config.get('nuke_template') or '{nuke_template}'
+    py_cmd = nuke_config.get('py_cmd') or '{py_cmd}'
+    nuke_data = nuke_config.get('data') or {}
+    nuke_cmd = nuke_config.get('nuke_cmd')
+    image_config = shot_info.get('config', {}).get('images')
+    image_path = os.path.join(image_config.get('dir'), image_config.get('file')).replace('\\', '/')
+    new_nuke_data = {}
+    for key, value in nuke_data.items():
+        if key.endswith('_layer'):
+            format_image_path = fmt.format(image_path, layer=value, **shot_info)
+            new_nuke_data.setdefault('%s_path' % key, format_image_path)
+        else:
+            new_nuke_data.setdefault(key, value)
+
+    format_command = fmt.format(nuke_cmd,
+                                nuke_exe=nuke_exe,
+                                nuke_template=nuke_template,
+                                py_cmd=py_cmd,
+                                **new_nuke_data)
+    result = subprocess.call(format_command, shell=True)
+    return json.dumps({'result': result})
 
 
 if __name__ == '__main__':

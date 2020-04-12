@@ -1,18 +1,18 @@
-lr:
+lr: # maya layer file path
   dir: E:/huayu-storm/TTT/lr/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_{layer}_{version}.mb
-compositing:
+compositing:  # nuke output path
   dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.{ext}
-images:
+images:  # maya layer output path
   dir: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
-  file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg
-mov:
+  file: ttt_{episode}_{sequence}_{shot}_l3Color_lr_{version}_{layer}.%04d.jpg
+mov:  # final mov path
   dir: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.mov
-nuke:
+nuke: # nuke project path
   dir: E:/huayu-storm/TTT/nuke/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.nk
-an:
+an: # animation mov path
   dir: E:/huayu-storm/TTT/an
   file: ttt_{episode}_{sequence}_{shot}_an_{version}.mov

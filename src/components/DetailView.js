@@ -48,7 +48,7 @@ class DetailView extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (JSON.stringify(this.props) !== JSON.stringify(nextProps)) {
-            api.get_detail(nextProps.shot, (response) => {
+            api.get_detail(nextProps.shot).then((response) => {
                 this.setState({
                     dataSource: response.data
                 })

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Upload, Select, Row, Col } from 'antd';
+import { Table, Button, Select, Row, Col } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import {set_mayabatch_filters} from '../actions/mayabatch'
 

@@ -14,8 +14,12 @@ class Api {
         return axios.defaults.baseURL + "/get_thumbnail?preview=" + shot["preview"]
     }
 
-    get_detail(shot, callback) {
-        axios.post('/get_detail', shot).then(callback)
+    get_detail(shot) {
+        return axios.post('/get_detail', shot)
+    }
+
+    nuke_setup_process(shot) {
+        return axios.post('/nuke_setup_process', shot)
     }
 }
 

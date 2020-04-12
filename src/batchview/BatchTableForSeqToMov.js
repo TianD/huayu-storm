@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Upload, Button, Select, Col, Row } from 'antd';
+import { Table, Button, Select, Col, Row } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import { set_seq2movbatch_filters } from '../actions/seq2movbatch'
 

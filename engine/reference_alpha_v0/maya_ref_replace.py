@@ -216,6 +216,14 @@ class ReferenceExporter(ReferenceHelper):
         #       BGCLR -> [aov]  , id : 1 [R]
         #       CHCLR -> Puzzle Matte , id : 2 [G]
         #       PRO -> Puzzle Matte , id : 3 [B]
+        #           rsCreateAov -type  "Puzzle Matte";
+        #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+        #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
+        #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
+        #           setAttr "rsAov_PuzzleMatte.redId" 1;
+        #           setAttr "rsAov_PuzzleMatte.greenId" 2;
+        #           setAttr "rsAov_PuzzleMatte.blueId" 3;
+        #           setAttr "rsAov_PuzzleMatte.mode" 1;
         # todo , if layer in [ LGT ]
         #   override render layer
         for override_layer_name in ['BGColor', 'CHColor']:

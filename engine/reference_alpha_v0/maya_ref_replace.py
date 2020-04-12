@@ -25,10 +25,10 @@ class SceneHelper(LogHelper):
 
         # scene info
         self.episode = ''
-        self.scene = ''
+        self.sequence = ''
         self.shot = ''
 
-    def get_episode_scene_shot_from_filename(self):
+    def get_episode_sequence_shot_from_filename(self):
         scene_file_path = maya_cmds.file(query=1, exn=1)
         scene_file_name = self.path_helper.get_base_name(scene_file_path)
 
@@ -44,7 +44,7 @@ class SceneHelper(LogHelper):
                 valid_match_list = []
             if len(valid_match_list) >= 3:
                 self.episode = valid_match_list[0]
-                self.scene = valid_match_list[1]
+                self.sequence = valid_match_list[1]
                 self.shot = valid_match_list[2]
             else:
                 self.error('no enough match item for episode_scene_shot')

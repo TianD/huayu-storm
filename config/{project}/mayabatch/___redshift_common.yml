@@ -4,7 +4,7 @@ render_setting:
     ### common setting [tab]
     #       file output [row layout ]
     #           file_name_prefix: ""
-    "defaultRenderGlobals.ifp": "EP{episode:03}/Q{scene:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>"
+    "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>"
     #           image format: ""
     "redshiftOptions.imageFormat": 1 #0,1,2,3,4   { 1: OpenEXR }
     #           bits per channel: ""

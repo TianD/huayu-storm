@@ -107,10 +107,15 @@ class SceneHelper(LogHelper):
 
     def set_attr_with_command_batch_list(self, command_batch_list, override_layer_name=DEFAULT_RENDER_LAYER_NAME):
         if override_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
-            pass
+            for command_arg in command_batch_list:
+                attr_key, attr_value = command_arg
+                maya_cmds.setAttr(attr_key, attr_value)
         else:
-            # self.__set_override_for_render_layer()
-            pass
+            for command_arg in command_batch_list:
+                attr_key, attr_value = command_arg
+                self.__set_override_for_render_layer(
+                    attr_key, attr_value, input_layer_name=override_layer_name, create_if_not_existed=True
+                )
 
 
 class ReferenceHelper(LogHelper):

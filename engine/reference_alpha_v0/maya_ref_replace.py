@@ -168,20 +168,64 @@ class ReferenceHelper(LogHelper):
 
 
 class ReferenceExporter(ReferenceHelper):
-    def post_reference(self, reference_source, reference_target):
-        super(ReferenceExporter, self).post_reference(reference_source, reference_target)
+    LAYER_MASTER = 'masterLayer'
+    LAYER_BG_COLOR = 'BGCLR'
+    LAYER_CHR_COLOR = 'CHCLR'
+    LAYER_SKY = 'SKY'
+    LAYER_IDP = 'IDP'
+    LAYER_LGT = 'LGT'
+
+    LAYER_LIST_OF_ALL = [
+        LAYER_MASTER,
+        LAYER_BG_COLOR,
+        LAYER_CHR_COLOR,
+        LAYER_SKY,
+        LAYER_IDP,
+        LAYER_LGT,
+    ]
+
+    def layer_process(self, layer_name):
+        if layer_name in ReferenceExporter.LAYER_LIST_OF_ALL:
+            if layer_name == ReferenceExporter.LAYER_MASTER:
+                pass
+            elif layer_name == ReferenceExporter.LAYER_BG_COLOR:
+                # todo import bg color file
+                pass
+            elif layer_name == ReferenceExporter.LAYER_CHR_COLOR:
+                pass
+            elif layer_name == ReferenceExporter.LAYER_SKY:
+                # todo import sky file
+                pass
+            elif layer_name == ReferenceExporter.LAYER_IDP:
+                # todo set idp for chr / bg
+                pass
+            elif layer_name == ReferenceExporter.LAYER_LGT:
+                # todo import lgt file
+                pass
+        else:
+            self.error('not valid layer : {}'.format(layer_name))
+
+    def export_all(self):
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
-        # todo , set layer override setting
+        # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
+        #   override render layer
+        # todo , if layer in [ IDP ] , create idp layer
+        #   override render layer
+        #   BGCLR -> [aov] Puzzle Matte , id : 1
+        #   CHCLR -> Puzzle Matte , id : 2
+        #   PRO -> Puzzle Matte , id : 3
+        # todo , if layer in [ LGT ]
+        #   override render layer
         for override_layer_name in ['BGColor', 'CHColor']:
             command_param_list = [('defaultResolution.width', 1920)]
             self.scene_helper.set_attr_with_command_param_list_batch_list(
                 command_param_list, override_render_layer_name=override_layer_name
             )
 
-        self.debug('set render setting', reference_source, reference_target)
+        # self.debug('set render setting', reference_source, reference_target)
         # todo , export reference file
-        self.debug('export reference file', reference_source, reference_target)
+        # self.debug('export reference file', reference_source, reference_target)
 
 
 if __name__ == '__main__':

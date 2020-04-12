@@ -48,3 +48,18 @@ layer_setting:
                 "redshiftOptions.refractionMaxTraceDepth": 6
                 #           combined:
                 "redshiftOptions.combinedMaxTraceDepth": 6
+    -   layer_name: SKY
+        layer_setting:
+            render_setting:
+                ### output [tab]
+                #       unified sampling [row layout]
+                #           min samples:
+                "redshiftOptions.unifiedMinSamples": 32
+                #           max samples:
+                "redshiftOptions.unifiedMaxSamples": 256
+                #           adaptive error threshold:
+                "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
+                ### AOV [tab]
+                #       general [row layout]
+                #           mode:
+                "redshiftOptions.aovGlobalEnableMode": 0 #0,1

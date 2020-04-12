@@ -2,7 +2,9 @@
 
 
 import re
+import sys
 
+import maya.app.renderSetup.views.overrideUtils as override_utils
 import maya.cmds as maya_cmds
 import pymel.core as pymel_core
 
@@ -25,10 +27,10 @@ class SceneHelper(LogHelper):
 
         # scene info
         self.episode = ''
-        self.scene = ''
+        self.sequence = ''
         self.shot = ''
 
-    def get_episode_scene_shot_from_filename(self):
+    def get_episode_sequence_shot_from_filename(self):
         scene_file_path = maya_cmds.file(query=1, exn=1)
         scene_file_name = self.path_helper.get_base_name(scene_file_path)
 
@@ -44,12 +46,79 @@ class SceneHelper(LogHelper):
                 valid_match_list = []
             if len(valid_match_list) >= 3:
                 self.episode = valid_match_list[0]
-                self.scene = valid_match_list[1]
+                self.sequence = valid_match_list[1]
                 self.shot = valid_match_list[2]
             else:
                 self.error('no enough match item for episode_scene_shot')
         else:
             self.error('no enough match item for episode_scene_shot')
+
+    def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='',
+                                        create_if_not_existed=True):
+        # layer_name_input = layer_name_input  # "renderSetupLayer2"
+        # attr_key = attr_key  # 'defaultResolution.width'
+        # attr_value = value  # 2000
+
+        node_name, node_attr = attr_key.split('.')
+
+        render_settings_collection_list = maya_cmds.ls(type='renderSettingsCollection')
+        render_settings_collection_existed = False
+        for render_settings_collection in render_settings_collection_list:
+            render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
+            if render_setup_layer == input_render_layer_name:
+                render_settings_collection_existed = True
+                break
+        if not render_settings_collection_existed:
+            legacy_render_layer = \
+                maya_cmds.listConnections('{}.{}'.format(input_render_layer_name, 'legacyRenderLayer'))[0]
+            sys.modules['maya.app.renderSetup.model.renderSetup'].instance(). \
+                switchToLayerUsingLegacyName(legacy_render_layer)
+            override_utils.createAbsoluteOverride(node_name, node_attr)
+
+        for render_settings_collection in render_settings_collection_list:
+            render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
+            if render_setup_layer == input_render_layer_name:
+                override_node_list = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'enabled'))
+
+                set_ok = False
+                for override_node in override_node_list:
+                    override_node_source_node_name = maya_cmds.getAttr('{}.targetNodeName'.format(override_node))
+                    override_node_source_node_attr = maya_cmds.getAttr('{}.attribute'.format(override_node))
+                    if True and \
+                            override_node_source_node_name == node_name and \
+                            override_node_source_node_attr == node_attr:
+                        try:
+                            self.debug(
+                                maya_cmds.getAttr("%s.attribute" % override_node),
+                                maya_cmds.getAttr("%s.attrValue" % override_node)
+                            )
+                            self.debug(
+                                maya_cmds.setAttr("%s.attrValue" % override_node, attr_value)
+                            )
+                            set_ok = True
+                        except:
+                            pass
+                if not set_ok and create_if_not_existed:
+                    self.debug(node_name, node_attr)
+                    override_utils.createAbsoluteOverride(node_name, node_attr)
+                    self.__set_override_for_render_layer(
+                        attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
+                    )
+
+    DEFAULT_RENDER_LAYER_NAME = 'masterLayer'
+
+    def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list,
+                                                    override_render_layer_name=DEFAULT_RENDER_LAYER_NAME):
+        if override_render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
+            for command_param_list in command_param_list_batch_list:
+                attr_key, attr_value = command_param_list
+                maya_cmds.setAttr(attr_key, attr_value)
+        else:
+            for command_param_list in command_param_list_batch_list:
+                attr_key, attr_value = command_param_list
+                self.__set_override_for_render_layer(
+                    attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
+                )
 
 
 class ReferenceHelper(LogHelper):
@@ -63,6 +132,7 @@ class ReferenceHelper(LogHelper):
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
+        self.scene_helper = SceneHelper(logger=logger)
 
     def __reference_filter(self):
         return []
@@ -98,12 +168,73 @@ class ReferenceHelper(LogHelper):
 
 
 class ReferenceExporter(ReferenceHelper):
-    def post_reference(self, reference_source, reference_target):
-        super(ReferenceExporter, self).post_reference(reference_source, reference_target)
-        # todo , set render setting
-        self.debug('set render setting', reference_source, reference_target)
+    LAYER_MASTER = 'masterLayer'
+    LAYER_BG_COLOR = 'BGCLR'
+    LAYER_CHR_COLOR = 'CHCLR'
+    LAYER_SKY = 'SKY'
+    LAYER_IDP = 'IDP'
+    LAYER_LGT = 'LGT'
+
+    LAYER_LIST_OF_ALL = [
+        LAYER_MASTER,
+        LAYER_BG_COLOR,
+        LAYER_CHR_COLOR,
+        LAYER_SKY,
+        LAYER_IDP,
+        LAYER_LGT,
+    ]
+
+    def layer_process(self, layer_name):
+        if layer_name in ReferenceExporter.LAYER_LIST_OF_ALL:
+            if layer_name == ReferenceExporter.LAYER_MASTER:
+                pass
+            elif layer_name == ReferenceExporter.LAYER_BG_COLOR:
+                # todo import bg color file
+                pass
+            elif layer_name == ReferenceExporter.LAYER_CHR_COLOR:
+                pass
+            elif layer_name == ReferenceExporter.LAYER_SKY:
+                # todo import sky file
+                pass
+            elif layer_name == ReferenceExporter.LAYER_IDP:
+                # todo set idp for chr / bg
+                pass
+            elif layer_name == ReferenceExporter.LAYER_LGT:
+                # todo import lgt file
+                pass
+        else:
+            self.error('not valid layer : {}'.format(layer_name))
+
+    def export_all(self):
+        # todo , set common render setting
+        self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
+        # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
+        #   override render layer
+        # todo , if layer in [ IDP ] , create idp layer
+        #   override render layer
+        #   Puzzle Matte , rename to idp
+        #       BGCLR -> [aov]  , id : 1 [R]
+        #       CHCLR -> Puzzle Matte , id : 2 [G]
+        #       PRO -> Puzzle Matte , id : 3 [B]
+        #           rsCreateAov -type  "Puzzle Matte";
+        #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+        #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
+        #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
+        #           setAttr "rsAov_PuzzleMatte.redId" 1;
+        #           setAttr "rsAov_PuzzleMatte.greenId" 2;
+        #           setAttr "rsAov_PuzzleMatte.blueId" 3;
+        #           setAttr "rsAov_PuzzleMatte.mode" 1;
+        # todo , if layer in [ LGT ]
+        #   override render layer
+        for override_layer_name in ['BGColor', 'CHColor']:
+            command_param_list = [('defaultResolution.width', 1920)]
+            self.scene_helper.set_attr_with_command_param_list_batch_list(
+                command_param_list, override_render_layer_name=override_layer_name
+            )
+
+        # self.debug('set render setting', reference_source, reference_target)
         # todo , export reference file
-        self.debug('export reference file', reference_source, reference_target)
+        # self.debug('export reference file', reference_source, reference_target)
 
 
 if __name__ == '__main__':

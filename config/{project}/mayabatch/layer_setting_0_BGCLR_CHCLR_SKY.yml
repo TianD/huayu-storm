@@ -1,6 +1,6 @@
 basic_config: ___redshift_common.yml
 layer_setting:
-    -   layer_name: BGcolor
+    -   layer_name: BGCLR
         layer_setting:
             render_setting:
                 ### output [tab]
@@ -20,7 +20,7 @@ layer_setting:
                 #       brute force gi [row layout]
                 #           num rays:
                 "redshiftOptions.bruteForceGINumRays": 512
-    -   layer_name: CHcolor
+    -   layer_name: CHCLR
         layer_setting:
             render_setting:
                 ### output [tab]
@@ -48,3 +48,18 @@ layer_setting:
                 "redshiftOptions.refractionMaxTraceDepth": 6
                 #           combined:
                 "redshiftOptions.combinedMaxTraceDepth": 6
+    -   layer_name: SKY
+        layer_setting:
+            render_setting:
+                ### output [tab]
+                #       unified sampling [row layout]
+                #           min samples:
+                "redshiftOptions.unifiedMinSamples": 32
+                #           max samples:
+                "redshiftOptions.unifiedMaxSamples": 256
+                #           adaptive error threshold:
+                "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
+                ### AOV [tab]
+                #       general [row layout]
+                #           mode:
+                "redshiftOptions.aovGlobalEnableMode": 0 #0,1

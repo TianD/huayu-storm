@@ -4,7 +4,7 @@ render_setting:
     ### common setting [tab]
     #       file output [row layout ]
     #           file_name_prefix: ""
-    "defaultRenderGlobals.ifp": "EP129/Q001/S001/<RenderLayer>/<Scene>_<RenderLayer>"
+    "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>"
     #           image format: ""
     "redshiftOptions.imageFormat": 1 #0,1,2,3,4   { 1: OpenEXR }
     #           bits per channel: ""
@@ -25,7 +25,8 @@ render_setting:
     "defaultRenderGlobals.extensionPadding": 4
     #       renderable camera [row layout]
     #           renderable camera:
-    "perspShape.renderable": 1 # "perspShape.rnd"
+    # todo select in file , no need here
+    # "perspShape.renderable": 1 # "perspShape.rnd"
     #       resolution [row layout]
     #           presets: # this change defaultResolution.width / height /device aspect ratio / pixel aspect ratio
     # { hd 1080 : 1920 1080 1.778 1.00 }

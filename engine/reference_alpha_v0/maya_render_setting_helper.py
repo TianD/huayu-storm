@@ -6,7 +6,8 @@ MAYA_RENDER_ARNOLD = 'arnold'
 
 
 class MayaRenderSettingHelper(LogHelper):
-    pass
+    def set_renderable_camera(self, camera_name):
+        pass
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 basic_config: ___redshift_common.yml
 layer_setting:
-    -   layer_name: BGcolor
+    -   layer_name: BGCLR
         layer_setting:
             render_setting:
                 ### output [tab]
@@ -20,7 +20,7 @@ layer_setting:
                 #       brute force gi [row layout]
                 #           num rays:
                 "redshiftOptions.bruteForceGINumRays": 512
-    -   layer_name: CHcolor
+    -   layer_name: CHCLR
         layer_setting:
             render_setting:
                 ### output [tab]

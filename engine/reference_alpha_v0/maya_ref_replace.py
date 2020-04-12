@@ -53,7 +53,7 @@ class SceneHelper(LogHelper):
         else:
             self.error('no enough match item for episode_scene_shot')
 
-    def __set_override_for_render_layer(self, attr_key, attr_value, input_layer_name='', create_if_not_existed=True):
+    def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='', create_if_not_existed=True):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
@@ -64,18 +64,18 @@ class SceneHelper(LogHelper):
         render_settings_collection_existed = False
         for render_settings_collection in render_settings_collection_list:
             render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
-            if render_setup_layer == input_layer_name:
+            if render_setup_layer == input_render_layer_name:
                 render_settings_collection_existed = True
                 break
         if not render_settings_collection_existed:
-            legacy_render_layer = maya_cmds.listConnections('{}.{}'.format(input_layer_name, 'legacyRenderLayer'))[0]
+            legacy_render_layer = maya_cmds.listConnections('{}.{}'.format(input_render_layer_name, 'legacyRenderLayer'))[0]
             sys.modules['maya.app.renderSetup.model.renderSetup'].instance(). \
                 switchToLayerUsingLegacyName(legacy_render_layer)
             override_utils.createAbsoluteOverride(node_name, node_attr)
 
         for render_settings_collection in render_settings_collection_list:
             render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
-            if render_setup_layer == input_layer_name:
+            if render_setup_layer == input_render_layer_name:
                 override_node_list = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'enabled'))
 
                 set_ok = False
@@ -100,13 +100,13 @@ class SceneHelper(LogHelper):
                     self.debug(node_name, node_attr)
                     override_utils.createAbsoluteOverride(node_name, node_attr)
                     self.__set_override_for_render_layer(
-                        attr_key, attr_value, input_layer_name, create_if_not_existed=False
+                        attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
                     )
 
     DEFAULT_RENDER_LAYER_NAME = 'masterLayer'
 
-    def set_attr_with_command_batch_list(self, command_batch_list, override_layer_name=DEFAULT_RENDER_LAYER_NAME):
-        if override_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
+    def set_attr_with_command_batch_list(self, command_batch_list, override_render_layer_name=DEFAULT_RENDER_LAYER_NAME):
+        if override_render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
             for command_arg in command_batch_list:
                 attr_key, attr_value = command_arg
                 maya_cmds.setAttr(attr_key, attr_value)
@@ -114,7 +114,7 @@ class SceneHelper(LogHelper):
             for command_arg in command_batch_list:
                 attr_key, attr_value = command_arg
                 self.__set_override_for_render_layer(
-                    attr_key, attr_value, input_layer_name=override_layer_name, create_if_not_existed=True
+                    attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
                 )
 
 
@@ -172,7 +172,7 @@ class ReferenceExporter(ReferenceHelper):
         # todo , set layer override setting
         for override_layer_name in ['BGColor', 'CHColor']:
             self.scene_helper.set_attr_with_command_batch_list(
-                [('defaultResolution.width', 1920)], override_layer_name=override_layer_name
+                [('defaultResolution.width', 1920)], override_render_layer_name=override_layer_name
             )
 
         self.debug('set render setting', reference_source, reference_target)

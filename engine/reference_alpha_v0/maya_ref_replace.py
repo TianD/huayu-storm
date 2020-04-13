@@ -23,7 +23,7 @@ class SceneHelper(LogHelper):
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
-        self.path_helper = PathAndFileHelper(logger)
+        self.path_and_file_helper = PathAndFileHelper(logger)
 
         # scene info
         self.episode = ''
@@ -32,7 +32,7 @@ class SceneHelper(LogHelper):
 
     def get_episode_sequence_shot_from_filename(self):
         scene_file_path = maya_cmds.file(query=1, exn=1)
-        scene_file_name = self.path_helper.get_base_name(scene_file_path)
+        scene_file_name = self.path_and_file_helper.get_base_name(scene_file_path)
 
         name_item_list = scene_file_name.split(SceneHelper.NAME_SPLITTER)
         if len(name_item_list) > 5:
@@ -52,6 +52,12 @@ class SceneHelper(LogHelper):
                 self.error('no enough match item for episode_scene_shot')
         else:
             self.error('no enough match item for episode_scene_shot')
+
+    def get_replaced_file_path_on_file_base_name(self, file_path, src_string, dst_string):
+        file_base_name = self.path_and_file_helper.get_base_name(file_path)
+        file_dir_name = self.path_and_file_helper.get_dir_name(file_path)
+        new_file_base_name = file_base_name.replace(src_string, dst_string)
+        return self.path_and_file_helper.join_file_path(file_dir_name, new_file_base_name)
 
     def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='',
                                         create_if_not_existed=True):
@@ -122,7 +128,7 @@ class SceneHelper(LogHelper):
 
 
 class ReferenceHelper(LogHelper):
-    replace_rules = [
+    REPLACE_RULES = [
         {'bgclr': 'add_scene'},
         {'chclr': 'add_char/props'},
         {'light': 'config_file'},  # just a maya file
@@ -143,21 +149,35 @@ class ReferenceHelper(LogHelper):
     def post_reference(self, reference_source, reference_target):
         return
 
-    def __replace_reference(self, reference_source, reference_target):
+    def __replace_reference(self, reference_source, reference_target, name_space):
+        """
+        :param reference_source: usually is animation file
+        :param reference_target: usually is rendering / lighting file
+        :param name_space:
+        :return:
+        """
         # todo maya replace reference
+        # todo name_space -> reference_source -> get replaced file path -> do replace
         reference_replaced = False
+        maya_cmds.file(reference_target, loadReference="myReferenceRN")
         return reference_replaced
 
     def __get_reference_file_path_with_rules(self, reference_source, rules):
         # todo replace with rules , anim -> rendering , some other
-        return reference_source
+        # todo use rules
+        # get replaced file name
+        render_file_path = \
+            self.scene_helper.get_replaced_file_path_on_file_base_name(reference_source, 'anim', 'render')
+        return render_file_path
 
-    def __replace_reference_with_rules(self, reference_source):
+    def __replace_reference_with_rules(self, reference_item):
+        reference_source = ''
+        reference_name_space = ''
         reference_target = \
             self.__get_reference_file_path_with_rules(
-                reference_source, self.replace_rules
+                reference_source, self.REPLACE_RULES
             )
-        self.__replace_reference(reference_source, reference_target)
+        self.__replace_reference(reference_source, reference_target, name_space=reference_name_space)
         # post process
         self.post_reference(reference_source, reference_target)
 
@@ -208,13 +228,19 @@ class ReferenceExporter(ReferenceHelper):
     def export_all(self):
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
+        # todo , replace reference
+        #   xx_anim -> xx_render
+        #   add scene as bg
+        #   add char / props
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
+        #           if BGCLR:
+        #               set CHCLR -> [override] Primary Visiblity : off
         # todo , if layer in [ IDP ] , create idp layer
         #   override render layer
         #   Puzzle Matte , rename to idp
-        #       BGCLR -> [aov]  , id : 1 [R]
-        #       CHCLR -> Puzzle Matte , id : 2 [G]
+        #       CHCLR -> [aov]  , id : 1 [R]
+        #       BGCLR -> Puzzle Matte , id : 2 [G]
         #       PRO -> Puzzle Matte , id : 3 [B]
         #           rsCreateAov -type  "Puzzle Matte";
         #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp

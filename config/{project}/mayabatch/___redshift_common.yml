@@ -15,7 +15,7 @@ render_setting:
     "redshiftOptions.exrForceMultilayer": 1 #0,1 only valid for exr
     #           animation:
     "defaultRenderGlobals.animation": 1
-    #           start frame:
+    #           start frame:a
     "defaultRenderGlobals.fs": 1
     #           end frame:
     "defaultRenderGlobals.ef": 1

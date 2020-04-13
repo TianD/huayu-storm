@@ -138,6 +138,16 @@ class ReferenceHelper(LogHelper):
         # {'aov': 'config_file'},  # just a maya file
     ]
 
+    ADD_RULES = [
+        {KEY_FROM: 'anim', KEY_TO: 'scene'},
+        {KEY_FROM: 'anim', KEY_TO: 'sky'},
+        {KEY_FROM: 'anim', KEY_TO: 'light'},
+        # {'chclr': 'add_char/props'},
+        # {'light': 'config_file'},  # just a maya file
+        # {'sky': 'config_file'},  # just a maya file
+        # {'aov': 'config_file'},  # just a maya file
+    ]
+
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
         self.scene_helper = SceneHelper(logger=logger)
@@ -151,45 +161,42 @@ class ReferenceHelper(LogHelper):
     def post_reference(self, reference_source, reference_target):
         return
 
-    def __replace_reference(self, reference_target, reference_node):
-        """
-        :param reference_source: usually is animation file
-        :param reference_target: usually is rendering / lighting file
-        :param name_space:
-        :return:
-        """
-        # todo maya replace reference
-        # todo name_space -> reference_source -> get replaced file path -> do replace
-        return reference_node.replaceWith(reference_target)
-
-    def __get_reference_file_path_with_rules(self, reference_source):
+    def __get_reference_file_path_with_rule(self, reference_source, rule):
         # get replaced file name
-        render_file_path = ''
-        for rule in ReferenceExporter.REPLACE_RULES:
-            replace_from = rule.get(ReferenceExporter.KEY_FROM, '')
-            replace_to = rule.get(ReferenceExporter.KEY_TO, '')
-            if replace_from and replace_to:
-                render_file_path = \
-                    self.scene_helper.get_replaced_file_path_on_file_base_name(
-                        reference_source, replace_from, replace_to
-                    )
-                break
-        return render_file_path
+        new_file_path = ''
+        replace_from = rule.get(ReferenceExporter.KEY_FROM, '')
+        replace_to = rule.get(ReferenceExporter.KEY_TO, '')
+        if replace_from and replace_to:
+            new_file_path = \
+                self.scene_helper.get_replaced_file_path_on_file_base_name(
+                    reference_source, replace_from, replace_to
+                )
+        return new_file_path
 
     def __replace_reference_with_rules(self, reference_item):
         reference_source = reference_item.path
         # reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
-        reference_target = \
-            self.__get_reference_file_path_with_rules(reference_source)
-        if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
-            self.__replace_reference(reference_target, reference_item)
-            # post process
-            self.post_reference(reference_source, reference_target)
+        for rule in ReferenceHelper.REPLACE_RULES:
+            reference_target = \
+                self.__get_reference_file_path_with_rule(reference_source, rule)
+            if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
+                reference_item.replaceWith(reference_target)
+
+    def __create_reference_with_rules(self, reference_source):
+        for rule in ReferenceHelper.ADD_RULES:
+            reference_target = \
+                self.__get_reference_file_path_with_rule(reference_source, rule)
+            if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
+                pymel_core.system.createReference(reference_target)
 
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())
+        reference_path = ''
         for reference_item in reference_list:
+            reference_path = reference_item.path
             self.__replace_reference_with_rules(reference_item)
+
+        self.__create_reference_with_rules(reference_source=reference_path)
 
 
 class ReferenceExporter(ReferenceHelper):

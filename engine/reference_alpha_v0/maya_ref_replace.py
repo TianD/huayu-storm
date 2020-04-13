@@ -169,7 +169,7 @@ class ReferenceHelper(LogHelper):
 
     def __replace_reference_with_rules(self, reference_item):
         reference_source = reference_item.path
-        reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
+        # reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
         reference_target = \
             self.__get_reference_file_path_with_rules(
                 reference_source, self.REPLACE_RULES
@@ -227,7 +227,8 @@ class ReferenceExporter(ReferenceHelper):
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
         # todo , replace reference
-        #   xx_anim -> xx_render
+        # xx_anim -> xx_render
+        self.process_all_reference()
         #   add scene as bg
         #   add char / props
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file

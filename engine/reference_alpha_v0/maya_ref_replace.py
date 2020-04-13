@@ -3,6 +3,7 @@
 
 import re
 
+from maya.app import renderSetup
 import maya.app.renderSetup.views.overrideUtils as override_utils
 import maya.cmds as maya_cmds
 import pymel.core as pymel_core
@@ -125,10 +126,16 @@ class SceneHelper(LogHelper):
                     attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
                 )
 
+    def create_render_layer(self, render_layer_name):
+        renderSetup.model.renderSetup.initialize()
+        render_setup = renderSetup.model.renderSetup.instance()
+        render_setup.createRenderLayer(render_layer_name)
+
 
 class ReferenceHelper(LogHelper):
     KEY_FROM = 'from'
     KEY_TO = 'to'
+    KEY_RENDER_LAYER_NAME = 'layer_name'
 
     REPLACE_RULES = [
         {KEY_FROM: 'anim', KEY_TO: 'render'},
@@ -139,9 +146,9 @@ class ReferenceHelper(LogHelper):
     ]
 
     ADD_RULES = [
-        {KEY_FROM: 'anim', KEY_TO: 'scene'},
-        {KEY_FROM: 'anim', KEY_TO: 'sky'},
-        {KEY_FROM: 'anim', KEY_TO: 'light'},
+        {KEY_FROM: 'anim', KEY_TO: 'scene', KEY_RENDER_LAYER_NAME: 'BGCLR'},
+        {KEY_FROM: 'anim', KEY_TO: 'sky', KEY_RENDER_LAYER_NAME: 'SKY'},
+        {KEY_FROM: 'anim', KEY_TO: 'light', KEY_RENDER_LAYER_NAME: 'LGT'},
         # {'chclr': 'add_char/props'},
         # {'light': 'config_file'},  # just a maya file
         # {'sky': 'config_file'},  # just a maya file
@@ -182,12 +189,13 @@ class ReferenceHelper(LogHelper):
             if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
                 reference_item.replaceWith(reference_target)
 
-    def __create_reference_with_rules(self, reference_source):
+    def __add_reference_with_rules(self, reference_source):
         for rule in ReferenceHelper.ADD_RULES:
             reference_target = \
                 self.__get_reference_file_path_with_rule(reference_source, rule)
             if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
                 pymel_core.system.createReference(reference_target)
+                self.scene_helper.create_render_layer(rule.get(ReferenceHelper.KEY_RENDER_LAYER_NAME))
 
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())
@@ -196,7 +204,7 @@ class ReferenceHelper(LogHelper):
             reference_path = reference_item.path
             self.__replace_reference_with_rules(reference_item)
 
-        self.__create_reference_with_rules(reference_source=reference_path)
+        self.__add_reference_with_rules(reference_source=reference_path)
 
 
 class ReferenceExporter(ReferenceHelper):
@@ -242,9 +250,9 @@ class ReferenceExporter(ReferenceHelper):
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
         # todo , replace reference
         # xx_anim -> xx_render
-        self.process_all_reference()
         #   add scene as bg
         #   add char / props
+        self.process_all_reference()
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:

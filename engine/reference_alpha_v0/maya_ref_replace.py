@@ -127,12 +127,15 @@ class SceneHelper(LogHelper):
 
 
 class ReferenceHelper(LogHelper):
+    KEY_FROM = 'from'
+    KEY_TO = 'to'
+
     REPLACE_RULES = [
-        {'bgclr': 'add_scene'},
-        {'chclr': 'add_char/props'},
-        {'light': 'config_file'},  # just a maya file
-        {'sky': 'config_file'},  # just a maya file
-        {'aov': 'config_file'},  # just a maya file
+        {KEY_FROM: 'anim', KEY_TO: 'render'},
+        # {'chclr': 'add_char/props'},
+        # {'light': 'config_file'},  # just a maya file
+        # {'sky': 'config_file'},  # just a maya file
+        # {'aov': 'config_file'},  # just a maya file
     ]
 
     def __init__(self, logger=None):
@@ -159,21 +162,25 @@ class ReferenceHelper(LogHelper):
         # todo name_space -> reference_source -> get replaced file path -> do replace
         return reference_node.replaceWith(reference_target)
 
-    def __get_reference_file_path_with_rules(self, reference_source, rules):
-        # todo replace with rules , anim -> rendering , some other
-        # todo use rules
+    def __get_reference_file_path_with_rules(self, reference_source):
         # get replaced file name
-        render_file_path = \
-            self.scene_helper.get_replaced_file_path_on_file_base_name(reference_source, 'anim', 'render')
+        render_file_path = ''
+        for rule in ReferenceExporter.REPLACE_RULES:
+            replace_from = rule.get(ReferenceExporter.KEY_FROM, '')
+            replace_to = rule.get(ReferenceExporter.KEY_TO, '')
+            if replace_from and replace_to:
+                render_file_path = \
+                    self.scene_helper.get_replaced_file_path_on_file_base_name(
+                        reference_source, replace_from, replace_to
+                    )
+                break
         return render_file_path
 
     def __replace_reference_with_rules(self, reference_item):
         reference_source = reference_item.path
         # reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
         reference_target = \
-            self.__get_reference_file_path_with_rules(
-                reference_source, self.REPLACE_RULES
-            )
+            self.__get_reference_file_path_with_rules(reference_source)
         if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
             self.__replace_reference(reference_target, reference_item)
             # post process

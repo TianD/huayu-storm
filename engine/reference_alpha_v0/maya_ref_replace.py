@@ -143,7 +143,7 @@ class ReferenceHelper(LogHelper):
     KEY_RENDER_LAYER_NAME = 'layer_name'
 
     REPLACE_RULES = [
-        {KEY_FROM: 'anim', KEY_TO: 'render'},
+        {KEY_FROM: 'anim', KEY_TO: 'render'},               # TODO: 如果不存在render的就不替换
         # {'chclr': 'add_char/props'},
         # {'light': 'config_file'},  # just a maya file
         # {'sky': 'config_file'},  # just a maya file
@@ -214,7 +214,7 @@ class ReferenceHelper(LogHelper):
 
 class ReferenceExporter(ReferenceHelper):
     LAYER_MASTER = 'masterLayer'
-    LAYER_BG_COLOR = 'BGCLR'
+    LAYER_BG_COLOR = 'BGCLR'                   # TODO: 层命名需要提到配置文件中。
     LAYER_CHR_COLOR = 'CHCLR'
     LAYER_SKY = 'SKY'
     LAYER_IDP = 'IDP'

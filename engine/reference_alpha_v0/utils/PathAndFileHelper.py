@@ -45,6 +45,8 @@ class PathAndFileHelper(LogHelper):
     def is_file(self, path):
         return os.path.isfile(path)
 
+    is_file_exist = is_file
+
     KEY_CURRENT_IS_FILE = 'KEY_CURRENT_IS_FILE'
     KEY_CURRENT_IS_DIR = 'KEY_CURRENT_IS_DIR'
     KEY_CURRENT_IS_UNKNOWN = 'KEY_CURRENT_IS_UNKNOWN'

@@ -2,7 +2,6 @@
 
 
 import re
-import sys
 
 import maya.app.renderSetup.views.overrideUtils as override_utils
 import maya.cmds as maya_cmds
@@ -149,7 +148,7 @@ class ReferenceHelper(LogHelper):
     def post_reference(self, reference_source, reference_target):
         return
 
-    def __replace_reference(self, reference_source, reference_target, name_space):
+    def __replace_reference(self, reference_target, reference_node):
         """
         :param reference_source: usually is animation file
         :param reference_target: usually is rendering / lighting file
@@ -158,9 +157,7 @@ class ReferenceHelper(LogHelper):
         """
         # todo maya replace reference
         # todo name_space -> reference_source -> get replaced file path -> do replace
-        reference_replaced = False
-        maya_cmds.file(reference_target, loadReference="myReferenceRN")
-        return reference_replaced
+        return reference_node.replaceWith(reference_target)
 
     def __get_reference_file_path_with_rules(self, reference_source, rules):
         # todo replace with rules , anim -> rendering , some other
@@ -171,15 +168,16 @@ class ReferenceHelper(LogHelper):
         return render_file_path
 
     def __replace_reference_with_rules(self, reference_item):
-        reference_source = ''
-        reference_name_space = ''
+        reference_source = reference_item.path
+        reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
         reference_target = \
             self.__get_reference_file_path_with_rules(
                 reference_source, self.REPLACE_RULES
             )
-        self.__replace_reference(reference_source, reference_target, name_space=reference_name_space)
-        # post process
-        self.post_reference(reference_source, reference_target)
+        if self.scene_helper.path_and_file_helper.is_file_exist(reference_target):
+            self.__replace_reference(reference_target, reference_item)
+            # post process
+            self.post_reference(reference_source, reference_target)
 
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())
@@ -264,9 +262,17 @@ class ReferenceExporter(ReferenceHelper):
 
 
 if __name__ == '__main__':
-    # reference_helper = ReferenceHelper()
+    egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
+    import sys
+
+    sys.path.insert(0, egg_dir)
+
+    # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+
+    reference_helper = ReferenceHelper()
+    reference_helper.process_all_reference()
     # reference_helper.info(reference_helper.get_reference_list(), **reference_helper.FORMAT_JSON_DICT_KWARG)
     # reference_helper.replace_reference()
 
-    ref_exporter = ReferenceExporter()
-    ref_exporter.process_all_reference()
+    # ref_exporter = ReferenceExporter()
+    # ref_exporter.process_all_reference()

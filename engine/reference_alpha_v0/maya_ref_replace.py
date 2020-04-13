@@ -3,10 +3,10 @@
 
 import re
 
-from maya.app import renderSetup
 import maya.app.renderSetup.views.overrideUtils as override_utils
 import maya.cmds as maya_cmds
 import pymel.core as pymel_core
+from maya.app import renderSetup
 
 # todo remove reload
 import LogHelper
@@ -127,9 +127,11 @@ class SceneHelper(LogHelper):
                 )
 
     def create_render_layer(self, render_layer_name):
-        renderSetup.model.renderSetup.initialize()
+        # renderSetup.model.renderSetup.initialize() , # this will cause renderSetup destroyed after this
         render_setup = renderSetup.model.renderSetup.instance()
-        render_setup.createRenderLayer(render_layer_name)
+        render_layer = render_setup.createRenderLayer(render_layer_name)
+        collection = render_layer.createCollection(render_layer_name + '_collection')
+        collection.getSelector().setPattern('|*')
 
 
 class ReferenceHelper(LogHelper):

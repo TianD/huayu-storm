@@ -129,7 +129,10 @@ class SceneHelper(LogHelper):
     def create_render_layer(self, render_layer_name):
         # renderSetup.model.renderSetup.initialize() , # this will cause renderSetup destroyed after this
         render_setup = renderSetup.model.renderSetup.instance()
-        render_layer = render_setup.createRenderLayer(render_layer_name)
+        try:
+            render_layer = render_setup.getRenderLayer(render_layer_name)
+        except:
+            render_layer = render_setup.createRenderLayer(render_layer_name)
         collection = render_layer.createCollection(render_layer_name + '_collection')
         collection.getSelector().setPattern('|*')
 

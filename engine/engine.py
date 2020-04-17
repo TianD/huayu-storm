@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-import subprocess
+import zmq
 import yaml
 from flask import Flask, send_file, request
 from flask_cors import CORS
@@ -32,6 +32,10 @@ CORS(app)
 config_dir = os.path.join(os.path.dirname(__file__), '../config')
 
 DEFAULT_IMAGE = os.path.join(os.path.dirname(__file__), '../public/default.png')
+
+ZMQ_CONTEXT = zmq.Context()
+ZMQ_SOCKET = ZMQ_CONTEXT.socket(zmq.PUSH)
+ZMQ_SOCKET.connect("tcp://localhost:5555")
 
 
 def get_first_image_of_dir(**shot_info):
@@ -182,8 +186,8 @@ def nuke_setup_process():
                                 nuke_template=nuke_template,
                                 py_cmd=py_cmd,
                                 **new_nuke_data)
-    result = subprocess.call(format_command, shell=True)
-    return json.dumps({'result': result})
+    ZMQ_SOCKET.send_json({'format_command': format_command})
+    return json.dumps({'format_command': format_command})
 
 
 if __name__ == '__main__':

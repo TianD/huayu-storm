@@ -4,6 +4,9 @@ import { Table, Row, Col, Radio, Cascader, Button } from 'antd';
 import { PlayCircleTwoTone } from '@ant-design/icons';
 import { set_nukebatch_filters, set_nukebatch_taskid } from '../actions/nukebatch';
 import api from '../api'
+import io from 'socket.io-client';
+
+const socket = io('ws://localhost:8001')
 
 function mapStateToProps(state) {
     return {
@@ -82,15 +85,16 @@ class BatchTableForNuke extends Component {
         })
     }
 
-    playThis(record, index) {
-        api.nuke_setup_process(record).then()
-        console.log(record)
+    async playThis(record, index) {
+        // TODO: 用maya进行处理
+        await api.nuke_setup_process(record).then((response)=>{
+            console.log(response)
+        })
     }
 
     filterShots(value) {
         this.props.set_nukebatch_filters(value)
         let project_list = this.props.project_list;
-        console.log('project_list', project_list)
         let shot_list;
         if (value.length > 0) {
             let project = project_list.filter((element) => {
@@ -118,6 +122,9 @@ class BatchTableForNuke extends Component {
 
     componentDidMount() {
         this.filterShots(this.props.nukebatch_filters)
+        socket.on('refresh_ui', data=>{
+            console.log('refresh_ui', data)
+        })
     }
 
     render() {

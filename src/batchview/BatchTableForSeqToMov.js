@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Select, Col, Row } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
-import { set_seq2movbatch_filters } from '../actions/seq2movbatch'
+import { set_seq2movbatch_filters } from '../actions/seq2movbatch';
 
-const {remote } = window.electron;
+const {remote,ipcRenderer } = window.electron;
 
 function mapStateToProps(state) {
     return {
@@ -103,6 +103,10 @@ class BatchTableForSeqToMov extends Component {
         this.setState({
             file_list: []
         })
+    }
+
+    componentDidMount(){
+        ipcRenderer.on('clearData', ()=>{this.clearlist()})
     }
 
     render() {

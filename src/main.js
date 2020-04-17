@@ -2,30 +2,45 @@ const { app, BrowserWindow, Menu, Tray } = require('electron')
 const { spawn } = require('child_process')
 const path = require('path')
 
-let pyProc = null;
-// let nodeProc = null;
+const server = require('http').createServer();
+const io = require('socket.io')(server);
+io.on('connection', client => {
+  client.on('finish_job', data=> {
+    console.log('finish_job', data)
+    client.broadcast.emit('refresh_ui', {job: data})
+  })
+  client.on('disconnect', () => { /* … */ });
+});
+server.listen(8001);
+
+let win;
+let engineProc = null;
+// let zmqProc = null;
 
 let tray = null;
 
 function createSubProc() {
   let pycmd = path.resolve(__dirname, '../engine/run.bat')
-  pyProc = spawn(pycmd)
-  if (pyProc != null) {
+  engineProc = spawn(pycmd)
+  if (engineProc != null) {
     console.log('python process success')
   }
-  // exec("react-scripts start")
+  // let pycmd2 = path.resolve(__dirname, '../engine/run.bat')
+  // if (nodeProc != null) {
+  //   console.log('queue process success')
+  // }
 }
 
 function exitSubProc() {
-  pyProc.kill()
+  engineProc.kill()
   // nodeProc.kill()
-  pyProc = null
+  engineProc = null
   // nodeProc = null
 }
 
 function createWindow() {
   // 创建浏览器窗口
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1280,
     height: 720,
     webPreferences: {
@@ -43,6 +58,10 @@ function createWindow() {
 
   Menu.setApplicationMenu(null)
 
+}
+
+function clearData () {
+  win.send('clearData', {success:true, message: 'hello'})
 }
 
 // This method will be called when Electron has finished
@@ -72,6 +91,7 @@ app.on('will-quit', exitSubProc)
 app.on('ready', () => {
   tray = new Tray(path.join(__dirname, './favicon.ico'))
   const contextMenu = Menu.buildFromTemplate([
+    {label: 'Clear', click: clearData},
     { label: 'Main', click: createWindow },
     { label: 'Quit', click: app.quit }
   ])

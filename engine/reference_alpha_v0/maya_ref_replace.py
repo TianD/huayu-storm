@@ -40,10 +40,10 @@ LAYER_LIST_OF_ALL = [
 
 RENDER_LAYER_RULES = [
     # layer name ,  layer select pattern
-    [LAYER_BG_COLOR, ['SCN:*']],
-    [LAYER_LGT, ['LGT:*']],
-    [LAYER_SKY, ['SKY:*']],
-    [LAYER_CHR_COLOR, ['*:CHR', '*:PRO', 'CHRLGT:*']],
+    [LAYER_BG_COLOR, ['SCNRN:*']],
+    [LAYER_LGT, ['LGTRN:*']],
+    [LAYER_SKY, ['SKYRN:*']],
+    [LAYER_CHR_COLOR, ['*:CHR', '*:PRO', 'CHRLGTRN:*']],
 ]
 
 KEY_FROM = 'from'
@@ -431,5 +431,5 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    # ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_reference()
+    # ref_exporter.process_all_render_layer()

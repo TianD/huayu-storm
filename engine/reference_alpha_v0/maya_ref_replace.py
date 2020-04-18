@@ -21,9 +21,8 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 
 LAYER_MASTER = 'masterLayer'
-LAYER_BG_COLOR = 'BGCLR'
+LAYER_BG_COLOR = 'SCN'
 LAYER_CHR_COLOR = 'CHCLR'
-LAYER_CHR_LIGHT = 'CHLIGHT'
 LAYER_SKY = 'SKY'
 LAYER_IDP = 'IDP'
 LAYER_LGT = 'LGT'
@@ -33,7 +32,6 @@ LAYER_LIST_OF_ALL = [
     LAYER_MASTER,
     LAYER_BG_COLOR,
     LAYER_CHR_COLOR,
-    LAYER_CHR_LIGHT,
     LAYER_SKY,
     LAYER_IDP,
     LAYER_LGT,

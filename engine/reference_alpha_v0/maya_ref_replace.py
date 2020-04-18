@@ -239,31 +239,31 @@ class ReferenceHelper(LogHelper):
         self.ADD_RULES = [
             {
                 KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_BG_COLOR,
+                KEY_NAMESPACE_NAME: LAYER_BG_COLOR + 'RN',
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_SKY,
-                KEY_NAMESPACE_NAME: LAYER_SKY,
+                KEY_NAMESPACE_NAME: LAYER_SKY + 'RN',
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_LGT,
-                KEY_NAMESPACE_NAME: LAYER_LGT,
+                KEY_NAMESPACE_NAME: LAYER_LGT + 'RN',
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_CHR_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR,
+                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR + 'RN',
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_AOV,
-                KEY_NAMESPACE_NAME: LAYER_AOV,
+                KEY_NAMESPACE_NAME: LAYER_AOV + 'RN',
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
                 KEY_REPLACE_PARAMS: {}
             },
@@ -419,10 +419,10 @@ class ReferenceExporter(ReferenceHelper):
 
 if __name__ == '__main__':
     egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
-    import sys
+    # import sys
 
-    sys.path.insert(0, egg_dir)
-
+    # sys.path.insert(0, egg_dir)
+    #
     # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
 
     # reference_helper = ReferenceHelper()

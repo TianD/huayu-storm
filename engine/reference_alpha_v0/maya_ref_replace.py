@@ -51,6 +51,7 @@ RENDER_LAYER_RULES = [
 KEY_FROM = 'from'
 KEY_TO = 'to'
 KEY_RENDER_LAYER_NAME = 'layer_name'
+KEY_NAMESPACE_NAME = 'namespace_name'
 
 REPLACE_RULES = [
     {KEY_FROM: 'anim', KEY_TO: 'render'},
@@ -231,26 +232,31 @@ class ReferenceHelper(LogHelper):
         self.ADD_RULES = [
             {
                 KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,
+                KEY_NAMESPACE_NAME: LAYER_BG_COLOR,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_SKY,
+                KEY_NAMESPACE_NAME: LAYER_SKY,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_LGT,
+                KEY_NAMESPACE_NAME: LAYER_LGT,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_CHR_COLOR,
+                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_AOV,
+                KEY_NAMESPACE_NAME: LAYER_AOV,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
                 KEY_REPLACE_PARAMS: {}
             },
@@ -301,11 +307,12 @@ class ReferenceHelper(LogHelper):
 
     def __add_reference_with_rules(self, reference_source):
         for rule in self.ADD_RULES:
+            namespace_name = rule.get(KEY_NAMESPACE_NAME, '')
             reference_target_list = \
                 self.__get_reference_file_path_with_rule(reference_source, rule)
             for reference_target in reference_target_list:
                 if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
-                    pymel_core.system.createReference(reference_target)
+                    pymel_core.system.createReference(reference_target, namespace=namespace_name)
 
     def get_file_path_list_from_shot_file_for_sky(self):
         return IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY
@@ -357,8 +364,7 @@ class ReferenceExporter(ReferenceHelper):
             self.error('not valid layer : {}'.format(layer_name))
 
     def export_all(self):
-        # todo , set common render setting
-        self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
+
         # todo , replace reference
         # xx_anim -> xx_render
         #   add scene as bg
@@ -372,7 +378,8 @@ class ReferenceExporter(ReferenceHelper):
                 self.scene_helper.set_render_layer_object_pattern_for_maya_old(
                     layer_name, select_pattern
                 )
-
+        # todo , set common render setting
+        self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:

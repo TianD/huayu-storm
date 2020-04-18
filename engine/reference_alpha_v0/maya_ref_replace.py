@@ -364,9 +364,10 @@ class ReferenceExporter(ReferenceHelper):
             layer_name = render_layer_select_rule[0]
             select_pattern_list = render_layer_select_rule[1]
 
-            self.scene_helper.set_render_layer_object_pattern_for_maya_old(
-                layer_name
-            )
+            for select_pattern in select_pattern_list:
+                self.scene_helper.set_render_layer_object_pattern_for_maya_old(
+                    layer_name, select_pattern
+                )
 
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer

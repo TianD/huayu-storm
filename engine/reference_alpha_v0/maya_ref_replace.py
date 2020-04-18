@@ -68,11 +68,15 @@ REDSHIFT_ID_1 = REDSHIFT_MATTE_RED
 REDSHIFT_ID_2 = REDSHIFT_MATTE_GREEN
 REDSHIFT_ID_3 = REDSHIFT_MATTE_BLUE
 
+REDSHIFT_MATTE_ATTR_RED = 'redId'
+REDSHIFT_MATTE_ATTR_BLUE = 'greenId'
+REDSHIFT_MATTE_ATTR_GREEN = 'blueId'
+
 LAYER_IDP_CONFIG = \
     [
-        [CHR_OBJECT_SELECTOR, REDSHIFT_ID_1, REDSHIFT_MATTE_RED],
-        [PRO_OBJECT_SELECTOR, REDSHIFT_ID_2, REDSHIFT_MATTE_GREEN],
-        [BG_OBJECT_SELECTOR, REDSHIFT_ID_3, REDSHIFT_MATTE_BLUE],
+        [CHR_OBJECT_SELECTOR, REDSHIFT_ID_1, REDSHIFT_MATTE_RED, REDSHIFT_MATTE_ATTR_RED],
+        [PRO_OBJECT_SELECTOR, REDSHIFT_ID_2, REDSHIFT_MATTE_GREEN, REDSHIFT_MATTE_ATTR_BLUE],
+        [BG_OBJECT_SELECTOR, REDSHIFT_ID_3, REDSHIFT_MATTE_BLUE, REDSHIFT_MATTE_ATTR_GREEN],
     ]
 
 KEY_FROM = 'from'
@@ -370,21 +374,10 @@ class SceneHelperForRedshift(SceneHelper):
                     selector = config[0]
                     object_id = config[1]
                     matte_color = config[2]
-                    if matte_color == REDSHIFT_MATTE_RED:
-                        current_matte_id = matte_color
-                        self.set_attr_with_command_param_list_batch_list(
-                            ['{}.redId'.format(idp_node_name), current_matte_id]
-                        )
-                    elif matte_color == REDSHIFT_MATTE_GREEN:
-                        current_matte_id = matte_color
-                        self.set_attr_with_command_param_list_batch_list(
-                            ['{}.greenId'.format(idp_node_name), current_matte_id]
-                        )
-                    elif matte_color == REDSHIFT_MATTE_BLUE:
-                        current_matte_id = matte_color
-                        self.set_attr_with_command_param_list_batch_list(
-                            ['{}.blueId'.format(idp_node_name), current_matte_id]
-                        )
+                    aov_attr = config[3]
+                    self.set_attr_with_command_param_list_batch_list(
+                        ['{}.{}'.format(idp_node_name, aov_attr), object_id]
+                    )
                     # todo select object by selector , and then set object_id , and set rgb object_id
                     self.select_with_clear(selector)
                     # todo , if layer in [ IDP ] , create idp layer

@@ -215,7 +215,6 @@ class SceneHelper(LogHelper):
 
         # as use *:* this like , if not found , error happened , so try/except to avoid this
 
-        print(render_layer.name(), render_layer.listMembers())
         try:
             maya_cmds.select(cl=True)
             maya_cmds.select(object_pattern)

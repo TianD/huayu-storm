@@ -45,7 +45,7 @@ class PathAndFileHelper(LogHelper):
     def is_file(self, path):
         return os.path.isfile(path)
 
-    is_file_exist = is_file
+    is_file_existed = is_file
 
     KEY_CURRENT_IS_FILE = 'KEY_CURRENT_IS_FILE'
     KEY_CURRENT_IS_DIR = 'KEY_CURRENT_IS_DIR'
@@ -59,6 +59,12 @@ class PathAndFileHelper(LogHelper):
             current_is = PathAndFileHelper.KEY_CURRENT_IS_FILE
 
         return current_is
+
+    def is_same_file(self, file_a, file_b):
+        return os.path.samefile(file_a, file_b)
+
+    def is_different_file(self, file_a, file_b):
+        return not self.is_same_file(file_a, file_b)
 
     def list_dir(self, dir_path, file_filter_list=[], only_dir=False, only_file=False):
         return_path_list = []

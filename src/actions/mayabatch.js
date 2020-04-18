@@ -6,3 +6,10 @@ export function set_mayabatch_filters(data) {
         data: data
     };
 }
+
+export function set_mayabatch_items(data) {
+    return {
+        type: reducerType.MAYABATCH_ITEMS,
+        data: data
+    }
+}

@@ -59,9 +59,9 @@ function createWindow() {
 
 }
 
-function clearData () {
-  win.send('clearData', {success:true, message: 'hello'})
-}
+// function clearData () {
+//   win.send('clearData', {success:true, message: 'hello'})
+// }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -90,7 +90,7 @@ app.on('will-quit', exitSubProc)
 app.on('ready', () => {
   tray = new Tray(path.join(__dirname, './favicon.ico'))
   const contextMenu = Menu.buildFromTemplate([
-    {label: 'Clear', click: clearData},
+    // {label: 'Clear', click: clearData},
     { label: 'Main', click: createWindow },
     { label: 'Quit', click: app.quit }
   ])

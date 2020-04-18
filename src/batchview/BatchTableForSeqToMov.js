@@ -2,22 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Select, Col, Row } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
-import { set_seq2movbatch_filters } from '../actions/seq2movbatch';
+import { set_seq2movbatch_filters, set_seq2movbatch_items } from '../actions/seq2movbatch';
+import api from '../api'
 
-const {remote,ipcRenderer } = window.electron;
+const {remote } = window.electron;
 
 function mapStateToProps(state) {
     return {
         project_list: state.project_list,
         get_project_list_failed: state.get_project_list_failed,
         get_project_list_loading: state.get_project_list_loading,
-        seq2movbatch_filters: state.seq2movbatch_filters
+        seq2movbatch_filters: state.seq2movbatch_filters,
+        seq2movbatch_items: state.seq2movbatch_items
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        set_seq2movbatch_filters: (data) => dispatch(set_seq2movbatch_filters(data))
+        set_seq2movbatch_filters: (data) => dispatch(set_seq2movbatch_filters(data)),
+        set_seq2movbatch_items: (data) => dispatch(set_seq2movbatch_items(data))
     }
 }
 
@@ -55,30 +58,29 @@ class BatchTableForSeqToMov extends Component {
                 )
             }
         ]
-        this.state = {
-            file_list: []
-        }
     }
 
-    playThis(record) {
-        // TODO: 用maya进行处理
-        console.log(record)
+    async playThis(record, index) {
+        let files = this.props.seq2movbatch_items;
+        await api.seq2mov_process(record, index).then((response)=>{
+            let new_record = {...record, ...response.data}
+            files.splice(index, 1, new_record)
+        })
+        this.props.set_nukebatch_items(files)
     }
 
     removeThis(record) {
-        let { file_list } = this.state;
+        let file_list = this.props.seq2movbatch_items;
         file_list.splice(record.key, 1);
         let new_file_list = file_list.map((item, index) => {
             return { ...item, key: index, id: index + 1 }
         })
-        this.setState({
-            file_list: new_file_list
-        })
+        this.props.set_seq2movbatch_items(new_file_list)
     }
 
     async upload(e) {
         let result = await remote.dialog.showOpenDialog({
-            properties: ['openFile'],
+            properties: ['openFile', 'multiSelections'],
         });
         let file_list = [];
         for (let i = 0; i < result.filePaths.length; i++) {
@@ -86,13 +88,14 @@ class BatchTableForSeqToMov extends Component {
                 key: i,
                 id: i + 1,
                 name: result.filePaths[i],
-                status: '就绪'
+                status: 'Ready'
             }
             file_list.push(file_data)
         }
-        this.setState({
-            file_list: file_list
-        })
+        // this.setState({
+        //     file_list: file_list
+        // })
+        this.props.set_seq2movbatch_items(file_list)
     }
     
     change_project(value) {
@@ -100,17 +103,13 @@ class BatchTableForSeqToMov extends Component {
     }
 
     clearlist() {
-        this.setState({
-            file_list: []
-        })
-    }
-
-    componentDidMount(){
-        ipcRenderer.on('clearData', ()=>{this.clearlist()})
+        // this.setState({
+        //     file_list: []
+        // })
+        this.props.set_seq2movbatch_items([])
     }
 
     render() {
-        let {file_list} = this.state
         return (
             <div>
                 <Row>
@@ -129,7 +128,7 @@ class BatchTableForSeqToMov extends Component {
                 </Row>
                 <Table
                     tableLayout={"fixed"}
-                    dataSource={file_list}
+                    dataSource={this.props.seq2movbatch_items}
                     columns={this.columns}
                     pagination={false}
                 />

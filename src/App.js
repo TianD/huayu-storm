@@ -9,6 +9,8 @@ import BatchTableForSeqToMov from './batchview/BatchTableForSeqToMov';
 import Logo from './logo.png';
 import { get_project_list } from './actions/get_project_list'
 import { set_nukebatch_items } from './actions/nukebatch';
+import { set_seq2movbatch_items } from './actions/seq2movbatch';
+import { set_mayabatch_items } from './actions/mayabatch';
 import io from 'socket.io-client';
 
 const socket = io('ws://localhost:8001')
@@ -18,9 +20,9 @@ const { Header, Content, Footer } = Layout;
 
 function mapStateToProps(state) {
     return {
-        nukebatch_filters: state.nukebatch_filters,
-        nukebatch_taskid: state.nukebatch_taskid,
-        nukebatch_items: state.nukebatch_items
+        nukebatch_items: state.nukebatch_items,
+        seq2movbatch_items: state.seq2movbatch_items,
+        mayabatch_items: state.mayabatch_items
     }
 }
 
@@ -28,6 +30,8 @@ function mapDispatchToProps(dispatch) {
     return {
         get_project_list: () => dispatch(get_project_list()),
         set_nukebatch_items: (data) => dispatch(set_nukebatch_items(data)),
+        set_seq2movbatch_items: (data) => dispatch(set_seq2movbatch_items(data)),
+        set_mayabatch_items: (data) => dispatch(set_mayabatch_items(data))
     }
 }
 
@@ -66,11 +70,29 @@ class App extends Component {
                     console.log('nukebatch refresh')
                     break
                 case 'mayabatch':
-                    // TODO: add mayabatch
+                    let mayabatch_items = this.props.mayabatch_items;
+                    let new_mayabatch_items = mayabatch_items.map((item) => {
+                        if (item.key === data.key) {
+                            return { ...item, status: data.status }
+                        }
+                        return item
+                    })
+                    if (this.mounted) {
+                        this.props.set_mayabatch_items(new_mayabatch_items)
+                    }
                     console.log('mayabatch refresh')
                     break
                 case 'seq2movbatch':
-                    // TODO: add seq2movbatch
+                    let seq2movbatch_items = this.props.seq2movbatch_items;
+                    let new_seq2movbatch_items = seq2movbatch_items.map((item) => {
+                        if (item.key === data.key) {
+                            return { ...item, status: data.status }
+                        }
+                        return item
+                    })
+                    if (this.mounted) {
+                        this.props.set_seq2movbatch_items(new_seq2movbatch_items)
+                    }
                     console.log('seq2movbatch refresh')
                     break
                 default:

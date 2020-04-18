@@ -18,8 +18,16 @@ class Api {
         return axios.post('/get_detail', shot)
     }
 
+    maya_layer_process(shot) {
+        return axios.post('/maya_layer_process', shot)
+    }
+
     nuke_setup_process(shot) {
         return axios.post('/nuke_setup_process', shot)
+    }
+
+    seq2mov_process(shot) {
+        return axios.post('/seq2mov_process', shot)
     }
 }
 

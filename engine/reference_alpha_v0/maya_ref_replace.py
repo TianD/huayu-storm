@@ -140,9 +140,21 @@ class SceneHelper(LogHelper):
         collection = render_layer.createCollection(render_layer_name + '_collection')
         collection.getSelector().setPattern('|*')
 
-    def create_render_layer_for_maya_old(self, render_layer_name):
-        pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
-        render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name)
+    def create_render_layer_for_maya_old(self, object_pattern='', render_layer_name=''):
+        """
+        :param object_pattern:
+            p*:PRO to select pro
+            c*:CHR to select character
+        :param render_layer_name:
+        :return:
+        """
+        try:
+            render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
+        except:
+            render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name)
+        maya_cmds.select(object_pattern)
+        selected = maya_cmds.ls(sl=True)
+        maya_cmds.editRenderLayerMembers(render_layer.name(), selected)
 
 
 class ReferenceHelper(LogHelper):

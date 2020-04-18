@@ -103,6 +103,8 @@ IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
     r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\AOV.mb"  # Aov
 ]
 
+PLUGIN_REDSHIFT = 'redshift4maya.mll'
+
 
 class SceneHelper(LogHelper):
     NAME_SPLITTER = '_'
@@ -318,6 +320,8 @@ class SceneHelper(LogHelper):
                     # todo select object by selector , and then set object_id , and set rgb object_id
                     self.select_with_clear(selector)
 
+    def load_plugin(self, plugin_name):
+        maya_cmds.loadPlugin(plugin_name)
 
 
 class ReferenceHelper(LogHelper):
@@ -528,6 +532,8 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
+    ref_exporter.scene_helper.load_plugin(PLUGIN_REDSHIFT)
+
+    # ref_exporter.process_all_reference()
+    # ref_exporter.process_all_render_layer()
     # ref_exporter.process_all_layer_override_attr()

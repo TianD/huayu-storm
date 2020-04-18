@@ -6,3 +6,10 @@ export function set_seq2movbatch_filters(data) {
         data: data
     };
 }
+
+export function set_seq2movbatch_items(data) {
+    return {
+        type: reducerType.SEQ2MOVBATCH_ITEMS,
+        data: data
+    }
+}

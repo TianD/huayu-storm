@@ -54,8 +54,6 @@ def get_first_image_of_dir(**shot_info):
 
 @app.route('/api/get_project_list')
 def get_project_list():
-    # import pydevd
-    # pydevd.settrace('localhost', port=1567, stdoutToServer=True, stderrToServer=True)
     temp_dict = {}
     for project in os.listdir(config_dir):
         project_config_path = os.path.join(config_dir, project, 'dir_template.yml')
@@ -190,11 +188,20 @@ def nuke_setup_process():
     return json.dumps({'status': 'Queued'})
 
 
+@app.route('/api/seq2mov_process', methods=['POST'])
+def seq2mov_process():
+    return json.dumps({'status': 'Queued'})
+
+
+@app.route('/api/maya_layer_process', methods=['POST'])
+def maya_layer_process():
+    return json.dumps({'status': 'Queued'})
+
+
 if __name__ == '__main__':
     @run_with_reloader
     def run_server():
         http_server = WSGIServer(('0.0.0.0', 5000), DebuggedApplication(app))
         http_server.serve_forever()
-
 
     run_server()

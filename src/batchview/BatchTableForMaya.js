@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Button, Select, Row, Col } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
-import {set_mayabatch_filters} from '../actions/mayabatch'
+import {set_mayabatch_filters, set_mayabatch_items} from '../actions/mayabatch';
+import api from '../api'
 
 const {remote } = window.electron;
 
@@ -11,13 +12,15 @@ function mapStateToProps(state) {
         project_list: state.project_list,
         get_project_list_failed: state.get_project_list_failed,
         get_project_list_loading: state.get_project_list_loading,
-        mayabatch_filters: state.mayabatch_filters
+        mayabatch_filters: state.mayabatch_filters,
+        mayabatch_items: state.mayabatch_items
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        set_mayabatch_filters: (data)=>dispatch(set_mayabatch_filters(data))
+        set_mayabatch_filters: (data)=>dispatch(set_mayabatch_filters(data)),
+        set_mayabatch_items: (data)=>dispatch(set_mayabatch_items(data))
     }
 }
 
@@ -55,30 +58,29 @@ class BatchTableForMaya extends Component {
                 )
             }
         ]
-        this.state = {
-            file_list: []
-        }
     }
 
-    playThis(record) {
-        // TODO: 用maya进行处理
-        console.log(record)
+    async playThis(record, index) {
+        let file_list = this.props.mayabatch_items;
+        await api.maya_layer_process(record, index).then((response)=>{
+            let new_record = {...record, ...response.data}
+            file_list.splice(index, 1, new_record)
+        })
+        this.props.set_mayabatch_items(file_list)
     }
     
     removeThis(record) {
-        let {file_list} = this.state;
+        let file_list = this.props.mayabatch_items;
         file_list.splice(record.key, 1);
         let new_file_list = file_list.map((item, index)=>{
             return {...item, key: index, id: index+1}
         })
-        this.setState({
-            file_list: new_file_list
-        })
+        this.props.set_mayabatch_items(new_file_list)
     }
 
     async upload(e) {
         let result = await remote.dialog.showOpenDialog({
-            properties: ['openFile'],
+            properties: ['openFile', 'multiSelections'],
         });
         let file_list = [];
         for (let i = 0; i < result.filePaths.length; i++) {
@@ -90,15 +92,11 @@ class BatchTableForMaya extends Component {
             }
             file_list.push(file_data)
         }
-        this.setState({
-            file_list: file_list
-        })
+        this.props.set_mayabatch_items(file_list)
     }
 
     clearlist(){
-        this.setState({
-            file_list: []
-        })
+        this.props.set_mayabatch_items([])
     }
 
     change_project(value) {
@@ -106,7 +104,6 @@ class BatchTableForMaya extends Component {
     }
 
     render() {
-        let { file_list } = this.state;
         return (
             <div>
                 <Row>
@@ -125,7 +122,7 @@ class BatchTableForMaya extends Component {
                 </Row>
                 <Table
                     tableLayout={"fixed"}
-                    dataSource={file_list}
+                    dataSource={this.props.mayabatch_items}
                     columns={this.columns}
                     pagination={false}
                 />

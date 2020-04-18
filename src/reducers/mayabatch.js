@@ -11,3 +11,11 @@ export function mayabatch_filters(state = null, action) {
     }
 }
 
+export function mayabatch_items(state=[], action) {
+    switch(action.type) {
+        case reducerType.MAYABATCH_ITEMS:
+            return action.data
+        default:
+            return state;
+    }
+}

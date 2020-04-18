@@ -117,6 +117,10 @@ class SceneHelper(LogHelper):
         self.sequence = ''
         self.shot = ''
 
+    def select_with_clear(self, object_pattern):
+        maya_cmds.select(cl=True)
+        maya_cmds.select(object_pattern)
+
     def get_episode_sequence_shot_from_filename(self):
         scene_file_path = maya_cmds.file(query=1, exn=1)
         scene_file_name = self.path_and_file_helper.get_base_name(scene_file_path)
@@ -291,8 +295,7 @@ class SceneHelper(LogHelper):
         # as use *:* this like , if not found , error happened , so try/except to avoid this
 
         try:
-            maya_cmds.select(cl=True)
-            maya_cmds.select(object_pattern)
+            self.select_with_clear(object_pattern)
             selected = maya_cmds.ls(sl=True)
             render_layer.addMembers(selected)
         except:
@@ -306,6 +309,15 @@ class SceneHelper(LogHelper):
                 self.set_render_layer_object_pattern_for_maya_old(
                     object_pattern=select_pattern, render_layer_name=layer_name
                 )
+            if layer_name == LAYER_IDP:
+                # todo create IDP aov ,set aov with object_id
+                for config in LAYER_IDP_CONFIG:
+                    selector = config[0]
+                    object_id = config[1]
+                    matte_color = config[2]
+                    # todo select object by selector , and then set object_id , and set rgb object_id
+                    self.select_with_clear(selector)
+
 
 
 class ReferenceHelper(LogHelper):

@@ -156,6 +156,7 @@ class ReferenceHelper(LogHelper):
     LAYER_SKY = 'SKY'
     LAYER_IDP = 'IDP'
     LAYER_LGT = 'LGT'
+    LAYER_AOV = 'AOV'
 
     LAYER_LIST_OF_ALL = [
         LAYER_MASTER,
@@ -165,6 +166,7 @@ class ReferenceHelper(LogHelper):
         LAYER_SKY,
         LAYER_IDP,
         LAYER_LGT,
+        LAYER_AOV,
     ]
 
     REPLACE_RULES = [
@@ -187,7 +189,6 @@ class ReferenceHelper(LogHelper):
     IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
         r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
     ]
-
     IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
         r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
     ]
@@ -199,20 +200,23 @@ class ReferenceHelper(LogHelper):
         self.ADD_RULES = [
             {
                 ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_BG_COLOR,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_scene,
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {
                 ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_SKY,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_sky,
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {
                 ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_CHR_COLOR,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_light,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {
-                    'file': ReferenceHelper.IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT
-                }
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
+                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+            },
+            {
+                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_AOV,
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
+                ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             # {'chclr': 'add_char/props'},
             # {'light': 'config_file'},  # just a maya file
@@ -269,14 +273,20 @@ class ReferenceHelper(LogHelper):
                 pymel_core.system.createReference(reference_target)
                 self.scene_helper.create_render_layer_for_maya_old(rule.get(ReferenceHelper.KEY_RENDER_LAYER_NAME))
 
-    def get_file_path_from_shot_file_for_sky(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_FOR_LAYER_SKY
+    def get_file_path_list_from_shot_file_for_sky(self):
+        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY
 
-    def get_file_path_from_shot_file_for_scene(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_FOR_LAYER_SCENE
+    def get_file_path_list_from_shot_file_for_scene(self):
+        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE
 
-    def get_file_path_from_shot_file_for_light(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT
+    def get_file_path_list_from_shot_file_for_light(self):
+        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
+
+    def get_file_path_list_from_shot_file_for_character(self):
+        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
+
+    def get_file_path_list_from_shot_file_for_aov(self):
+        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV
 
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())

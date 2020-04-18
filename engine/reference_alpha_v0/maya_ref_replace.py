@@ -211,9 +211,11 @@ class SceneHelper(LogHelper):
         try:
             render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
         except:
-            render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name)
+            render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name, empty=True)
 
         # as use *:* this like , if not found , error happened , so try/except to avoid this
+
+        print(render_layer.name(), render_layer.listMembers())
         try:
             maya_cmds.select(cl=True)
             maya_cmds.select(object_pattern)

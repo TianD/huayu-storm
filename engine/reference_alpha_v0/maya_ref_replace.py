@@ -64,16 +64,20 @@ KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
+]
+
+IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH = [
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\LGT.mb"  # scene , import sky file content
 ]
 IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY = [
     r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
 ]
 IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHLGT.mb"  # chrlight , in layer chcolor
 ]
 IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\AOV.mb"  # Aov
 ]
 
 
@@ -310,7 +314,7 @@ class ReferenceHelper(LogHelper):
         return IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE
 
     def get_file_path_list_from_shot_file_for_light(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH
 
     def get_file_path_list_from_shot_file_for_character(self):
         return IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR

@@ -2,3 +2,5 @@ flask
 flask-cors
 pyyaml
 gevent
+pyzmq
+python-socketio

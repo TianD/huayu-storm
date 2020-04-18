@@ -83,7 +83,7 @@ run_flask:
 
 py_setup_deps:
 	pushd engine ;\
-		venv/Scripts/python engine.py
+		venv/Scripts/pip install -r requirement.txt
 
 release:
 	@make set_nodejs_env command=' \

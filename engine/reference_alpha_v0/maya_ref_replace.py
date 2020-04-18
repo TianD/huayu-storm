@@ -209,8 +209,13 @@ class ReferenceHelper(LogHelper):
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_CHR_COLOR,
+                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_LGT,
                 ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
+                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+            },
+            {
+                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_CHR_COLOR,
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {

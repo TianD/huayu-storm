@@ -5,6 +5,7 @@ import re
 import sys
 
 import maya.cmds as maya_cmds
+import maya.mel as maya_mel
 import pymel.core as pymel_core
 
 try:
@@ -28,6 +29,8 @@ LAYER_SKY = 'SKY'
 LAYER_IDP = 'IDP'
 LAYER_LGT = 'LGT'
 LAYER_AOV = 'AOV'
+
+LAYER_IDP_AOV_NAME = 'idp'
 
 LAYER_LIST_OF_ALL = [
     LAYER_MASTER,
@@ -56,12 +59,14 @@ RENDER_LAYER_RULES = [
 ]
 
 # [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]
-REDSHIFT_ID_1 = 1
-REDSHIFT_ID_2 = 2
-REDSHIFT_ID_3 = 3
+
 REDSHIFT_MATTE_RED = 1
 REDSHIFT_MATTE_GREEN = 2
 REDSHIFT_MATTE_BLUE = 3
+
+REDSHIFT_ID_1 = REDSHIFT_MATTE_RED
+REDSHIFT_ID_2 = REDSHIFT_MATTE_GREEN
+REDSHIFT_ID_3 = REDSHIFT_MATTE_BLUE
 
 LAYER_IDP_CONFIG = \
     [
@@ -111,7 +116,7 @@ class SceneHelper(LogHelper):
     EPISODE_SCENE_SHOT_REGX = '(SEA_0[0-9]_T[0-9a-z]+)_(P[0-9a-z]+)_(S[0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
 
     def __init__(self, logger=None):
-        LogHelper.__init__(self, logger)
+        super(SceneHelper, self).__init__(logger=logger)
         self.path_and_file_helper = PathAndFileHelper(logger)
 
         # scene info
@@ -258,8 +263,15 @@ class SceneHelper(LogHelper):
 
     DEFAULT_RENDER_LAYER_NAME = 'masterLayer'
 
-    def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list,
-                                                    override_render_layer_name=DEFAULT_RENDER_LAYER_NAME):
+    def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list):
+        for command_param_list in command_param_list_batch_list:
+            attr_key, attr_value = command_param_list
+            pymel_core.general.setAttr(attr_key, attr_value)
+
+    def set_attr_with_command_param_list_batch_list_with_render_layer(
+            self,
+            command_param_list_batch_list, override_render_layer_name=DEFAULT_RENDER_LAYER_NAME
+    ):
         if override_render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
             for command_param_list in command_param_list_batch_list:
                 attr_key, attr_value = command_param_list
@@ -281,6 +293,14 @@ class SceneHelper(LogHelper):
         collection = render_layer.createCollection(render_layer_name + '_collection')
         collection.getSelector().setPattern('|*')
 
+    def __get_render_layer_with_auto_create(self, render_layer_name):
+        try:
+            render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
+        except:
+            render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name, empty=True)
+
+        return render_layer
+
     def set_render_layer_object_pattern_for_maya_old(self, object_pattern='', render_layer_name=''):
         """
         :param object_pattern:
@@ -289,10 +309,7 @@ class SceneHelper(LogHelper):
         :param render_layer_name:
         :return:
         """
-        try:
-            render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
-        except:
-            render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name, empty=True)
+        render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
 
         # as use *:* this like , if not found , error happened , so try/except to avoid this
 
@@ -306,11 +323,34 @@ class SceneHelper(LogHelper):
     def load_plugin(self, plugin_name):
         maya_cmds.loadPlugin(plugin_name)
 
+    def set_render_layer_to_current(self, render_layer_name):
+        render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
+        render_layer.setCurrent()
+
 
 class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
         self.load_plugin()
+
+    def create_idp_with_type_and_name(self, name=''):
+        """
+        :param type: "Puzzle Matte"
+        :param name:
+        :return:
+        """
+
+        # todo create rsObjectId node
+        #   redshift menu => [ Redshift -> Object Properties -> Create Redshift Object Id Node for Selection ]
+        #   in render setting -> AOV -> AOVs -> (select) Puzzle Matte , rename to : idp
+        #                     -> AOV -> Processing -> Puzzle Matte ->
+        #                                       Mode: Object ID , Red ID : 1 , Green ID : 2 , Blue ID : 3
+        #                                       [ ]Reflect/Refract IDs
+        maya_mel.eval('rsCreateAov -type  "{node_type}"'.format(node_type="Puzzle Matte"))
+        idp_node_name = maya_cmds.ls(type='RedshiftAOV')[0]
+        # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+        self.set_attr_with_command_param_list_batch_list([idp_node_name + '.name', name])
+        return idp_node_name
 
     # todo extract to SceneHelperForRedshift
     def process_all_render_layer(self):
@@ -322,27 +362,45 @@ class SceneHelperForRedshift(SceneHelper):
                     object_pattern=select_pattern, render_layer_name=layer_name
                 )
             if layer_name == LAYER_IDP:
+                self.set_render_layer_to_current(layer_name)
+                idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
+
                 # todo create IDP aov ,set aov with object_id
                 for config in LAYER_IDP_CONFIG:
                     selector = config[0]
                     object_id = config[1]
                     matte_color = config[2]
+                    if matte_color == REDSHIFT_MATTE_RED:
+                        current_matte_id = matte_color
+                        self.set_attr_with_command_param_list_batch_list(
+                            ['{}.redId'.format(idp_node_name), current_matte_id]
+                        )
+                    elif matte_color == REDSHIFT_MATTE_GREEN:
+                        current_matte_id = matte_color
+                        self.set_attr_with_command_param_list_batch_list(
+                            ['{}.greenId'.format(idp_node_name), current_matte_id]
+                        )
+                    elif matte_color == REDSHIFT_MATTE_BLUE:
+                        current_matte_id = matte_color
+                        self.set_attr_with_command_param_list_batch_list(
+                            ['{}.blueId'.format(idp_node_name), current_matte_id]
+                        )
                     # todo select object by selector , and then set object_id , and set rgb object_id
                     self.select_with_clear(selector)
-                # todo , if layer in [ IDP ] , create idp layer
-                #   override render layer
-                #   Puzzle Matte , rename to idp
-                #       CHCLR -> [aov]  , id : 1 [R]
-                #       BGCLR -> Puzzle Matte , id : 2 [G]
-                #       PRO -> Puzzle Matte , id : 3 [B]
-                #           rsCreateAov -type  "Puzzle Matte";
-                #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
-                #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
-                #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
-                #           setAttr "rsAov_PuzzleMatte.redId" 1;
-                #           setAttr "rsAov_PuzzleMatte.greenId" 2;
-                #           setAttr "rsAov_PuzzleMatte.blueId" 3;
-                #           setAttr "rsAov_PuzzleMatte.mode" 1;
+                    # todo , if layer in [ IDP ] , create idp layer
+                    #   override render layer
+                    #   Puzzle Matte , rename to idp
+                    #       CHCLR -> [aov]  , id : 1 [R]
+                    #       BGCLR -> Puzzle Matte , id : 2 [G]
+                    #       PRO -> Puzzle Matte , id : 3 [B]
+                    #           rsCreateAov -type  "Puzzle Matte";
+                    #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+                    #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
+                    #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
+                    #           setAttr "rsAov_PuzzleMatte.redId" 1;
+                    #           setAttr "rsAov_PuzzleMatte.greenId" 2;
+                    #           setAttr "rsAov_PuzzleMatte.blueId" 3;
+                    #           setAttr "rsAov_PuzzleMatte.mode" 1;
 
     def load_plugin(self, plugin_name=PLUGIN_REDSHIFT):
         super(SceneHelperForRedshift, self).load_plugin(plugin_name)
@@ -498,7 +556,7 @@ class ReferenceExporter(ReferenceHelper):
     def process_all_layer_override_attr(self):
         for override_layer_name in ['BGColor', 'CHColor']:
             command_param_list = [('defaultResolution.width', 1920)]
-            self.scene_helper.set_attr_with_command_param_list_batch_list(
+            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                 command_param_list, override_render_layer_name=override_layer_name
             )
 
@@ -510,7 +568,8 @@ class ReferenceExporter(ReferenceHelper):
         # create render layer
         self.process_all_render_layer()
         # todo , set common render setting
-        self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
+        self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+            [('defaultResolution.width', 1920)])
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:
@@ -519,7 +578,7 @@ class ReferenceExporter(ReferenceHelper):
         #   override render layer
         for override_layer_name in ['BGColor', 'CHColor']:
             command_param_list = [('defaultResolution.width', 1920)]
-            self.scene_helper.set_attr_with_command_param_list_batch_list(
+            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                 command_param_list, override_render_layer_name=override_layer_name
             )
 
@@ -543,6 +602,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
     ref_exporter.scene_helper.load_plugin(PLUGIN_REDSHIFT)
+    ref_exporter.scene_helper.set_render_layer_to_current('BGCLR')
 
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()

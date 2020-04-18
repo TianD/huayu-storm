@@ -178,10 +178,19 @@ class ReferenceHelper(LogHelper):
     KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
     KEY_REPLACE_PARAMS = 'key_replace_params'
 
-    IMPORT_FILE_PATH_FOR_LAYER_SCENE = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
-    IMPORT_FILE_PATH_FOR_LAYER_SKY = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
-    IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
-    IMPORT_FILE_PATH_FOR_LAYER_AOV = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
+    IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
+        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
+    ]
+    IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY = [
+        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
+    ]
+    IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
+        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
+    ]
+
+    IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
+        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
+    ]
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
@@ -199,14 +208,11 @@ class ReferenceHelper(LogHelper):
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_LGT,
+                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_CHR_COLOR,
                 ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_light,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
-            },
-            {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_LGT,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_light,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                ReferenceHelper.KEY_REPLACE_PARAMS: {
+                    'file': ReferenceHelper.IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT
+                }
             },
             # {'chclr': 'add_char/props'},
             # {'light': 'config_file'},  # just a maya file

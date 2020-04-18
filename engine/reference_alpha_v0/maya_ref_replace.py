@@ -39,7 +39,7 @@ LAYER_LIST_OF_ALL = [
     LAYER_AOV,
 ]
 
-BG_OBJECT_SELECTOR = 'SCNRN:*'
+BG_OBJECT_SELECTOR = 'BGCLR:*'
 LGT_OBJECT_SELECTOR = 'LGTRN:*'
 SKY_OBJECT_SELECTOR = 'SKYRN:*'
 CHR_OBJECT_SELECTOR = '*:CHR'
@@ -516,6 +516,6 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    # ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
-    ref_exporter.process_all_layer_override_attr()
+    ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()
+    # ref_exporter.process_all_layer_override_attr()

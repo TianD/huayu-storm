@@ -141,6 +141,7 @@ class SceneHelper(LogHelper):
         collection.getSelector().setPattern('|*')
 
     def create_render_layer_for_maya_old(self, render_layer_name):
+        pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
         render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name)
 
 
@@ -254,7 +255,6 @@ class ReferenceHelper(LogHelper):
                     self.scene_helper.get_file_path_with_replace_on_file_base_name(
                         reference_source, replace_from, replace_to
                     )
-
         return new_file_path
 
     def __replace_reference_with_rules(self, reference_item):
@@ -267,7 +267,6 @@ class ReferenceHelper(LogHelper):
                     self.scene_helper.path_and_file_helper.is_different_file(
                         reference_source, reference_target,
                     ):
-                print('-------', reference_target)
                 reference_item.replaceWith(reference_target)
 
     def __add_reference_with_rules(self, reference_source):
@@ -277,7 +276,6 @@ class ReferenceHelper(LogHelper):
             for reference_target in reference_target_list:
                 if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
                     pymel_core.system.createReference(reference_target)
-                    self.scene_helper.create_render_layer_for_maya_old(rule.get(ReferenceHelper.KEY_RENDER_LAYER_NAME))
 
     def get_file_path_list_from_shot_file_for_sky(self):
         return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY

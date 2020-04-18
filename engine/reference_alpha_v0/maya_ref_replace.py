@@ -20,10 +20,6 @@ reload(LogHelper)
 from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 
-RENDER_LAYER_RULES = [
-    []
-]
-
 LAYER_MASTER = 'masterLayer'
 LAYER_BG_COLOR = 'BGCLR'
 LAYER_CHR_COLOR = 'CHCLR'
@@ -42,6 +38,14 @@ LAYER_LIST_OF_ALL = [
     LAYER_IDP,
     LAYER_LGT,
     LAYER_AOV,
+]
+
+RENDER_LAYER_RULES = [
+    # layer name ,  layer select pattern
+    [LAYER_BG_COLOR, ['SCN:*']],
+    [LAYER_LGT, ['LGT:*']],
+    [LAYER_SKY, ['SKY:*']],
+    [LAYER_CHR_COLOR, ['*:CHR', '*:PRO', 'CHRLGT:*']],
 ]
 
 KEY_FROM = 'from'

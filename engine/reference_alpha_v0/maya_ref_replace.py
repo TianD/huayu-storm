@@ -295,10 +295,12 @@ class ReferenceHelper(LogHelper):
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())
         reference_path = ''
+        # replace
         for reference_item in reference_list:
             reference_path = reference_item.path
             self.__replace_reference_with_rules(reference_item)
 
+        # add reference
         self.__add_reference_with_rules(reference_source=reference_path)
 
 

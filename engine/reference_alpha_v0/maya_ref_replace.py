@@ -2,6 +2,7 @@
 
 
 import re
+import sys
 
 import maya.cmds as maya_cmds
 import pymel.core as pymel_core
@@ -214,6 +215,7 @@ class SceneHelper(LogHelper):
 
         # as use *:* this like , if not found , error happened , so try/except to avoid this
         try:
+            maya_cmds.select(cl=True)
             maya_cmds.select(object_pattern)
             selected = maya_cmds.ls(sl=True)
             render_layer.addMembers(selected)
@@ -431,5 +433,5 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
+    # ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()

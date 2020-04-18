@@ -6,8 +6,7 @@ const server = require('http').createServer();
 const io = require('socket.io')(server);
 io.on('connection', client => {
   client.on('finish_job', data=> {
-    console.log('finish_job', data)
-    client.broadcast.emit('refresh_ui', {job: data})
+    client.broadcast.emit('refresh_ui', data)
   })
   client.on('disconnect', () => { /* … */ });
 });

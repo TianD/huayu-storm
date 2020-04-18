@@ -7,13 +7,27 @@ import BatchTableForMaya from './batchview/BatchTableForMaya';
 import BatchTableForNuke from './batchview/BatchTableForNuke';
 import BatchTableForSeqToMov from './batchview/BatchTableForSeqToMov';
 import Logo from './logo.png';
-import {get_project_list} from './actions/get_project_list'
+import { get_project_list } from './actions/get_project_list'
+import { set_nukebatch_items } from './actions/nukebatch';
+import io from 'socket.io-client';
+
+const socket = io('ws://localhost:8001')
+
 
 const { Header, Content, Footer } = Layout;
 
+function mapStateToProps(state) {
+    return {
+        nukebatch_filters: state.nukebatch_filters,
+        nukebatch_taskid: state.nukebatch_taskid,
+        nukebatch_items: state.nukebatch_items
+    }
+}
+
 function mapDispatchToProps(dispatch) {
     return {
-        get_project_list: ()=> dispatch(get_project_list())
+        get_project_list: () => dispatch(get_project_list()),
+        set_nukebatch_items: (data) => dispatch(set_nukebatch_items(data)),
     }
 }
 
@@ -32,8 +46,37 @@ class App extends Component {
         )
     }
 
-    componentDidMount(){
+    componentDidMount() {
+        this.mounted = true;
         this.props.get_project_list()
+        socket.on('refresh_ui', data => {
+            let view = data.view;
+            switch (view) {
+                case 'nukebatch':
+                    let nukebatch_items = this.props.nukebatch_items;
+                    let new_nukebatch_items = nukebatch_items.map((item) => {
+                        if (item.key === data.key) {
+                            return { ...item, status: data.status }
+                        }
+                        return item
+                    })
+                    if (this.mounted) {
+                        this.props.set_nukebatch_items(new_nukebatch_items)
+                    }
+                    console.log('nukebatch refresh')
+                    break
+                case 'mayabatch':
+                    // TODO: add mayabatch
+                    console.log('mayabatch refresh')
+                    break
+                case 'seq2movbatch':
+                    // TODO: add seq2movbatch
+                    console.log('seq2movbatch refresh')
+                    break
+                default:
+                    console.log('do nothing')
+            }
+        })
     }
 
     render() {
@@ -88,4 +131,4 @@ class App extends Component {
 
 }
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -186,8 +186,8 @@ def nuke_setup_process():
                                 nuke_template=nuke_template,
                                 py_cmd=py_cmd,
                                 **new_nuke_data)
-    ZMQ_SOCKET.send_json({'format_command': format_command})
-    return json.dumps({'format_command': format_command})
+    ZMQ_SOCKET.send_json({'format_command': format_command, 'key': shot_info.get('key'), 'view': 'nukebatch'})
+    return json.dumps({'status': 'Queued'})
 
 
 if __name__ == '__main__':

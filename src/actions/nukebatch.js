@@ -13,3 +13,10 @@ export function set_nukebatch_taskid(data) {
         data: data
     }
 }
+
+export function set_nukebatch_items(data) {
+    return {
+        type: reducerType.NUKEBATCH_ITEMS,
+        data: data
+    }
+}

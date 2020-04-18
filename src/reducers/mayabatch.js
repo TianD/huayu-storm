@@ -10,3 +10,4 @@ export function mayabatch_filters(state = null, action) {
             return state;
     }
 }
+

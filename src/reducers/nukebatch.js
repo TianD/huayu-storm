@@ -20,3 +20,12 @@ export function nukebatch_taskid(state = 1, action) {
             return state;
     }
 }
+
+export function nukebatch_items(state=[], action) {
+    switch(action.type) {
+        case reducerType.NUKEBATCH_ITEMS:
+            return action.data
+        default:
+            return state;
+    }
+}

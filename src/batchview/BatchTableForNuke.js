@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Row, Col, Radio, Cascader, Button } from 'antd';
 import { PlayCircleTwoTone } from '@ant-design/icons';
-import { set_nukebatch_filters, set_nukebatch_taskid } from '../actions/nukebatch';
+import { set_nukebatch_filters, set_nukebatch_taskid, set_nukebatch_items } from '../actions/nukebatch';
 import api from '../api'
-import io from 'socket.io-client';
-
-const socket = io('ws://localhost:8001')
 
 function mapStateToProps(state) {
     return {
@@ -14,14 +11,16 @@ function mapStateToProps(state) {
         get_project_list_failed: state.get_project_list_failed,
         get_project_list_loading: state.get_project_list_loading,
         nukebatch_filters: state.nukebatch_filters,
-        nukebatch_taskid: state.nukebatch_taskid
+        nukebatch_taskid: state.nukebatch_taskid,
+        nukebatch_items: state.nukebatch_items
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         set_nukebatch_filters: (data) => dispatch(set_nukebatch_filters(data)),
-        set_nukebatch_taskid: (data) => dispatch(set_nukebatch_taskid(data))
+        set_nukebatch_taskid: (data) => dispatch(set_nukebatch_taskid(data)),
+        set_nukebatch_items: (data) => dispatch(set_nukebatch_items(data))
     }
 }
 
@@ -60,6 +59,11 @@ class BatchTableForNuke extends Component {
                 render: (text) => taskmap[text]
             },
             {
+                title: '状态',
+                dataIndex: 'status',
+                key: 'status'
+            },
+            {
                 title: 'Action',
                 dataIndex: 'action',
                 key: 'action',
@@ -71,29 +75,30 @@ class BatchTableForNuke extends Component {
                 )
             }
         ]
-        this.state = {
-            shots: [],
-        }
     }
 
     changeTask(e) {
-        let { shots } = this.state;
-        let new_shot_list = shots.map((item) => ({ ...item, taskid: e.target.value }))
+        let shots = this.props.nukebatch_items;
+        let new_shot_list = shots.map((item) => {
+            if(item.status === 'Ready'){
+                return { ...item, taskid: e.target.value }
+            }
+            return item})
         this.props.set_nukebatch_taskid(e.target.value)
-        this.setState({
-            shots: new_shot_list
-        })
+        this.props.set_nukebatch_items(new_shot_list)
     }
 
     async playThis(record, index) {
-        // TODO: 用maya进行处理
-        await api.nuke_setup_process(record).then((response)=>{
-            console.log(response)
+        let shots = this.props.nukebatch_items;
+        await api.nuke_setup_process(record, index).then((response)=>{
+            let new_record = {...record, ...response.data}
+            shots.splice(index, 1, new_record)
         })
+        this.props.set_nukebatch_items(shots)
     }
 
     filterShots(value) {
-        this.props.set_nukebatch_filters(value)
+        let current_taskid = this.props.nukebatch_taskid;
         let project_list = this.props.project_list;
         let shot_list;
         if (value.length > 0) {
@@ -114,21 +119,12 @@ class BatchTableForNuke extends Component {
         } else {
             shot_list = [];
         }
-        let new_shot_list = shot_list.map((item) => ({ ...item, taskid: this.props.nukebatch_taskid }))
-        this.setState({
-            shots: new_shot_list
-        })
-    }
-
-    componentDidMount() {
-        this.filterShots(this.props.nukebatch_filters)
-        socket.on('refresh_ui', data=>{
-            console.log('refresh_ui', data)
-        })
+        let new_shot_list = shot_list.map((item) => ({ ...item, taskid: current_taskid }))
+        this.props.set_nukebatch_filters(value)
+        this.props.set_nukebatch_items(new_shot_list)
     }
 
     render() {
-        let { shots } = this.state;
         return (
             <div>
                 <Row>
@@ -151,7 +147,7 @@ class BatchTableForNuke extends Component {
                 </Row>
                 <Table
                     tableLayout={"fixed"}
-                    dataSource={shots}
+                    dataSource={this.props.nukebatch_items}
                     columns={this.columns}
                     pagination={false}
                     size="small"

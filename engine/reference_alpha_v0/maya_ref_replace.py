@@ -186,7 +186,7 @@ class SceneHelper(LogHelper):
                     attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
                 )
 
-    def create_render_layer_for_maya_new(self, render_layer_name):
+    def set_render_layer_with_object_pattern_for_maya_new(self, bject_pattern='', render_layer_name=''):
         # renderSetup.model.renderSetup.initialize() , # this will cause renderSetup destroyed after this
         render_setup = renderSetup.model.renderSetup.instance()
         try:
@@ -196,7 +196,7 @@ class SceneHelper(LogHelper):
         collection = render_layer.createCollection(render_layer_name + '_collection')
         collection.getSelector().setPattern('|*')
 
-    def create_render_layer_for_maya_old(self, object_pattern='', render_layer_name=''):
+    def set_render_layer_object_pattern_for_maya_old(self, object_pattern='', render_layer_name=''):
         """
         :param object_pattern:
             p*:PRO to select pro
@@ -208,9 +208,14 @@ class SceneHelper(LogHelper):
             render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
         except:
             render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name)
-        maya_cmds.select(object_pattern)
-        selected = maya_cmds.ls(sl=True)
-        maya_cmds.editRenderLayerMembers(render_layer.name(), selected)
+
+        # as use *:* this like , if not found , error happened , so try/except to avoid this
+        try:
+            maya_cmds.select(object_pattern)
+            selected = maya_cmds.ls(sl=True)
+            maya_cmds.editRenderLayerMembers(render_layer.name(), selected)
+        except:
+            pass
 
 
 class ReferenceHelper(LogHelper):
@@ -355,6 +360,14 @@ class ReferenceExporter(ReferenceHelper):
         #   add scene as bg
         #   add char / props
         self.process_all_reference()
+        for render_layer_select_rule in RENDER_LAYER_RULES:
+            layer_name = render_layer_select_rule[0]
+            select_pattern_list = render_layer_select_rule[1]
+
+            self.scene_helper.set_render_layer_object_pattern_for_maya_old(
+                layer_name
+            )
+
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:

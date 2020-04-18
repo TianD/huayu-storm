@@ -152,6 +152,7 @@ class ReferenceHelper(LogHelper):
     LAYER_MASTER = 'masterLayer'
     LAYER_BG_COLOR = 'BGCLR'
     LAYER_CHR_COLOR = 'CHCLR'
+    LAYER_CHR_LIGHT = 'CHLIGHT'
     LAYER_SKY = 'SKY'
     LAYER_IDP = 'IDP'
     LAYER_LGT = 'LGT'
@@ -160,6 +161,7 @@ class ReferenceHelper(LogHelper):
         LAYER_MASTER,
         LAYER_BG_COLOR,
         LAYER_CHR_COLOR,
+        LAYER_CHR_LIGHT,
         LAYER_SKY,
         LAYER_IDP,
         LAYER_LGT,
@@ -176,10 +178,10 @@ class ReferenceHelper(LogHelper):
     KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
     KEY_REPLACE_PARAMS = 'key_replace_params'
 
-    IMPORT_FILE_PATH_FOR_LAYER_SCENE = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_c001001kai_h_ms_scene.mb"  # scene , import sky file content
-    IMPORT_FILE_PATH_FOR_LAYER_SKY = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_c001001kai_h_ms_sky.mb"  # sky , import sky file content
-    IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_c001001kai_chrlight.mb"  # chrlight , in layer chcolor
-    IMPORT_FILE_PATH_FOR_LAYER_AOV = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_c001001kai_aov.mb"  # Aov
+    IMPORT_FILE_PATH_FOR_LAYER_SCENE = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
+    IMPORT_FILE_PATH_FOR_LAYER_SKY = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
+    IMPORT_FILE_PATH_FOR_LAYER_CHCOLOR_FILE_CHRLIGHT = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
+    IMPORT_FILE_PATH_FOR_LAYER_AOV = r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
@@ -194,6 +196,11 @@ class ReferenceHelper(LogHelper):
             {
                 ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_SKY,
                 ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_sky,
+                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+            },
+            {
+                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_LGT,
+                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_from_shot_file_for_light,
                 ReferenceHelper.KEY_REPLACE_PARAMS: {}
             },
             {

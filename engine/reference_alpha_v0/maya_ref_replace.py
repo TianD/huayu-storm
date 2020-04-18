@@ -123,8 +123,8 @@ class SceneHelper(LogHelper):
         new_file_base_name = file_base_name.replace(src_string, dst_string)
         return self.path_and_file_helper.join_file_path(file_dir_name, new_file_base_name)
 
-    def __set_override_for_render_layer(self, attr_key, attr_value, input_render_layer_name='',
-                                        create_if_not_existed=True):
+    def __set_override_for_render_layer_for_maya_new(self, attr_key, attr_value, input_render_layer_name='',
+                                                     create_if_not_existed=True):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
@@ -171,7 +171,59 @@ class SceneHelper(LogHelper):
                 if not set_ok and create_if_not_existed:
                     self.debug(node_name, node_attr)
                     override_utils.createAbsoluteOverride(node_name, node_attr)
-                    self.__set_override_for_render_layer(
+                    self.__set_override_for_render_layer_for_maya_new(
+                        attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
+                    )
+
+    def __set_override_for_render_layer_for_maya_old(self, attr_key, attr_value, input_render_layer_name='',
+                                                     create_if_not_existed=True):
+        # layer_name_input = layer_name_input  # "renderSetupLayer2"
+        # attr_key = attr_key  # 'defaultResolution.width'
+        # attr_value = value  # 2000
+
+        node_name, node_attr = attr_key.split('.')
+
+        render_settings_collection_list = maya_cmds.ls(type='renderSettingsCollection')
+        render_settings_collection_existed = False
+        for render_settings_collection in render_settings_collection_list:
+            render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
+            if render_setup_layer == input_render_layer_name:
+                render_settings_collection_existed = True
+                break
+        if not render_settings_collection_existed:
+            legacy_render_layer = \
+                maya_cmds.listConnections('{}.{}'.format(input_render_layer_name, 'legacyRenderLayer'))[0]
+            sys.modules['maya.app.renderSetup.model.renderSetup'].instance(). \
+                switchToLayerUsingLegacyName(legacy_render_layer)
+            override_utils.createAbsoluteOverride(node_name, node_attr)
+
+        for render_settings_collection in render_settings_collection_list:
+            render_setup_layer = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'parentList'))[0]
+            if render_setup_layer == input_render_layer_name:
+                override_node_list = maya_cmds.listConnections('{}.{}'.format(render_settings_collection, 'enabled'))
+
+                set_ok = False
+                for override_node in override_node_list:
+                    override_node_source_node_name = maya_cmds.getAttr('{}.targetNodeName'.format(override_node))
+                    override_node_source_node_attr = maya_cmds.getAttr('{}.attribute'.format(override_node))
+                    if True and \
+                            override_node_source_node_name == node_name and \
+                            override_node_source_node_attr == node_attr:
+                        try:
+                            self.debug(
+                                maya_cmds.getAttr("%s.attribute" % override_node),
+                                maya_cmds.getAttr("%s.attrValue" % override_node)
+                            )
+                            self.debug(
+                                maya_cmds.setAttr("%s.attrValue" % override_node, attr_value)
+                            )
+                            set_ok = True
+                        except:
+                            pass
+                if not set_ok and create_if_not_existed:
+                    self.debug(node_name, node_attr)
+                    override_utils.createAbsoluteOverride(node_name, node_attr)
+                    self.__set_override_for_render_layer_for_maya_new(
                         attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
                     )
 
@@ -186,7 +238,7 @@ class SceneHelper(LogHelper):
         else:
             for command_param_list in command_param_list_batch_list:
                 attr_key, attr_value = command_param_list
-                self.__set_override_for_render_layer(
+                self.__set_override_for_render_layer_for_maya_old(
                     attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
                 )
 
@@ -380,6 +432,13 @@ class ReferenceExporter(ReferenceHelper):
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
 
+    def process_all_layer_override_attr(self):
+        for override_layer_name in ['BGColor', 'CHColor']:
+            command_param_list = [('defaultResolution.width', 1920)]
+            self.scene_helper.set_attr_with_command_param_list_batch_list(
+                command_param_list, override_render_layer_name=override_layer_name
+            )
+
     def export_all(self):
         # todo , replace reference
         # xx_anim -> xx_render
@@ -435,4 +494,5 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
     # ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
+    # ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_layer_override_attr()

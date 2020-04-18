@@ -303,6 +303,16 @@ class SceneHelper(LogHelper):
         except:
             pass
 
+    def load_plugin(self, plugin_name):
+        maya_cmds.loadPlugin(plugin_name)
+
+
+class SceneHelperForRedshift(SceneHelper):
+    def __init__(self, logger=None):
+        super(SceneHelperForRedshift, self).__init__(logger=logger)
+        self.load_plugin()
+
+    # todo extract to SceneHelperForRedshift
     def process_all_render_layer(self):
         for render_layer_select_rule in RENDER_LAYER_RULES:
             layer_name = render_layer_select_rule[0]
@@ -319,16 +329,30 @@ class SceneHelper(LogHelper):
                     matte_color = config[2]
                     # todo select object by selector , and then set object_id , and set rgb object_id
                     self.select_with_clear(selector)
+                # todo , if layer in [ IDP ] , create idp layer
+                #   override render layer
+                #   Puzzle Matte , rename to idp
+                #       CHCLR -> [aov]  , id : 1 [R]
+                #       BGCLR -> Puzzle Matte , id : 2 [G]
+                #       PRO -> Puzzle Matte , id : 3 [B]
+                #           rsCreateAov -type  "Puzzle Matte";
+                #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+                #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
+                #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
+                #           setAttr "rsAov_PuzzleMatte.redId" 1;
+                #           setAttr "rsAov_PuzzleMatte.greenId" 2;
+                #           setAttr "rsAov_PuzzleMatte.blueId" 3;
+                #           setAttr "rsAov_PuzzleMatte.mode" 1;
 
-    def load_plugin(self, plugin_name):
-        maya_cmds.loadPlugin(plugin_name)
+    def load_plugin(self, plugin_name=PLUGIN_REDSHIFT):
+        super(SceneHelperForRedshift, self).load_plugin(plugin_name)
 
 
 class ReferenceHelper(LogHelper):
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
-        self.scene_helper = SceneHelper(logger=logger)
+        self.scene_helper = SceneHelperForRedshift(logger=logger)
 
         self.ADD_RULES = [
             {
@@ -479,11 +503,11 @@ class ReferenceExporter(ReferenceHelper):
             )
 
     def export_all(self):
-        # todo , replace reference
         # xx_anim -> xx_render
         #   add scene as bg
         #   add char / props
         self.process_all_reference()
+        # create render layer
         self.process_all_render_layer()
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
@@ -491,20 +515,6 @@ class ReferenceExporter(ReferenceHelper):
         #   override render layer
         #           if BGCLR:
         #               set CHCLR -> [override] Primary Visiblity : off
-        # todo , if layer in [ IDP ] , create idp layer
-        #   override render layer
-        #   Puzzle Matte , rename to idp
-        #       CHCLR -> [aov]  , id : 1 [R]
-        #       BGCLR -> Puzzle Matte , id : 2 [G]
-        #       PRO -> Puzzle Matte , id : 3 [B]
-        #           rsCreateAov -type  "Puzzle Matte";
-        #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
-        #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
-        #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
-        #           setAttr "rsAov_PuzzleMatte.redId" 1;
-        #           setAttr "rsAov_PuzzleMatte.greenId" 2;
-        #           setAttr "rsAov_PuzzleMatte.blueId" 3;
-        #           setAttr "rsAov_PuzzleMatte.mode" 1;
         # todo , if layer in [ LGT ]
         #   override render layer
         for override_layer_name in ['BGColor', 'CHColor']:

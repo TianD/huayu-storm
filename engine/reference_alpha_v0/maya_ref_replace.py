@@ -272,11 +272,12 @@ class ReferenceHelper(LogHelper):
 
     def __add_reference_with_rules(self, reference_source):
         for rule in self.ADD_RULES:
-            reference_target = \
+            reference_target_list = \
                 self.__get_reference_file_path_with_rule(reference_source, rule)
-            if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
-                pymel_core.system.createReference(reference_target)
-                self.scene_helper.create_render_layer_for_maya_old(rule.get(ReferenceHelper.KEY_RENDER_LAYER_NAME))
+            for reference_target in reference_target_list:
+                if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
+                    pymel_core.system.createReference(reference_target)
+                    self.scene_helper.create_render_layer_for_maya_old(rule.get(ReferenceHelper.KEY_RENDER_LAYER_NAME))
 
     def get_file_path_list_from_shot_file_for_sky(self):
         return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY

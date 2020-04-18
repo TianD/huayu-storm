@@ -218,9 +218,18 @@ class SceneHelper(LogHelper):
         try:
             maya_cmds.select(object_pattern)
             selected = maya_cmds.ls(sl=True)
-            maya_cmds.editRenderLayerMembers(render_layer.name(), selected)
+            render_layer.addMembers(selected)
         except:
             pass
+
+    def process_all_render_layer(self):
+        for render_layer_select_rule in RENDER_LAYER_RULES:
+            layer_name = render_layer_select_rule[0]
+            select_pattern_list = render_layer_select_rule[1]
+            for select_pattern in select_pattern_list:
+                self.set_render_layer_object_pattern_for_maya_old(
+                    object_pattern=select_pattern, render_layer_name=layer_name
+                )
 
 
 class ReferenceHelper(LogHelper):
@@ -367,21 +376,16 @@ class ReferenceExporter(ReferenceHelper):
         else:
             self.error('not valid layer : {}'.format(layer_name))
 
-    def export_all(self):
+    def process_all_render_layer(self):
+        return self.scene_helper.process_all_render_layer()
 
+    def export_all(self):
         # todo , replace reference
         # xx_anim -> xx_render
         #   add scene as bg
         #   add char / props
         self.process_all_reference()
-        for render_layer_select_rule in RENDER_LAYER_RULES:
-            layer_name = render_layer_select_rule[0]
-            select_pattern_list = render_layer_select_rule[1]
-
-            for select_pattern in select_pattern_list:
-                self.scene_helper.set_render_layer_object_pattern_for_maya_old(
-                    layer_name, select_pattern
-                )
+        self.process_all_render_layer()
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list([('defaultResolution.width', 1920)])
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
@@ -423,10 +427,11 @@ if __name__ == '__main__':
 
     # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
 
-    reference_helper = ReferenceHelper()
-    reference_helper.process_all_reference()
+    # reference_helper = ReferenceHelper()
+    # reference_helper.process_all_reference()
     # reference_helper.info(reference_helper.get_reference_list(), **reference_helper.FORMAT_JSON_DICT_KWARG)
     # reference_helper.replace_reference()
 
-    # ref_exporter = ReferenceExporter()
+    ref_exporter = ReferenceExporter()
     # ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()

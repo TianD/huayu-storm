@@ -308,11 +308,15 @@ class ReferenceHelper(LogHelper):
     def __add_reference_with_rules(self, reference_source):
         for rule in self.ADD_RULES:
             namespace_name = rule.get(KEY_NAMESPACE_NAME, '')
+            if namespace_name:
+                kwargs = {'namespace': namespace_name}
+            else:
+                kwargs = {}
             reference_target_list = \
                 self.__get_reference_file_path_with_rule(reference_source, rule)
             for reference_target in reference_target_list:
                 if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
-                    pymel_core.system.createReference(reference_target, namespace=namespace_name)
+                    pymel_core.system.createReference(reference_target, **kwargs)
 
     def get_file_path_list_from_shot_file_for_sky(self):
         return IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY

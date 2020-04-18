@@ -20,6 +20,58 @@ reload(LogHelper)
 from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 
+RENDER_LAYER_RULES = [
+    []
+]
+
+LAYER_MASTER = 'masterLayer'
+LAYER_BG_COLOR = 'BGCLR'
+LAYER_CHR_COLOR = 'CHCLR'
+LAYER_CHR_LIGHT = 'CHLIGHT'
+LAYER_SKY = 'SKY'
+LAYER_IDP = 'IDP'
+LAYER_LGT = 'LGT'
+LAYER_AOV = 'AOV'
+
+LAYER_LIST_OF_ALL = [
+    LAYER_MASTER,
+    LAYER_BG_COLOR,
+    LAYER_CHR_COLOR,
+    LAYER_CHR_LIGHT,
+    LAYER_SKY,
+    LAYER_IDP,
+    LAYER_LGT,
+    LAYER_AOV,
+]
+
+KEY_FROM = 'from'
+KEY_TO = 'to'
+KEY_RENDER_LAYER_NAME = 'layer_name'
+
+REPLACE_RULES = [
+    {KEY_FROM: 'anim', KEY_TO: 'render'},
+    # {'chclr': 'add_char/props'},
+    # {'light': 'config_file'},  # just a maya file
+    # {'sky': 'config_file'},  # just a maya file
+    # {'aov': 'config_file'},  # just a maya file
+]
+
+KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
+KEY_REPLACE_PARAMS = 'key_replace_params'
+
+IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
+]
+IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY = [
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
+]
+IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
+]
+IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
+    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
+]
+
 
 class SceneHelper(LogHelper):
     NAME_SPLITTER = '_'
@@ -158,53 +210,6 @@ class SceneHelper(LogHelper):
 
 
 class ReferenceHelper(LogHelper):
-    KEY_FROM = 'from'
-    KEY_TO = 'to'
-    KEY_RENDER_LAYER_NAME = 'layer_name'
-
-    LAYER_MASTER = 'masterLayer'
-    LAYER_BG_COLOR = 'BGCLR'
-    LAYER_CHR_COLOR = 'CHCLR'
-    LAYER_CHR_LIGHT = 'CHLIGHT'
-    LAYER_SKY = 'SKY'
-    LAYER_IDP = 'IDP'
-    LAYER_LGT = 'LGT'
-    LAYER_AOV = 'AOV'
-
-    LAYER_LIST_OF_ALL = [
-        LAYER_MASTER,
-        LAYER_BG_COLOR,
-        LAYER_CHR_COLOR,
-        LAYER_CHR_LIGHT,
-        LAYER_SKY,
-        LAYER_IDP,
-        LAYER_LGT,
-        LAYER_AOV,
-    ]
-
-    REPLACE_RULES = [
-        {KEY_FROM: 'anim', KEY_TO: 'render'},
-        # {'chclr': 'add_char/props'},
-        # {'light': 'config_file'},  # just a maya file
-        # {'sky': 'config_file'},  # just a maya file
-        # {'aov': 'config_file'},  # just a maya file
-    ]
-
-    KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
-    KEY_REPLACE_PARAMS = 'key_replace_params'
-
-    IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Scene.mb"  # scene , import sky file content
-    ]
-    IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY = [
-        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
-    ]
-    IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
-        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHlight.mb"  # chrlight , in layer chcolor
-    ]
-    IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
-        r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\RS_AOV.mb"  # Aov
-    ]
 
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
@@ -212,29 +217,29 @@ class ReferenceHelper(LogHelper):
 
         self.ADD_RULES = [
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_BG_COLOR,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,
+                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
+                KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_SKY,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                KEY_RENDER_LAYER_NAME: LAYER_SKY,
+                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
+                KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_LGT,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                KEY_RENDER_LAYER_NAME: LAYER_LGT,
+                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
+                KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_CHR_COLOR,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                KEY_RENDER_LAYER_NAME: LAYER_CHR_COLOR,
+                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
+                KEY_REPLACE_PARAMS: {}
             },
             {
-                ReferenceHelper.KEY_RENDER_LAYER_NAME: ReferenceHelper.LAYER_AOV,
-                ReferenceHelper.KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
-                ReferenceHelper.KEY_REPLACE_PARAMS: {}
+                KEY_RENDER_LAYER_NAME: LAYER_AOV,
+                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
+                KEY_REPLACE_PARAMS: {}
             },
             # {'chclr': 'add_char/props'},
             # {'light': 'config_file'},  # just a maya file
@@ -254,9 +259,9 @@ class ReferenceHelper(LogHelper):
     def __get_reference_file_path_with_rule(self, reference_source, rule):
         # get replaced file name
         new_file_path = ''
-        replace_from = rule.get(ReferenceExporter.KEY_FROM, '')
-        replace_to = rule.get(ReferenceExporter.KEY_TO, '')
-        replace_func = rule.get(ReferenceExporter.KEY_LAYER_PROCESS_FUNC, None)
+        replace_from = rule.get(KEY_FROM, '')
+        replace_to = rule.get(KEY_TO, '')
+        replace_func = rule.get(KEY_LAYER_PROCESS_FUNC, None)
 
         if replace_func:
             print(rule)
@@ -272,7 +277,7 @@ class ReferenceHelper(LogHelper):
     def __replace_reference_with_rules(self, reference_item):
         reference_source = reference_item.path
         # reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
-        for rule in ReferenceHelper.REPLACE_RULES:
+        for rule in REPLACE_RULES:
             reference_target = \
                 self.__get_reference_file_path_with_rule(reference_source, rule)
             if self.scene_helper.path_and_file_helper.is_file_existed(reference_target) and \
@@ -290,19 +295,19 @@ class ReferenceHelper(LogHelper):
                     pymel_core.system.createReference(reference_target)
 
     def get_file_path_list_from_shot_file_for_sky(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY
 
     def get_file_path_list_from_shot_file_for_scene(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE
 
     def get_file_path_list_from_shot_file_for_light(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
 
     def get_file_path_list_from_shot_file_for_character(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
 
     def get_file_path_list_from_shot_file_for_aov(self):
-        return ReferenceHelper.IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV
+        return IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV
 
     def process_all_reference(self):
         reference_list = self.get_reference_list(self.__reference_filter())
@@ -318,21 +323,21 @@ class ReferenceHelper(LogHelper):
 
 class ReferenceExporter(ReferenceHelper):
     def layer_process(self, layer_name):
-        if layer_name in ReferenceExporter.LAYER_LIST_OF_ALL:
-            if layer_name == ReferenceExporter.LAYER_MASTER:
+        if layer_name in LAYER_LIST_OF_ALL:
+            if layer_name == LAYER_MASTER:
                 pass
-            elif layer_name == ReferenceExporter.LAYER_BG_COLOR:
+            elif layer_name == LAYER_BG_COLOR:
                 # todo import bg color file
                 pass
-            elif layer_name == ReferenceExporter.LAYER_CHR_COLOR:
+            elif layer_name == LAYER_CHR_COLOR:
                 pass
-            elif layer_name == ReferenceExporter.LAYER_SKY:
+            elif layer_name == LAYER_SKY:
                 # todo import sky file
                 pass
-            elif layer_name == ReferenceExporter.LAYER_IDP:
+            elif layer_name == LAYER_IDP:
                 # todo set idp for chr / bg
                 pass
-            elif layer_name == ReferenceExporter.LAYER_LGT:
+            elif layer_name == LAYER_LGT:
                 # todo import lgt file
                 pass
         else:

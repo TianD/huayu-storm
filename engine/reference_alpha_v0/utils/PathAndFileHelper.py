@@ -61,7 +61,7 @@ class PathAndFileHelper(LogHelper):
         return current_is
 
     def is_same_file(self, file_a, file_b):
-        return os.path.samefile(file_a, file_b)
+        return os.path.realpath(file_a) == os.path.realpath(file_b)
 
     def is_different_file(self, file_a, file_b):
         return not self.is_same_file(file_a, file_b)

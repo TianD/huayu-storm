@@ -362,10 +362,19 @@ class SceneHelperForRedshift(SceneHelper):
         #                                       [ ]Reflect/Refract IDs
         maya_mel.eval('rsCreateAov -type  "{node_type}"'.format(node_type="Puzzle Matte"))
         idp_node_name = maya_cmds.ls(type='RedshiftAOV')[-1]
+        self.debug('---------------', idp_node_name)
         # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
-        self.set_attr_with_command_param_list_batch_list([idp_node_name + '.name', name])
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                [idp_node_name + '.name', name]
+            ]
+        )
         # mode: 1 => object id mode
-        self.set_attr_with_command_param_list_batch_list([idp_node_name + '.mode', 1])
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                [idp_node_name + '.mode', 1]
+            ]
+        )
         return idp_node_name
 
     # todo extract to SceneHelperForRedshift
@@ -373,6 +382,8 @@ class SceneHelperForRedshift(SceneHelper):
         for render_layer_select_rule in RENDER_LAYER_RULES:
             layer_name = render_layer_select_rule[0]
             select_pattern_list = render_layer_select_rule[1]
+            self.debug('--------------', layer_name)
+            # if layer_name == LAYER_IDP:
             for select_pattern in select_pattern_list:
                 self.set_render_layer_object_pattern_for_maya_old(
                     object_pattern=select_pattern, render_layer_name=layer_name
@@ -393,7 +404,6 @@ class SceneHelperForRedshift(SceneHelper):
                 self.set_render_layer_to_current(layer_name)
                 idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
 
-                # todo create IDP aov ,set aov with object_id
                 for config in LAYER_IDP_CONFIG:
                     selector = config[0]
                     object_id = config[1]

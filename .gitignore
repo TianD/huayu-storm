@@ -2,6 +2,7 @@
 
 ./nodejs_bin
 ./environ.bat
+venv
 
 # dependencies
 /node_modules

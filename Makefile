@@ -66,7 +66,7 @@ run_app_electron:
 		npm run start_electron;\
  	';
 
-setup_deps:
+npm_setup_deps:
 	@make set_nodejs_env command=' \
 		  npm i ;\
  	';
@@ -80,6 +80,10 @@ install_electron:
 run_flask:
 	pushd engine ;\
 		venv/Scripts/python engine.py
+
+py_setup_deps:
+	pushd engine ;\
+		venv/Scripts/pip install -r requirement.txt
 
 release:
 	@make set_nodejs_env command=' \

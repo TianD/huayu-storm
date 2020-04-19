@@ -560,9 +560,7 @@ class ReferenceExporter(ReferenceHelper):
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             current_render_setting_list, current_layer_name
                         )
-            # todo save as
             self.scene_helper.export(output_file_name)
-            # print(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
@@ -604,13 +602,15 @@ class ReferenceExporter(ReferenceHelper):
 
 
 if __name__ == '__main__':
-    egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
-    import sys
+    try:
+        egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
+        import sys
 
-    sys.path.insert(0, egg_dir)
-    import pydevd_pycharm
-
-    pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+        sys.path.insert(0, egg_dir)
+        import pydevd_pycharms
+        pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+    except:
+        pass
 
     # reference_helper = ReferenceHelper()
     # reference_helper.process_all_reference()

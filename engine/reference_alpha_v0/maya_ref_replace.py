@@ -130,6 +130,8 @@ class SceneHelper(LogHelper):
         self.episode = ''
         self.sequence = ''
         self.shot = ''
+        # fill epsiode/sequence/shot
+        self.get_episode_sequence_shot_from_filename()
 
     def select_with_clear(self, object_pattern):
         maya_cmds.select(cl=True)
@@ -170,7 +172,6 @@ class SceneHelper(LogHelper):
             self.error('no enough match item for episode_scene_shot')
 
     def get_current_camera(self):
-        self.get_episode_sequence_shot_from_filename()
         cam_list = [
             cam.getParent().name()
             for cam in pymel_core.ls('cam*{}*{}*{}*'.format(self.episode, self.sequence, self.shot), type='camera')
@@ -259,7 +260,10 @@ class SceneHelper(LogHelper):
         # attr_value = value  # 2000
         self.set_render_layer_to_current(input_render_layer_name)
         if input_render_layer_name != SceneHelper.DEFAULT_RENDER_LAYER_NAME:
-            maya_cmds.editRenderLayerAdjustment(attr_key)
+            try:
+                maya_cmds.editRenderLayerAdjustment(attr_key)
+            except:
+                pass
         self.set_attr_with_command_param_list_batch_list(
             [
                 [attr_key, attr_value]
@@ -272,7 +276,7 @@ class SceneHelper(LogHelper):
         for command_param_list in command_param_list_batch_list:
             attr_key, attr_value = command_param_list
 
-            if isinstance(attr_value, str):
+            if isinstance(attr_value, str) or isinstance(attr_value, unicode):
                 attr_type = 'string'
             else:
                 attr_type = ''
@@ -286,6 +290,8 @@ class SceneHelper(LogHelper):
 
             try:
                 maya_cmds.setAttr(attr_key, attr_value, **kwargs)
+            except:
+                pass
             finally:
                 self.debug('failed on:', command_param_list)
 
@@ -664,4 +670,4 @@ if __name__ == '__main__':
 
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()
-    # ref_exporter.process_all_config()
+    ref_exporter.process_all_config()

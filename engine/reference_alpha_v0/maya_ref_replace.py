@@ -512,9 +512,27 @@ class ReferenceHelper(LogHelper):
 
 class ReferenceExporter(ReferenceHelper):
     def process_all_config(self):
-        layer_render_setting = self.config_helper.export_config()
-        # for
-        # print(layer_render_setting)
+        layer_render_setting = self.config_helper.export_config().get('{project}')
+        for file_name, file_render_setting_dict in layer_render_setting.items():
+            output_file_name = file_render_setting_dict.get('output_file_name', '')
+            if output_file_name:
+                file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
+
+                for file_render_layer_setting in file_render_layer_setting_list:
+                    current_layer_name = file_render_layer_setting.get('layer_name', '')
+
+                    if current_layer_name:
+                        current_render_setting_list = [
+                            list(current_render_setting_item)
+                            for current_render_setting_item in list(
+                                file_render_layer_setting.get('render_setting', '').items()
+                            )
+                        ]
+                        self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+                            current_render_setting_list, current_layer_name
+                        )
+            # todo save as
+            print(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()

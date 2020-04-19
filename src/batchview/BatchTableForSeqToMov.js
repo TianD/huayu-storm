@@ -71,6 +71,17 @@ class BatchTableForSeqToMov extends Component {
         this.props.set_seq2movbatch_items(files)
     }
 
+    async playAll() {
+        let files = this.props.seq2movbatch_items;
+        let new_files = [];
+        for (let i = 0; i < files.length; i++) {
+            await api.seq2mov_process(files[i]).then((response) => { 
+                new_files.push({ ...files[i], ...response.data }) 
+            })
+        }
+        this.props.set_seq2movbatch_items(new_files)
+    }
+
     removeThis(record, index) {
         let file_list = this.props.seq2movbatch_items;
         file_list.splice(record.key, 1);
@@ -103,6 +114,12 @@ class BatchTableForSeqToMov extends Component {
     }
     
     change_project(value) {
+        let files = this.props.seq2movbatch_items;
+        let new_files = [];
+        for (let i = 0; i < files.length; i++) {
+            new_files.push({...files[i], project: value})
+        }
+        this.props.set_seq2movbatch_items(new_files)
         this.props.set_seq2movbatch_filters(value)
     }
 
@@ -124,7 +141,7 @@ class BatchTableForSeqToMov extends Component {
                     </Col>
                     <Col span={6} offset={12}>
                         <Button onClick={()=>{this.clearlist()}} style={{ margin: 12 }}>清空</Button>
-                        <Button style={{ margin: 12 }}>全部开始</Button>
+                        <Button style={{ margin: 12 }} onClick={()=>this.playAll()}>全部开始</Button>
                     </Col>
                 </Row>
                 <Table

@@ -513,7 +513,8 @@ class ReferenceHelper(LogHelper):
 class ReferenceExporter(ReferenceHelper):
     def process_all_config(self):
         layer_render_setting = self.config_helper.export_config()
-        print(layer_render_setting)
+        # for
+        # print(layer_render_setting)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()

@@ -225,7 +225,8 @@ class SceneHelper(LogHelper):
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
         self.set_render_layer_to_current(input_render_layer_name)
-        maya_cmds.editRenderLayerAdjustment(attr_key)
+        if input_render_layer_name != SceneHelper.DEFAULT_RENDER_LAYER_NAME:
+            maya_cmds.editRenderLayerAdjustment(attr_key)
         self.set_attr_with_command_param_list_batch_list(
             [
                 [attr_key, attr_value]
@@ -591,9 +592,10 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    ref_exporter.process_all_config()
+
     # ref_exporter.process_all_layer_override_attr()
 
-    # ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_config()
     # ref_exporter.process_all_layer_override_attr()

@@ -1,4 +1,4 @@
-# coding=utf8
+ccccc# coding=utf8
 import json
 import re
 
@@ -46,11 +46,11 @@ LAYER_LIST_OF_ALL = [
 ]
 
 BG_OBJECT_SELECTOR = '*:SET'
-LGT_OBJECT_SELECTOR = 'LGT{}:*'.format(LAYER_NAMESPACE_SUFFIX)
-SKY_OBJECT_SELECTOR = 'SKY{}:*'.format(LAYER_NAMESPACE_SUFFIX)
+LGT_OBJECT_SELECTOR = 'LGT{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
+SKY_OBJECT_SELECTOR = 'SKY{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
 CHR_OBJECT_SELECTOR = '*:CHR'
 PRO_OBJECT_SELECTOR = '*:PRO'
-CHRLGT_OBJECT_SELECTOR = 'CHRLGT{}:*'.format(LAYER_NAMESPACE_SUFFIX)
+CHRLGT_OBJECT_SELECTOR = 'CHRLGT*{}:*'.format(LAYER_NAMESPACE_SUFFIX)
 
 RENDER_LAYER_RULES = [
     # layer name ,  layer select pattern
@@ -101,7 +101,7 @@ KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-    '',  # r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
+    '', #r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
 ]
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH = [
@@ -619,7 +619,7 @@ class ReferenceExporter(ReferenceHelper):
                                 '{}.primaryVisibility'.format(pymel_core.PyNode(character_transform).getShape().name()),
                                 0
                             ]
-                            for character_transform in character_list
+                            for character_transform in character_list if pymel_core.PyNode(character_transform).getShape()
                         ]
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             command_list, LAYER_BG_COLOR
@@ -684,6 +684,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    # ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()
+    ref_exporter.process_camera()
     ref_exporter.process_all_config()

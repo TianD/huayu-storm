@@ -262,8 +262,9 @@ class SceneHelper(LogHelper):
         if input_render_layer_name != SceneHelper.DEFAULT_RENDER_LAYER_NAME:
             try:
                 maya_cmds.editRenderLayerAdjustment(attr_key)
-            except:
-                pass
+            except Exception as e:
+                self.debug(e)
+
         self.set_attr_with_command_param_list_batch_list(
             [
                 [attr_key, attr_value]
@@ -620,7 +621,7 @@ class ReferenceExporter(ReferenceHelper):
                             for character_transform in character_list
                         ]
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                            command_list, LAYER_CHR_COLOR
+                            command_list, LAYER_BG_COLOR
                         )
 
             self.scene_helper.export(output_file_name)

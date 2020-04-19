@@ -553,27 +553,6 @@ class ReferenceHelper(LogHelper):
 
 
 class ReferenceExporter(ReferenceHelper):
-    def layer_process(self, layer_name):
-        if layer_name in LAYER_LIST_OF_ALL:
-            if layer_name == LAYER_MASTER:
-                pass
-            elif layer_name == LAYER_BG_COLOR:
-                # todo import bg color file
-                pass
-            elif layer_name == LAYER_CHR_COLOR:
-                pass
-            elif layer_name == LAYER_SKY:
-                # todo import sky file
-                pass
-            elif layer_name == LAYER_IDP:
-                # todo set idp for chr / bg
-                pass
-            elif layer_name == LAYER_LGT:
-                # todo import lgt file
-                pass
-        else:
-            self.error('not valid layer : {}'.format(layer_name))
-
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
 

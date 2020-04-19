@@ -126,41 +126,51 @@ if __name__ == '__main__':
         for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
             layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
             if layer_setting_basic_config_file_name:
-                common_layer_setting = \
-                    common_config_dict.get(layer_setting_basic_config_file_name, {}).get('layer_setting')
+                current_common_config_dict = common_config_dict.get(layer_setting_basic_config_file_name, {})
+                layer_setting_dict['basic_config'] = {
+                    'render_type': current_common_config_dict.get('render_type', ''),
+                    'render_plugin_name': current_common_config_dict.get('render_plugin_name', ''),
+                }
+
+                common_layer_setting = current_common_config_dict['layer_setting']
                 layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
 
                 all_layer_setting_dict[layer_setting_file_base_name] = layer_setting_dict
 
-    # config_helper.show_json(all_layer_setting_dict)
-
+    config_helper.show_json(all_layer_setting_dict)
+    #
     # convert layer config to command list
-    layer_setting_command_dict = OrderedDict()
-    for layer_setting_dict in all_layer_setting_dict.values():
-        plugin_name = config_helper.get_json_value_with_key_path(
-            'basic_config.render_plugin_name', '', layer_setting_dict
-        )
-        render_setting_command_arg_dict = config_helper.get_json_value_with_key_path(
-            'basic_config.render_setting', {}, layer_setting_dict
-        )
-
-        print('----basic--------------')
-        for render_setting_command_arg_item in render_setting_command_arg_dict.items():
-            print('setAttr {} {}'.format(*render_setting_command_arg_item))
-
-        layer_setting_list = config_helper.get_json_value_with_key_path(
-            'layer_setting', [], layer_setting_dict
-        )
-
-        layer_render_setting_command_arg_dict = OrderedDict()
-        for layer_setting in layer_setting_list:
-            layer_name = config_helper.get_json_value_with_key_path(
-                'layer_name', '', layer_setting
-            )
-            layer_render_setting_command_arg_dict = config_helper.get_json_value_with_key_path(
-                'layer_setting.render_setting', {}, layer_setting
-            )
-
-            print('----layer------{}--------'.format(layer_name))
-            for layer_render_setting_command_arg_item in layer_render_setting_command_arg_dict.items():
-                print('setAttr {} {}'.format(*layer_render_setting_command_arg_item))
+    # layer_setting_command_dict = OrderedDict()
+    # for layer_setting_file_name, layer_setting_dict in all_layer_setting_dict.items():
+    #     plugin_name = config_helper.get_json_value_with_key_path(
+    #         'basic_config.render_plugin_name', '', layer_setting_dict
+    #     )
+    #     plugin_dll_name = config_helper.get_json_value_with_key_path(
+    #         'basic_config.render_plugin_name', '', layer_setting_dict
+    #     )
+    #
+    #     output_file_name = config_helper.get_json_value_with_key_path(
+    #         'output_file_name', '', layer_setting_dict
+    #     )
+    #
+    #     layer_setting_list = config_helper.get_json_value_with_key_path(
+    #         'layer_setting', [], layer_setting_dict
+    #     )
+    #
+    #     layer_setting_command_dict[layer_setting_file_name] = OrderedDict()
+    #     layer_setting_command_dict[layer_setting_file_name]['plugin_name'] = plugin_name
+    #     layer_setting_command_dict[layer_setting_file_name]['plugin_dll_name'] = plugin_dll_name
+    #     layer_setting_command_dict[layer_setting_file_name]['output_file_name'] = output_file_name
+    #
+    #     for layer_setting in layer_setting_list:
+    #         layer_setting_dict = OrderedDict()
+    #         layer_name = config_helper.get_json_value_with_key_path(
+    #             'layer_name', '', layer_setting_dict
+    #         )
+    #         attr_setting_dict = config_helper.get_json_value_with_key_path(
+    #             'layer_setting.render_setting', [], layer_setting
+    #         )
+    #
+    #         layer_setting_dict[layer_name]
+    #         for attr_key, attr_value in attr_setting_dict.items():
+    #             print(attr_key, attr_value)

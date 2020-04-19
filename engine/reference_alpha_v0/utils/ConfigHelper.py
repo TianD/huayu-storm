@@ -111,7 +111,7 @@ if __name__ == '__main__':
             , file_filter_list=['*.yml', '*.yaml'], only_file=True
         )
 
-        common_config_dict = {}
+        common_config_dict = OrderedDict()
         for maya_batch_config_file in maya_batch_config_file_list:
             maya_batch_config_file_base_name = path_and_file_helper.get_base_name(maya_batch_config_file)
             config_json = config_helper.load_config_json_from_file(maya_batch_config_file)
@@ -126,7 +126,10 @@ if __name__ == '__main__':
         for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
             layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
             if layer_setting_basic_config_file_name:
-                layer_setting_dict['basic_config'] = common_config_dict.get(layer_setting_basic_config_file_name, {})
+                common_layer_setting = \
+                    common_config_dict.get(layer_setting_basic_config_file_name, {}).get('layer_setting')
+                layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
+
                 all_layer_setting_dict[layer_setting_file_base_name] = layer_setting_dict
 
     # config_helper.show_json(all_layer_setting_dict)

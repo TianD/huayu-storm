@@ -223,13 +223,13 @@ class SceneHelper(LogHelper):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
-        if self.set_render_layer_to_current(input_render_layer_name):
-            maya_cmds.editRenderLayerAdjustment(attr_key)
-            self.set_attr_with_command_param_list_batch_list(
-                [
-                    [attr_key, attr_value]
-                ]
-            )
+        self.set_render_layer_to_current(input_render_layer_name)
+        maya_cmds.editRenderLayerAdjustment(attr_key)
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                [attr_key, attr_value]
+            ]
+        )
 
     DEFAULT_RENDER_LAYER_NAME = 'masterLayer'
 
@@ -513,6 +513,8 @@ class ReferenceExporter(ReferenceHelper):
         return self.scene_helper.process_all_render_layer()
 
     def process_all_layer_override_attr(self):
+
+
         for override_layer_name in [LAYER_BG_COLOR]:
             command_param_list = [('defaultResolution.width', 1111)]
             self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(

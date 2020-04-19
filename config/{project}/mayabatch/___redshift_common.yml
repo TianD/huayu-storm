@@ -1,72 +1,75 @@
 render_type: redshift
 render_plugin_name: redshift4maya.mll
-render_setting:
-    ### common setting [tab]
-    #       file output [row layout ]
-    #           file_name_prefix: ""
-    "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>"
-    #           image format: ""
-    "redshiftOptions.imageFormat": 1 #0,1,2,3,4   { 1: OpenEXR }
-    #           bits per channel: ""
-    "redshiftOptions.exrBits": 16 #16,32
-    #           compression: default
-    "redshiftOptions.exrCompression": 0 #0,1,2,3,4
-    #           force combine beauty and AOVS into single file:
-    "redshiftOptions.exrForceMultilayer": 1 #0,1 only valid for exr
-    #           animation:
-    "defaultRenderGlobals.animation": 1
-    #           start frame:a
-    "defaultRenderGlobals.fs": 1
-    #           end frame:
-    "defaultRenderGlobals.ef": 1
-    #           by frame:
-    "defaultRenderGlobals.bfs": 1
-    #           frame padding:
-    "defaultRenderGlobals.extensionPadding": 4
-    #       renderable camera [row layout]
-    #           renderable camera:
-    # todo select in file , no need here
-    # "perspShape.renderable": 1 # "perspShape.rnd"
-    #       resolution [row layout]
-    #           presets: # this change defaultResolution.width / height /device aspect ratio / pixel aspect ratio
-    # { hd 1080 : 1920 1080 1.778 1.00 }
-    "defaultResolution.width": 1920
-    "defaultResolution.height": 1080
-    "defaultResolution.deviceAspectRatio": 1.778
-    "defaultResolution.pixelAspect": 1.00
-    #       misc [row layout]
-    #           enable default light
-    "defaultRenderGlobals.enableDefaultLight": 0
-    ### output [tab]
-    #       unified sampling [row layout]
-    #           min samples:
-    #"redshiftOptions.unifiedMinSamples": 4
-    #           max samples:
-    #"redshiftOptions.unifiedMaxSamples": 16
-    #           adaptive error threshold:
-    #"redshiftOptions.unifiedAdaptiveErrorThreshold": 0.010
-    ### opt [tab]
-    #       maximum trace depth [row layout]
-    #           reflection:
-    #"redshiftOptions.reflectionMaxTraceDepth": 4
-    #           refraction:
-    #"redshiftOptions.refractionMaxTraceDepth": 6
-    #           combined:
-    #"redshiftOptions.combinedMaxTraceDepth": 6
-    ### GI [tab]
-    #       general [row layout]
-    #           primary gi engine:
-    #"redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4
-    #           secondary gi engine:
-    #"redshiftOptions.secondaryGIEngine": 0
-    #       brute force gi [row layout]
-    #           num rays:
-    #"redshiftOptions.bruteForceGINumRays": 16
-    ### AOV [tab]
-    #       general [row layout]
-    #           mode:
-    #"redshiftOptions.aovGlobalEnableMode": 0 #0,1
-    ### System [tab]
-    #       Material Override [row layout]
-    #           enable:
-    #"redshiftOptions.materialOverrideEnable": 0 #0,1
+layer_setting:
+    -   layer_name: masterLayer
+        layer_setting:
+            render_setting:
+                ### common setting [tab]
+                #       file output [row layout ]
+                #           file_name_prefix: ""
+                "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>"
+                #           image format: ""
+                "redshiftOptions.imageFormat": 1 #0,1,2,3,4   { 1: OpenEXR }
+                #           bits per channel: ""
+                "redshiftOptions.exrBits": 16 #16,32
+                #           compression: default
+                "redshiftOptions.exrCompression": 0 #0,1,2,3,4
+                #           force combine beauty and AOVS into single file:
+                "redshiftOptions.exrForceMultilayer": 1 #0,1 only valid for exr
+                #           animation:
+                "defaultRenderGlobals.animation": 1
+                #           start frame:a
+                "defaultRenderGlobals.fs": 1
+                #           end frame:
+                "defaultRenderGlobals.ef": 1
+                #           by frame:
+                "defaultRenderGlobals.bfs": 1
+                #           frame padding:
+                "defaultRenderGlobals.extensionPadding": 4
+                #       renderable camera [row layout]
+                #           renderable camera:
+                # todo select in file , no need here
+                # "perspShape.renderable": 1 # "perspShape.rnd"
+                #       resolution [row layout]
+                #           presets: # this change defaultResolution.width / height /device aspect ratio / pixel aspect ratio
+                # { hd 1080 : 1920 1080 1.778 1.00 }
+                "defaultResolution.width": 1920
+                "defaultResolution.height": 1080
+                "defaultResolution.deviceAspectRatio": 1.778
+                "defaultResolution.pixelAspect": 1.00
+                #       misc [row layout]
+                #           enable default light
+                "defaultRenderGlobals.enableDefaultLight": 0
+                ### output [tab]
+                #       unified sampling [row layout]
+                #           min samples:
+                #"redshiftOptions.unifiedMinSamples": 4
+                #           max samples:
+                #"redshiftOptions.unifiedMaxSamples": 16
+                #           adaptive error threshold:
+                #"redshiftOptions.unifiedAdaptiveErrorThreshold": 0.010
+                ### opt [tab]
+                #       maximum trace depth [row layout]
+                #           reflection:
+                #"redshiftOptions.reflectionMaxTraceDepth": 4
+                #           refraction:
+                #"redshiftOptions.refractionMaxTraceDepth": 6
+                #           combined:
+                #"redshiftOptions.combinedMaxTraceDepth": 6
+                ### GI [tab]
+                #       general [row layout]
+                #           primary gi engine:
+                #"redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4
+                #           secondary gi engine:
+                #"redshiftOptions.secondaryGIEngine": 0
+                #       brute force gi [row layout]
+                #           num rays:
+                #"redshiftOptions.bruteForceGINumRays": 16
+                ### AOV [tab]
+                #       general [row layout]
+                #           mode:
+                #"redshiftOptions.aovGlobalEnableMode": 0 #0,1
+                ### System [tab]
+                #       Material Override [row layout]
+                #           enable:
+                #"redshiftOptions.materialOverrideEnable": 0 #0,1

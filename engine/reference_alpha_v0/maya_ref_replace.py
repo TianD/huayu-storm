@@ -609,6 +609,20 @@ class ReferenceExporter(ReferenceHelper):
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             current_render_setting_list, current_layer_name
                         )
+                    if current_layer_name == LAYER_BG_COLOR:
+                        self.scene_helper.set_render_layer_to_current(current_layer_name)
+                        character_list = self.scene_helper.list_with_pattern(CHR_OBJECT_SELECTOR)
+                        command_list = [
+                            [
+                                '{}.primaryVisibility'.format(pymel_core.PyNode(character_transform).getShape().name()),
+                                0
+                            ]
+                            for character_transform in character_list
+                        ]
+                        self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+                            command_list, LAYER_CHR_COLOR
+                        )
+
             self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):

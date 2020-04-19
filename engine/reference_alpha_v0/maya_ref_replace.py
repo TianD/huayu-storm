@@ -51,7 +51,7 @@ CHRLGT_OBJECT_SELECTOR = 'CHRLGTRN:*'
 
 RENDER_LAYER_RULES = [
     # layer name ,  layer select pattern
-    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR]],
+    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR, CHR_OBJECT_SELECTOR]],
     [LAYER_LGT, [LGT_OBJECT_SELECTOR]],
     [LAYER_SKY, [SKY_OBJECT_SELECTOR]],
     [LAYER_CHR_COLOR, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
@@ -119,7 +119,7 @@ PLUGIN_REDSHIFT = 'redshift4maya.mll'
 
 class SceneHelper(LogHelper):
     NAME_SPLITTER = '_'
-    EPISODE_SCENE_SHOT_REGX = '(SEA_0[0-9]_T[0-9a-z]+)_(P[0-9a-z]+)_(S[0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
+    EPISODE_SCENE_SHOT_REGX = 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
 
     def __init__(self, logger=None):
         super(SceneHelper, self).__init__(logger=logger)
@@ -159,6 +159,30 @@ class SceneHelper(LogHelper):
                 self.error('no enough match item for episode_scene_shot')
         else:
             self.error('no enough match item for episode_scene_shot')
+
+    def get_current_camera(self):
+        self.get_episode_sequence_shot_from_filename()
+        cam_list = [
+            cam.getParent().name()
+            for cam in pymel_core.ls('cam*{}*{}*{}*'.format(self.episode, self.sequence, self.shot), type='camera')
+        ]
+        if len(cam_list) == 1:
+            return cam_list[0]
+        else:
+            return ''
+
+    def set_renderable_camera(self, camera_name):
+        cam_list = [
+            cam
+            for cam in pymel_core.ls(type='camera')
+        ]
+        for cam in cam_list:
+            cam_name = cam.name()
+            renderable_attr = "{}.renderable".format(cam_name)
+            if cam.getParent().name() == camera_name:
+                maya_cmds.setAttr(renderable_attr, True)
+            else:
+                maya_cmds.setAttr(renderable_attr, False)
 
     def get_file_path_with_replace_on_file_base_name(self, file_path, src_string, dst_string):
         file_base_name = self.path_and_file_helper.get_base_name(file_path)
@@ -572,6 +596,10 @@ class ReferenceExporter(ReferenceHelper):
                 command_param_list, override_render_layer_name=override_layer_name
             )
 
+    def process_camera(self):
+        # todo
+        pass
+
     def export_all(self):
         # xx_anim -> xx_render
         #   add scene as bg
@@ -579,6 +607,8 @@ class ReferenceExporter(ReferenceHelper):
         self.process_all_reference()
         # create render layer
         self.process_all_render_layer()
+
+        self.process_camera()
 
         self.process_all_config()
 
@@ -608,6 +638,7 @@ if __name__ == '__main__':
 
         sys.path.insert(0, egg_dir)
         import pydevd_pycharms
+
         pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
     except:
         pass
@@ -621,4 +652,7 @@ if __name__ == '__main__':
 
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()
-    ref_exporter.process_all_config()
+    # ref_exporter.process_all_config()
+
+    current_camera = ref_exporter.scene_helper.get_current_camera()
+    ref_exporter.scene_helper.set_renderable_camera(current_camera)

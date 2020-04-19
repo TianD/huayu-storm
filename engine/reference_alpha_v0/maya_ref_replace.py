@@ -21,6 +21,8 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
+EPISODE_SCENE_SHOT_REGX = 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
+
 LAYER_MASTER = 'masterLayer'
 LAYER_BG_COLOR = 'BGCLR'
 LAYER_CHR_COLOR = 'CHCLR'
@@ -120,7 +122,6 @@ PLUGIN_REDSHIFT = 'redshift4maya.mll'
 
 class SceneHelper(LogHelper):
     NAME_SPLITTER = '_'
-    EPISODE_SCENE_SHOT_REGX = 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
 
     def __init__(self, logger=None):
         super(SceneHelper, self).__init__(logger=logger)
@@ -155,7 +156,7 @@ class SceneHelper(LogHelper):
         name_item_list = scene_file_name.split(SceneHelper.NAME_SPLITTER)
         if len(name_item_list) > 5:
             scene_info_match_list = \
-                re.findall(SceneHelper.EPISODE_SCENE_SHOT_REGX, scene_file_name, re.I)
+                re.findall(EPISODE_SCENE_SHOT_REGX, scene_file_name, re.I)
             self.debug(scene_info_match_list)
 
             if scene_info_match_list:

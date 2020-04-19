@@ -341,6 +341,11 @@ class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
         self.load_plugin()
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                ["defaultRenderGlobals.currentRenderer", "redshift"]
+            ]
+        )
 
     def create_idp_with_type_and_name(self, name=''):
         """
@@ -394,7 +399,6 @@ class SceneHelperForRedshift(SceneHelper):
                     object_id = config[1]
                     matte_color = config[2]
                     aov_attr = config[3]
-                    # todo select object by selector , and then set object_id , and set rgb object_id
                     self.select_with_clear(selector)
                     # create object id node with add objects
                     maya_mel.eval('redshiftCreateObjectIdNode()')
@@ -613,8 +617,8 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
     ref_exporter.scene_helper.load_plugin(PLUGIN_REDSHIFT)
-    ref_exporter.scene_helper.set_render_layer_to_current('BGCLR')
+    # ref_exporter.scene_helper.set_render_layer_to_current('BGCLR')
 
-    # ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
+    ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()
     # ref_exporter.process_all_layer_override_attr()

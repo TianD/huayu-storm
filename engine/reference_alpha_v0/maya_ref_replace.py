@@ -353,8 +353,7 @@ class SceneHelperForRedshift(SceneHelper):
         :param name:
         :return:
         """
-
-        # todo create rsObjectId node
+        # create rsObjectId node
         #   redshift menu => [ Redshift -> Object Properties -> Create Redshift Object Id Node for Selection ]
         #   in render setting -> AOV -> AOVs -> (select) Puzzle Matte , rename to : idp
         #                     -> AOV -> Processing -> Puzzle Matte ->

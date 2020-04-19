@@ -597,8 +597,8 @@ class ReferenceExporter(ReferenceHelper):
             )
 
     def process_camera(self):
-        # todo
-        pass
+        current_camera = self.scene_helper.get_current_camera()
+        self.scene_helper.set_renderable_camera(current_camera)
 
     def export_all(self):
         # xx_anim -> xx_render
@@ -607,7 +607,7 @@ class ReferenceExporter(ReferenceHelper):
         self.process_all_reference()
         # create render layer
         self.process_all_render_layer()
-
+        # set camera
         self.process_camera()
 
         self.process_all_config()
@@ -653,6 +653,3 @@ if __name__ == '__main__':
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()
     # ref_exporter.process_all_config()
-
-    current_camera = ref_exporter.scene_helper.get_current_camera()
-    ref_exporter.scene_helper.set_renderable_camera(current_camera)

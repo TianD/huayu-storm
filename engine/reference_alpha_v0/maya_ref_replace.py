@@ -30,6 +30,8 @@ LAYER_IDP = 'IDP'
 LAYER_LGT = 'LGT'
 LAYER_AOV = 'AOV'
 
+LAYER_NAMESPACE_SUFFIX = 'RN'
+
 LAYER_IDP_AOV_NAME = 'idp'
 
 LAYER_LIST_OF_ALL = [
@@ -443,38 +445,38 @@ class SceneHelperForRedshift(SceneHelper):
 class ReferenceHelper(LogHelper):
 
     def __init__(self, logger=None):
-        LogHelper.__init__(self, logger)
+        LogHelper.__init__(self, logger=logger)
         self.scene_helper = SceneHelperForRedshift(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
         self.ADD_RULES = [
             {
                 KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_BG_COLOR + 'RN',
+                KEY_NAMESPACE_NAME: LAYER_BG_COLOR + LAYER_NAMESPACE_SUFFIX,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_SKY,
-                KEY_NAMESPACE_NAME: LAYER_SKY + 'RN',
+                KEY_NAMESPACE_NAME: LAYER_SKY + LAYER_NAMESPACE_SUFFIX,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_LGT,
-                KEY_NAMESPACE_NAME: LAYER_LGT + 'RN',
+                KEY_NAMESPACE_NAME: LAYER_LGT + LAYER_NAMESPACE_SUFFIX,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_CHR_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR + 'RN',
+                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR + LAYER_NAMESPACE_SUFFIX,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
                 KEY_REPLACE_PARAMS: {}
             },
             {
                 KEY_RENDER_LAYER_NAME: LAYER_AOV,
-                KEY_NAMESPACE_NAME: LAYER_AOV + 'RN',
+                KEY_NAMESPACE_NAME: LAYER_AOV + LAYER_NAMESPACE_SUFFIX,
                 KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
                 KEY_REPLACE_PARAMS: {}
             },

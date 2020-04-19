@@ -45,7 +45,7 @@ LAYER_LIST_OF_ALL = [
     LAYER_AOV,
 ]
 
-BG_OBJECT_SELECTOR = 'BGCLR{}:*'.format(LAYER_NAMESPACE_SUFFIX)
+BG_OBJECT_SELECTOR = '*:SET'
 LGT_OBJECT_SELECTOR = 'LGT{}:*'.format(LAYER_NAMESPACE_SUFFIX)
 SKY_OBJECT_SELECTOR = 'SKY{}:*'.format(LAYER_NAMESPACE_SUFFIX)
 CHR_OBJECT_SELECTOR = '*:CHR'
@@ -101,7 +101,7 @@ KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
+    '',  # r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
 ]
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH = [

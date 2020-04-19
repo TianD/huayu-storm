@@ -1,0 +1,121 @@
+{
+  "layer_setting_0_BGCLR_CHCLR_SKY_IDP.yml": {
+    "basic_config": {
+      "render_type": "redshift",
+      "render_plugin_name": "redshift4maya.mll"
+    },
+    "output_file_name": "layer_setting_0_BGCLR_CHCLR_SKY.mb",
+    "layer_setting": [
+      {
+        "layer_name": "masterLayer",
+        "render_setting": {
+          "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>",
+          "redshiftOptions.imageFormat": 1,
+          "redshiftOptions.exrBits": 16,
+          "redshiftOptions.exrCompression": 0,
+          "redshiftOptions.exrForceMultilayer": 1,
+          "defaultRenderGlobals.animation": 1,
+          "defaultRenderGlobals.fs": 1,
+          "defaultRenderGlobals.ef": 1,
+          "defaultRenderGlobals.bfs": 1,
+          "defaultRenderGlobals.extensionPadding": 4,
+          "defaultResolution.width": 1920,
+          "defaultResolution.height": 1080,
+          "defaultResolution.deviceAspectRatio": 1.778,
+          "defaultResolution.pixelAspect": 1.0,
+          "defaultRenderGlobals.enableDefaultLight": 0
+        }
+      },
+      {
+        "layer_name": "BGCLR",
+        "render_setting": {
+          "redshiftOptions.unifiedMinSamples": 16,
+          "redshiftOptions.unifiedMaxSamples": 256,
+          "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003,
+          "redshiftOptions.primaryGIEngine": 1,
+          "redshiftOptions.secondaryGIEngine": 2,
+          "redshiftOptions.bruteForceGINumRays": 512
+        }
+      },
+      {
+        "layer_name": "CHCLR",
+        "render_setting": {
+          "redshiftOptions.unifiedMinSamples": 16,
+          "redshiftOptions.unifiedMaxSamples": 256,
+          "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.03,
+          "redshiftOptions.primaryGIEngine": 4,
+          "redshiftOptions.secondaryGIEngine": 4,
+          "redshiftOptions.bruteForceGINumRays": 512,
+          "redshiftOptions.reflectionMaxTraceDepth": 4,
+          "redshiftOptions.refractionMaxTraceDepth": 6,
+          "redshiftOptions.combinedMaxTraceDepth": 6
+        }
+      },
+      {
+        "layer_name": "SKY",
+        "render_setting": {
+          "redshiftOptions.unifiedMinSamples": 32,
+          "redshiftOptions.unifiedMaxSamples": 256,
+          "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.03,
+          "redshiftOptions.aovGlobalEnableMode": 0
+        }
+      },
+      {
+        "layer_name": "IDP",
+        "render_setting": {
+          "redshiftOptions.unifiedMinSamples": 16,
+          "redshiftOptions.unifiedMaxSamples": 256,
+          "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003,
+          "redshiftOptions.reflectionMaxTraceDepth": 0,
+          "redshiftOptions.refractionMaxTraceDepth": 0,
+          "redshiftOptions.combinedMaxTraceDepth": 0,
+          "redshiftOptions.primaryGIEngine": 0,
+          "redshiftOptions.secondaryGIEngine": 0,
+          "redshiftOptions.aovGlobalEnableMode": 0,
+          "redshiftOptions.materialOverrideEnable": 1
+        }
+      }
+    ]
+  },
+  "layer_setting_1_LGT.yml": {
+    "basic_config": {
+      "render_type": "redshift",
+      "render_plugin_name": "redshift4maya.mll"
+    },
+    "output_file_name": "layer_setting_2_LGT.mb",
+    "layer_setting": [
+      {
+        "layer_name": "masterLayer",
+        "render_setting": {
+          "defaultRenderGlobals.ifp": "EP{episode:03}/Q{sequence:03}/S{shot:03}/<RenderLayer>/<Scene>_<RenderLayer>",
+          "redshiftOptions.imageFormat": 1,
+          "redshiftOptions.exrBits": 16,
+          "redshiftOptions.exrCompression": 0,
+          "redshiftOptions.exrForceMultilayer": 1,
+          "defaultRenderGlobals.animation": 1,
+          "defaultRenderGlobals.fs": 1,
+          "defaultRenderGlobals.ef": 1,
+          "defaultRenderGlobals.bfs": 1,
+          "defaultRenderGlobals.extensionPadding": 4,
+          "defaultResolution.width": 1920,
+          "defaultResolution.height": 1080,
+          "defaultResolution.deviceAspectRatio": 1.778,
+          "defaultResolution.pixelAspect": 1.0,
+          "defaultRenderGlobals.enableDefaultLight": 0
+        }
+      },
+      {
+        "layer_name": "LGT",
+        "render_setting": {
+          "redshiftOptions.unifiedMinSamples": 32,
+          "redshiftOptions.unifiedMaxSamples": 256,
+          "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.03,
+          "redshiftOptions.aovGlobalEnableMode": 0,
+          "redshiftOptions.primaryGIEngine": 4,
+          "redshiftOptions.secondaryGIEngine": 4,
+          "redshiftOptions.materialOverrideEnable": 1
+        }
+      }
+    ]
+  }
+}

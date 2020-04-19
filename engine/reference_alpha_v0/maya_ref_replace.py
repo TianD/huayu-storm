@@ -261,6 +261,9 @@ class SceneHelper(LogHelper):
         collection.getSelector().setPattern('|*')
 
     def __get_render_layer_with_auto_create(self, render_layer_name):
+        if render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
+            render_layer_name = pymel_core.nodetypes.RenderLayer.defaultRenderLayer().name()
+
         try:
             render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
         except:

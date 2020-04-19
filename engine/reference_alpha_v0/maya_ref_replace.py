@@ -101,7 +101,7 @@ KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-    '', #r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
+    '',  # r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
 ]
 
 IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH = [
@@ -361,7 +361,7 @@ class SceneHelper(LogHelper):
     def export(self, file_name):
         scene_file_name = pymel_core.system.sceneName()
         self.save_as(file_name)
-        maya_cmds.file(scene_file_name, open=True, force=True)
+        maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
 
 
 class SceneHelperForRedshift(SceneHelper):
@@ -619,7 +619,8 @@ class ReferenceExporter(ReferenceHelper):
                                 '{}.primaryVisibility'.format(pymel_core.PyNode(character_transform).getShape().name()),
                                 0
                             ]
-                            for character_transform in character_list if pymel_core.PyNode(character_transform).getShape()
+                            for character_transform in character_list if
+                            pymel_core.PyNode(character_transform).getShape()
                         ]
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             command_list, LAYER_BG_COLOR

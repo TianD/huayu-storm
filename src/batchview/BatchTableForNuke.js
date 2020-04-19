@@ -36,9 +36,9 @@ class BatchTableForNuke extends Component {
         this.columns = [
             {
                 title: '镜头',
-                dataIndex: 'shot',
-                key: 'shot',
-                width: 60
+                dataIndex: 'key',
+                key: 'key',
+                width: 120
             },
             {
                 title: '预览',

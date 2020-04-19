@@ -61,3 +61,35 @@ layer_setting:
             #       general [row layout]
             #           mode:
             "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+    -   layer_name: IDP
+        render_setting:
+            ### output [tab]
+            #       unified sampling [row layout]
+            #           min samples:
+            "redshiftOptions.unifiedMinSamples": 16
+            #           max samples:
+            "redshiftOptions.unifiedMaxSamples": 256
+            #           adaptive error threshold:
+            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
+            ### opt [tab]
+            #       maximum trace depth [row layout]
+            #           reflection:
+            "redshiftOptions.reflectionMaxTraceDepth": 0
+            #           refraction:
+            "redshiftOptions.refractionMaxTraceDepth": 0
+            #           combined:
+            "redshiftOptions.combinedMaxTraceDepth": 0
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4   { 4: brute force }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+            ### AOV [tab]
+            #       general [row layout]
+            #           mode:
+            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+            ### System [tab]
+            #       Material Override [row layout]
+            #           enable:
+            "redshiftOptions.materialOverrideEnable": 1 #0,1

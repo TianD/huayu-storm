@@ -575,6 +575,9 @@ class ReferenceExporter(ReferenceHelper):
         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
             [('defaultResolution.width', 1920)]
         )
+
+        # todo set current camera with file name
+
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:

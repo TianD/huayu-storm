@@ -33,11 +33,7 @@ class BatchTableForSeqToMov extends Component {
                 title: 'Id',
                 dataIndex: 'id',
                 key: 'id',
-            },
-            {
-                title: '状态',
-                dataIndex: 'status',
-                key: 'status',
+                width: 60
             },
             {
                 title: '文件',
@@ -45,14 +41,20 @@ class BatchTableForSeqToMov extends Component {
                 key: 'Name',
             },
             {
+                title: '状态',
+                dataIndex: 'status',
+                key: 'status',
+            },
+            {
                 title: 'Action',
                 dataIndex: 'action',
                 key: 'action',
-                render: (text, record) => (
+                width: 140,
+                render: (text, record, index) => (
                     <span>
-                        <Button onClick={() => { this.playThis(record) }}
+                        <Button onClick={() => { this.playThis(record, index) }}
                             style={{ margin: 3 }} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
-                        <Button onClick={() => { this.removeThis(record) }}
+                        <Button onClick={() => { this.removeThis(record, index) }}
                             style={{ margin: 3 }} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
                     </span>
                 )
@@ -62,14 +64,14 @@ class BatchTableForSeqToMov extends Component {
 
     async playThis(record, index) {
         let files = this.props.seq2movbatch_items;
-        await api.seq2mov_process(record, index).then((response)=>{
+        await api.seq2mov_process(record).then((response)=>{
             let new_record = {...record, ...response.data}
             files.splice(index, 1, new_record)
         })
-        this.props.set_nukebatch_items(files)
+        this.props.set_seq2movbatch_items(files)
     }
 
-    removeThis(record) {
+    removeThis(record, index) {
         let file_list = this.props.seq2movbatch_items;
         file_list.splice(record.key, 1);
         let new_file_list = file_list.map((item, index) => {
@@ -79,22 +81,24 @@ class BatchTableForSeqToMov extends Component {
     }
 
     async upload(e) {
-        let result = await remote.dialog.showOpenDialog({
-            properties: ['openFile', 'multiSelections'],
+        let dirs = await remote.dialog.showOpenDialog({
+            properties: ['openDirectory', 'multiSelections'],
         });
+        let result;
+        await api.file_collections(dirs.filePaths).then((response)=>{
+            result = response.data
+        })
         let file_list = [];
-        for (let i = 0; i < result.filePaths.length; i++) {
+        for (let i = 0; i < result.length; i++) {
             let file_data = {
                 key: i,
                 id: i + 1,
-                name: result.filePaths[i],
+                name: result[i],
+                project: this.props.seq2movbatch_filters,
                 status: 'Ready'
             }
             file_list.push(file_data)
         }
-        // this.setState({
-        //     file_list: file_list
-        // })
         this.props.set_seq2movbatch_items(file_list)
     }
     
@@ -103,9 +107,6 @@ class BatchTableForSeqToMov extends Component {
     }
 
     clearlist() {
-        // this.setState({
-        //     file_list: []
-        // })
         this.props.set_seq2movbatch_items([])
     }
 
@@ -131,6 +132,8 @@ class BatchTableForSeqToMov extends Component {
                     dataSource={this.props.seq2movbatch_items}
                     columns={this.columns}
                     pagination={false}
+                    size="small"
+                    bordered
                 />
             </div>
         )

@@ -59,13 +59,16 @@ def get_project_list():
         project_config_path = os.path.join(config_dir, project, 'dir_template.yml')
         with open(project_config_path, 'r') as f:
             project_config = yaml.load(f)
-        compositing = project_config.get('compositing') or {}
-        comp_dir = compositing.get('dir')
-        format_comp_dir = re.sub("{[0-9a-zA-Z]*}", '*', comp_dir)
-        dir_list = glob.glob(format_comp_dir)
+        anim = project_config.get('anim') or {}
+        anim_dir = anim.get('dir')
+        try:
+            format_anim_dir = re.sub("{[0-9a-zA-Z_]*}", '*', anim_dir)
+        except:
+            continue
+        dir_list = glob.glob(format_anim_dir)
         for one_dir in dir_list:
-            comp_template = Template('comp_dir', comp_dir)
-            data = comp_template.parse(one_dir.replace('\\', '/'))
+            anim_template = Template('anim_dir', anim_dir)
+            data = anim_template.parse(one_dir.replace('\\', '/'))
             episode = data.get('episode')
             sequence = data.get('sequence')
             shot = data.get('shot')
@@ -190,6 +193,29 @@ def nuke_setup_process():
 
 @app.route('/api/seq2mov_process', methods=['POST'])
 def seq2mov_process():
+    file_info = json.loads(request.data)
+    project = file_info.get('project')
+    seq2mov_config_path = os.path.join(config_dir, project, 'seq2mov.yml')
+    dir_config_path = os.path.join(config_dir, project, 'dir_template.yml')
+    with open(dir_config_path, 'r') as f:
+        dir_config = yaml.load(f)
+    with open(seq2mov_config_path, 'r') as f:
+        seq2mov_config = yaml.load(f)
+    ffmpeg_exe = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bin/ffmpeg.exe')
+    ffmpeg_exe = ffmpeg_exe.replace('\\', '/')
+    cmd = seq2mov_config.get('ffmpeg_cmd')
+    input_file = file_info.get('name').replace('\\', '/')
+    input_template_code = seq2mov_config.get('input_file_template')
+    output_template_code = seq2mov_config.get('output_file_template')
+    input_template_path = '%s/%s' % (dir_config.get(input_template_code, {}).get('dir'),
+                                     dir_config.get(input_template_code, {}).get('file'))
+    input_template = Template(input_template_code, input_template_path)
+    data = input_template.parse(input_file)
+    output_template_path = '%s/%s' % (dir_config.get(output_template_code, {}).get('dir'),
+                                      dir_config.get(output_template_code, {}).get('file'))
+    output_file = fmt.format(output_template_path, **data)
+    format_command = fmt.format(cmd, ffmpeg_exe=ffmpeg_exe, input_file=input_file, output_file=output_file)
+    ZMQ_SOCKET.send_json({'format_command': format_command, 'key': file_info.get('key'), 'view': 'seq2movbatch'})
     return json.dumps({'status': 'Queued'})
 
 
@@ -198,10 +224,24 @@ def maya_layer_process():
     return json.dumps({'status': 'Queued'})
 
 
+@app.route('/api/file_collections', methods=['POST'])
+def get_file_collections():
+    dir_list = json.loads(request.data)
+    result = []
+    for d in dir_list:
+        collections, remainders = clique.assemble(os.listdir(d))
+        for collection in collections:
+            collection.padding = len(str(list(collection.indexes)[-1]))
+            temp = os.path.join(d, collection.format('{head}{padding}{tail}'))
+            result.append(temp)
+    return json.dumps(result)
+
+
 if __name__ == '__main__':
     @run_with_reloader
     def run_server():
         http_server = WSGIServer(('0.0.0.0', 5000), DebuggedApplication(app))
         http_server.serve_forever()
+
 
     run_server()

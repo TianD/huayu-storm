@@ -33,11 +33,7 @@ class BatchTableForMaya extends Component {
                 title: 'Id',
                 dataIndex: 'id',
                 key: 'id',
-            },
-            {
-                title: '状态',
-                dataIndex: 'status',
-                key: 'status',
+                width: 60
             },
             {
                 title: '文件',
@@ -45,14 +41,20 @@ class BatchTableForMaya extends Component {
                 key: 'Name',
             },
             {
+                title: '状态',
+                dataIndex: 'status',
+                key: 'status',
+            },
+            {
                 title: 'Action',
                 dataIndex: 'action',
                 key: 'action',
-                render: (text, record) => (
+                width: 140,
+                render: (text, record, index) => (
                     <span>
-                        <Button onClick={()=>{this.playThis(record)}} 
+                        <Button onClick={()=>{this.playThis(record, index)}} 
                         style={{ margin: 3 }} ghost shape="circle" icon={<PlayCircleTwoTone twoToneColor="#52c41a" />} />
-                        <Button onClick={()=>{this.removeThis(record)}} 
+                        <Button onClick={()=>{this.removeThis(record, index)}} 
                         style={{ margin: 3 }} ghost shape="circle" icon={<RestTwoTone twoToneColor="#eb2f96" />} />
                     </span>
                 )
@@ -69,7 +71,7 @@ class BatchTableForMaya extends Component {
         this.props.set_mayabatch_items(file_list)
     }
     
-    removeThis(record) {
+    removeThis(record, index) {
         let file_list = this.props.mayabatch_items;
         file_list.splice(record.key, 1);
         let new_file_list = file_list.map((item, index)=>{
@@ -88,7 +90,7 @@ class BatchTableForMaya extends Component {
                 key: i,
                 id: i + 1,
                 name: result.filePaths[i],
-                status: '就绪'
+                status: 'Ready'
             }
             file_list.push(file_data)
         }
@@ -125,6 +127,8 @@ class BatchTableForMaya extends Component {
                     dataSource={this.props.mayabatch_items}
                     columns={this.columns}
                     pagination={false}
+                    size="small"
+                    bordered
                 />
             </div>
         )

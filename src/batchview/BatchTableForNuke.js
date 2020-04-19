@@ -80,21 +80,33 @@ class BatchTableForNuke extends Component {
     changeTask(e) {
         let shots = this.props.nukebatch_items;
         let new_shot_list = shots.map((item) => {
-            if(item.status === 'Ready'){
+            if (item.status === 'Ready') {
                 return { ...item, taskid: e.target.value }
             }
-            return item})
+            return item
+        })
         this.props.set_nukebatch_taskid(e.target.value)
         this.props.set_nukebatch_items(new_shot_list)
     }
 
     async playThis(record, index) {
         let shots = this.props.nukebatch_items;
-        await api.nuke_setup_process(record, index).then((response)=>{
-            let new_record = {...record, ...response.data}
+        await api.nuke_setup_process(record).then((response) => {
+            let new_record = { ...record, ...response.data }
             shots.splice(index, 1, new_record)
         })
         this.props.set_nukebatch_items(shots)
+    }
+
+    async playAll() {
+        let shots = this.props.nukebatch_items;
+        let new_shots = [];
+        for (let i = 0; i < shots.length; i++) {
+            await api.nuke_setup_process(shots[i]).then((response) => { 
+                new_shots.push({ ...shots[i], ...response.data }) 
+            })
+        }
+        this.props.set_nukebatch_items(new_shots)
     }
 
     filterShots(value) {
@@ -143,7 +155,7 @@ class BatchTableForNuke extends Component {
                         </Radio.Group>
 
                     </Col>
-                    <Col span={6}><Button style={{ margin: 12 }}>全部开始</Button></Col>
+                    <Col span={6}><Button style={{ margin: 12 }} onClick={() => { this.playAll() }}>全部开始</Button></Col>
                 </Row>
                 <Table
                     tableLayout={"fixed"}

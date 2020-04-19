@@ -1,0 +1,18 @@
+lr:
+  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{episode}/maya
+  file: dr_{episode}_{sequence}_{shot}_{parent_layer}_lr_{version}.mb
+compositing:
+  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{episode}/comp
+  file: DR_{episode}_{sequence}_{shot}_kl_c{version}.tiff
+images:
+  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{episode}/image/dr_{episode}_{sequence}_{shot}_{parent_layer}_lr_{version}/{layer}
+  file: dr_{episode}_{sequence}_{shot}_{parent_layer}_lr_{version}_{layer}.%04d.exr
+mov:
+  dir: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
+  file: ttt_{episode}_{sequence}_{shot}_cp_{version}.mov
+nuke:
+  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{epsidoe}/nuke
+  file: dr_{episode}_{sequence}_{shot}_cp_c{version}.nk
+anim:
+  dir: Z:/Projects/DeerRun/Project/scenes/Animation/episode_{episode}/sequence_{sequence}/scene_{shot}/anim
+  file: DR_{epsidoe}_{sequence}_{shot}_an_c{version}.mb

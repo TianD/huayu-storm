@@ -13,6 +13,6 @@ mov:
 nuke:
   dir: E:/huayu-storm/TTT/nuke/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.nk
-an:
-  dir: E:/huayu-storm/TTT/an
+anim:
+  dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_an_{version}.mov

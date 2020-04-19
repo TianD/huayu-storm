@@ -27,7 +27,12 @@ class Api {
     }
 
     seq2mov_process(shot) {
+        console.log(shot)
         return axios.post('/seq2mov_process', shot)
+    }
+
+    file_collections(filenames) {
+        return axios.post('/file_collections', filenames)
     }
 }
 

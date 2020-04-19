@@ -570,20 +570,22 @@ class ReferenceExporter(ReferenceHelper):
         self.process_all_reference()
         # create render layer
         self.process_all_render_layer()
+
         # todo , set common render setting
         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-            [('defaultResolution.width', 1920)])
+            [('defaultResolution.width', 1920)]
+        )
         # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
         #   override render layer
         #           if BGCLR:
         #               set CHCLR -> [override] Primary Visiblity : off
         # todo , if layer in [ LGT ]
         #   override render layer
-        for override_layer_name in ['BGColor', 'CHColor']:
-            command_param_list = [('defaultResolution.width', 1920)]
-            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                command_param_list, override_render_layer_name=override_layer_name
-            )
+        # for override_layer_name in ['BGColor', 'CHColor']:
+        #     command_param_list = [('defaultResolution.width', 1920)]
+        #     self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+        #         command_param_list, override_render_layer_name=override_layer_name
+        #     )
 
         # self.debug('set render setting', reference_source, reference_target)
         # todo , export reference file
@@ -604,8 +606,6 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    ref_exporter.scene_helper.load_plugin(PLUGIN_REDSHIFT)
-    # ref_exporter.scene_helper.set_render_layer_to_current('BGCLR')
 
     ref_exporter.process_all_reference()
     ref_exporter.process_all_render_layer()

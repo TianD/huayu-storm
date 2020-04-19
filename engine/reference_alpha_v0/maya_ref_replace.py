@@ -20,6 +20,7 @@ reload(LogHelper)
 
 from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
+from utils.ConfigHelper import ConfigHelper
 
 LAYER_MASTER = 'masterLayer'
 LAYER_BG_COLOR = 'BGCLR'
@@ -391,6 +392,7 @@ class ReferenceHelper(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
         self.scene_helper = SceneHelperForRedshift(logger=logger)
+        self.config_helper = ConfigHelper(logger=logger)
 
         self.ADD_RULES = [
             {
@@ -509,12 +511,14 @@ class ReferenceHelper(LogHelper):
 
 
 class ReferenceExporter(ReferenceHelper):
+    def process_all_config(self):
+        layer_render_setting = self.config_helper.export_config()
+        print(layer_render_setting)
+
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
 
     def process_all_layer_override_attr(self):
-
-
         for override_layer_name in [LAYER_BG_COLOR]:
             command_param_list = [('defaultResolution.width', 1111)]
             self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
@@ -559,9 +563,8 @@ if __name__ == '__main__':
 
     sys.path.insert(0, egg_dir)
     #
-    import pydevd_pycharm
 
-    pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+    # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
 
     # reference_helper = ReferenceHelper()
     # reference_helper.process_all_reference()
@@ -569,7 +572,8 @@ if __name__ == '__main__':
     # reference_helper.replace_reference()
 
     ref_exporter = ReferenceExporter()
-    ref_exporter.process_all_layer_override_attr()
+    ref_exporter.process_all_config()
+    # ref_exporter.process_all_layer_override_attr()
 
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()

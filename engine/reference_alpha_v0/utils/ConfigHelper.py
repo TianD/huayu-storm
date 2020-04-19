@@ -88,89 +88,57 @@ class ConfigHelper(LogHelper):
             value = default_value
         return value
 
+    def export_config(self):
+        config_dir_root = self.path_and_file_helper.join_file_path(
+            __file__, '../../../../config',
+            **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+        )
+        project_list = self.path_and_file_helper.list_dir(config_dir_root, only_dir=True)
+
+        all_layer_setting_dict = OrderedDict()
+        return_all_layer_setting_dict = OrderedDict()
+        for project in project_list:
+            project_dir = self.path_and_file_helper.join_file_path(config_dir_root, project)
+            maya_batch_config_file_list = self.path_and_file_helper.list_dir(
+                self.path_and_file_helper.join_file_path(
+                    project_dir, 'mayabatch',
+                    **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+                )
+                , file_filter_list=['*.yml', '*.yaml'], only_file=True
+            )
+
+            common_config_dict = OrderedDict()
+            for maya_batch_config_file in maya_batch_config_file_list:
+                maya_batch_config_file_base_name = self.path_and_file_helper.get_base_name(maya_batch_config_file)
+
+                config_json = self.load_config_json_from_file(maya_batch_config_file)
+                # self.show_json(config_json)
+
+                # get "__*common*.yml" files
+                if maya_batch_config_file_base_name.startswith('__') and 'common' in maya_batch_config_file_base_name:
+                    common_config_dict[maya_batch_config_file_base_name] = config_json
+                else:
+                    all_layer_setting_dict[maya_batch_config_file] = config_json
+
+            for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
+                layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
+                if layer_setting_basic_config_file_name:
+                    current_common_config_dict = common_config_dict.get(layer_setting_basic_config_file_name, {})
+                    layer_setting_dict['basic_config'] = {
+                        'render_type': current_common_config_dict.get('render_type', ''),
+                        'render_plugin_name': current_common_config_dict.get('render_plugin_name', ''),
+                    }
+
+                    common_layer_setting = current_common_config_dict['layer_setting']
+                    layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
+
+                    layer_setting_file_base_name = self.path_and_file_helper.get_base_name(layer_setting_file_base_name)
+                    return_all_layer_setting_dict[layer_setting_file_base_name] = layer_setting_dict
+
+        # self.show_json(all_layer_setting_dict)
+        return return_all_layer_setting_dict
+
 
 if __name__ == '__main__':
-
-    path_and_file_helper = PathAndFileHelper()
-    config_helper = ConfigHelper(logger=path_and_file_helper.logger)
-
-    config_dir_root = path_and_file_helper.join_file_path(
-        __file__, '../../../../config',
-        **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
-    )
-    project_list = path_and_file_helper.list_dir(config_dir_root, only_dir=True)
-
-    all_layer_setting_dict = OrderedDict()
-    for project in project_list:
-        project_dir = path_and_file_helper.join_file_path(config_dir_root, project)
-        maya_batch_config_file_list = path_and_file_helper.list_dir(
-            path_and_file_helper.join_file_path(
-                project_dir, 'mayabatch',
-                **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
-            )
-            , file_filter_list=['*.yml', '*.yaml'], only_file=True
-        )
-
-        common_config_dict = OrderedDict()
-        for maya_batch_config_file in maya_batch_config_file_list:
-            maya_batch_config_file_base_name = path_and_file_helper.get_base_name(maya_batch_config_file)
-            config_json = config_helper.load_config_json_from_file(maya_batch_config_file)
-            # config_helper.show_json(config_json)
-
-            # get "__*common*.yml" files
-            if maya_batch_config_file_base_name.startswith('__') and 'common' in maya_batch_config_file_base_name:
-                common_config_dict[maya_batch_config_file_base_name] = config_json
-            else:
-                all_layer_setting_dict[maya_batch_config_file] = config_json
-
-        for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
-            layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
-            if layer_setting_basic_config_file_name:
-                current_common_config_dict = common_config_dict.get(layer_setting_basic_config_file_name, {})
-                layer_setting_dict['basic_config'] = {
-                    'render_type': current_common_config_dict.get('render_type', ''),
-                    'render_plugin_name': current_common_config_dict.get('render_plugin_name', ''),
-                }
-
-                common_layer_setting = current_common_config_dict['layer_setting']
-                layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
-
-                all_layer_setting_dict[layer_setting_file_base_name] = layer_setting_dict
-
-    config_helper.show_json(all_layer_setting_dict)
-    #
-    # convert layer config to command list
-    # layer_setting_command_dict = OrderedDict()
-    # for layer_setting_file_name, layer_setting_dict in all_layer_setting_dict.items():
-    #     plugin_name = config_helper.get_json_value_with_key_path(
-    #         'basic_config.render_plugin_name', '', layer_setting_dict
-    #     )
-    #     plugin_dll_name = config_helper.get_json_value_with_key_path(
-    #         'basic_config.render_plugin_name', '', layer_setting_dict
-    #     )
-    #
-    #     output_file_name = config_helper.get_json_value_with_key_path(
-    #         'output_file_name', '', layer_setting_dict
-    #     )
-    #
-    #     layer_setting_list = config_helper.get_json_value_with_key_path(
-    #         'layer_setting', [], layer_setting_dict
-    #     )
-    #
-    #     layer_setting_command_dict[layer_setting_file_name] = OrderedDict()
-    #     layer_setting_command_dict[layer_setting_file_name]['plugin_name'] = plugin_name
-    #     layer_setting_command_dict[layer_setting_file_name]['plugin_dll_name'] = plugin_dll_name
-    #     layer_setting_command_dict[layer_setting_file_name]['output_file_name'] = output_file_name
-    #
-    #     for layer_setting in layer_setting_list:
-    #         layer_setting_dict = OrderedDict()
-    #         layer_name = config_helper.get_json_value_with_key_path(
-    #             'layer_name', '', layer_setting_dict
-    #         )
-    #         attr_setting_dict = config_helper.get_json_value_with_key_path(
-    #             'layer_setting.render_setting', [], layer_setting
-    #         )
-    #
-    #         layer_setting_dict[layer_name]
-    #         for attr_key, attr_value in attr_setting_dict.items():
-    #             print(attr_key, attr_value)
+    config_helper = ConfigHelper()
+    config_helper.show_json(config_helper.export_config())

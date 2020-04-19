@@ -238,7 +238,23 @@ class SceneHelper(LogHelper):
     def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list):
         for command_param_list in command_param_list_batch_list:
             attr_key, attr_value = command_param_list
-            pymel_core.general.setAttr(attr_key, attr_value)
+
+            if isinstance(attr_value, str):
+                attr_type = 'string'
+            else:
+                attr_type = ''
+
+            if attr_type:
+                kwargs = {'type': attr_type}
+            else:
+                kwargs = {}
+
+            self.debug(attr_key, attr_value, **kwargs)
+
+            try:
+                maya_cmds.setAttr(attr_key, attr_value, **kwargs)
+            finally:
+                self.debug('failed on:', command_param_list)
 
     def set_attr_with_command_param_list_batch_list_with_render_layer(
             self,
@@ -296,6 +312,15 @@ class SceneHelper(LogHelper):
     def set_render_layer_to_current(self, render_layer_name):
         render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
         render_layer.setCurrent()
+
+    def save_as(self, file_name):
+        maya_cmds.file(rename=file_name)
+        maya_cmds.file(force=True, save=True)
+
+    def export(self, file_name):
+        scene_file_name = pymel_core.system.sceneName()
+        self.save_as(file_name)
+        maya_cmds.file(scene_file_name, open=True, force=True)
 
 
 class SceneHelperForRedshift(SceneHelper):
@@ -536,7 +561,8 @@ class ReferenceExporter(ReferenceHelper):
                             current_render_setting_list, current_layer_name
                         )
             # todo save as
-            print(output_file_name)
+            self.scene_helper.export(output_file_name)
+            # print(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
@@ -556,10 +582,7 @@ class ReferenceExporter(ReferenceHelper):
         # create render layer
         self.process_all_render_layer()
 
-        # todo , set common render setting
-        self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-            [('defaultResolution.width', 1920)]
-        )
+        self.process_all_config()
 
         # todo set current camera with file name
 
@@ -585,9 +608,9 @@ if __name__ == '__main__':
     import sys
 
     sys.path.insert(0, egg_dir)
-    #
+    import pydevd_pycharm
 
-    # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+    pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
 
     # reference_helper = ReferenceHelper()
     # reference_helper.process_all_reference()
@@ -596,9 +619,6 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    # ref_exporter.process_all_layer_override_attr()
-
-    ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
+    # ref_exporter.process_all_reference()
+    # ref_exporter.process_all_render_layer()
     ref_exporter.process_all_config()
-    # ref_exporter.process_all_layer_override_attr()

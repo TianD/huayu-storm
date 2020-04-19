@@ -14,13 +14,13 @@ layer_setting:
             #           compression: default
             "redshiftOptions.exrCompression": 0 #0,1,2,3,4
             #           force combine beauty and AOVS into single file:
-            "redshiftOptions.exrForceMultilayer": 1 #0,1 only valid for exr
+            "redshiftOptions.exrMultipart": 1 #0,1 only valid for exr
             #           animation:
             "defaultRenderGlobals.animation": 1
             #           start frame:a
             "defaultRenderGlobals.fs": 1
             #           end frame:
-            "defaultRenderGlobals.ef": 1
+            "defaultRenderGlobals.ef": 100
             #           by frame:
             "defaultRenderGlobals.bfs": 1
             #           frame padding:

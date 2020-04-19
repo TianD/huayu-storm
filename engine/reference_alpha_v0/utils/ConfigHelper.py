@@ -120,6 +120,8 @@ class ConfigHelper(LogHelper):
                 else:
                     all_layer_setting_dict[maya_batch_config_file] = config_json
 
+            project_name = self.path_and_file_helper.get_base_name(project_dir)
+            return_all_layer_setting_dict[project_name] = {}
             for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
                 layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
                 if layer_setting_basic_config_file_name:
@@ -133,8 +135,6 @@ class ConfigHelper(LogHelper):
                     layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
 
                     layer_setting_file_base_name = self.path_and_file_helper.get_base_name(layer_setting_file_base_name)
-                    project_name = self.path_and_file_helper.get_base_name(project_dir)
-                    return_all_layer_setting_dict[project_name] = {}
                     return_all_layer_setting_dict[project_name][layer_setting_file_base_name] = layer_setting_dict
 
         # self.show_json(all_layer_setting_dict)

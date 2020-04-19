@@ -1,6 +1,5 @@
 # coding=utf8
-
-
+import json
 import re
 
 import maya.cmds as maya_cmds
@@ -138,6 +137,14 @@ class SceneHelper(LogHelper):
 
     def list_with_pattern(self, object_pattern):
         return maya_cmds.ls(object_pattern)
+
+    def scene_format_dict(self):
+        return \
+            {
+                'episode': int(self.episode),
+                'sequence': int(self.sequence),
+                'shot': int(self.shot),
+            }
 
     def get_episode_sequence_shot_from_filename(self):
         scene_file_path = maya_cmds.file(query=1, exn=1)
@@ -566,6 +573,11 @@ class ReferenceHelper(LogHelper):
 
 
 class ReferenceExporter(ReferenceHelper):
+    def format_json_dict_with_format_dict(self, json_dict, format_dict):
+        json_string = json.dumps(json_dict)
+        json_string = json_string.format(**format_dict)
+        return json.loads(json_string)
+
     def process_all_config(self):
         layer_render_setting = self.config_helper.export_config().get('{project}')
         for file_name, file_render_setting_dict in layer_render_setting.items():
@@ -583,6 +595,9 @@ class ReferenceExporter(ReferenceHelper):
                                 file_render_layer_setting.get('render_setting', '').items()
                             )
                         ]
+                        current_render_setting_list = \
+                            self.format_json_dict_with_format_dict(current_render_setting_list)
+
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             current_render_setting_list, current_layer_name
                         )
@@ -590,13 +605,6 @@ class ReferenceExporter(ReferenceHelper):
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
-
-    def process_all_layer_override_attr(self):
-        for override_layer_name in [LAYER_BG_COLOR]:
-            command_param_list = [('defaultResolution.width', 1111)]
-            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                command_param_list, override_render_layer_name=override_layer_name
-            )
 
     def process_camera(self):
         current_camera = self.scene_helper.get_current_camera()

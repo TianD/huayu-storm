@@ -652,26 +652,7 @@ class ReferenceExporter(ReferenceHelper):
         self.process_all_render_layer()
         # set camera
         self.process_camera()
-
         self.process_all_config()
-
-        # todo set current camera with file name
-
-        # todo , if layer in [ BGCLR, CHCLR , SKY ] , import layer file into current file
-        #   override render layer
-        #           if BGCLR:
-        #               set CHCLR -> [override] Primary Visiblity : off
-        # todo , if layer in [ LGT ]
-        #   override render layer
-        # for override_layer_name in ['BGColor', 'CHColor']:
-        #     command_param_list = [('defaultResolution.width', 1920)]
-        #     self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-        #         command_param_list, override_render_layer_name=override_layer_name
-        #     )
-
-        # self.debug('set render setting', reference_source, reference_target)
-        # todo , export reference file
-        # self.debug('export reference file', reference_source, reference_target)
 
 
 if __name__ == '__main__':

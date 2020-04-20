@@ -342,8 +342,7 @@ class SceneHelper(LogHelper):
         # as use *:* this like , if not found , error happened , so try/except to avoid this
 
         try:
-            self.select_with_clear(object_pattern)
-            selected = maya_cmds.ls(sl=True)
+            selected = self.list_with_pattern(object_pattern)
             render_layer.addMembers(selected)
         except:
             pass

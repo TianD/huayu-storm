@@ -595,7 +595,7 @@ class ReferenceExporter(ReferenceHelper):
         for file_name, file_render_setting_dict in layer_render_setting.items():
             self.scene_helper.load_render_plugin()
             output_file_name = file_render_setting_dict.get('output_file_name', '').format(
-                self.scene_helper.scene_format_dict()
+                **self.scene_helper.scene_format_dict()
             )
 
             if output_file_name:

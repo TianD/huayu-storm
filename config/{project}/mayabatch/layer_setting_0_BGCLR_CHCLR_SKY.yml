@@ -1,20 +1,25 @@
 basic_config: ___redshift_common.yml
 output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/layer_setting_0_BGCLR_CHCLR_SKY.mb'
 layer_setting:
-    -   layer_name: SKY
+    -   layer_name: BGCLR
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]
             #           min samples:
-            "redshiftOptions.unifiedMinSamples": 32
+            "redshiftOptions.unifiedMinSamples": 16
             #           max samples:
             "redshiftOptions.unifiedMaxSamples": 256
             #           adaptive error threshold:
-            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
-            ### AOV [tab]
+            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
+            ### GI [tab]
             #       general [row layout]
-            #           mode:
-            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 1: photon map }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 4 #  { 2: irradiance point cloud }
+            #       brute force gi [row layout]
+            #           num rays:
+            "redshiftOptions.bruteForceGINumRays": 512
     -   layer_name: CHCLR
         render_setting:
             ### output [tab]
@@ -42,25 +47,20 @@ layer_setting:
             "redshiftOptions.refractionMaxTraceDepth": 6
             #           combined:
             "redshiftOptions.combinedMaxTraceDepth": 6
-    -   layer_name: BGCLR
+    -   layer_name: SKY
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]
             #           min samples:
-            "redshiftOptions.unifiedMinSamples": 16
+            "redshiftOptions.unifiedMinSamples": 32
             #           max samples:
             "redshiftOptions.unifiedMaxSamples": 256
             #           adaptive error threshold:
-            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
-            ### GI [tab]
+            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
+            ### AOV [tab]
             #       general [row layout]
-            #           primary gi engine:
-            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 1: photon map }
-            #           secondary gi engine:
-            "redshiftOptions.secondaryGIEngine": 4 #  { 2: irradiance point cloud }
-            #       brute force gi [row layout]
-            #           num rays:
-            "redshiftOptions.bruteForceGINumRays": 512
+            #           mode:
+            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
 #    -   layer_name: IDP
 #        render_setting:
 #            ### output [tab]

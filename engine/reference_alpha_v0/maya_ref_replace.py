@@ -675,9 +675,9 @@ if __name__ == '__main__':
         import sys
 
         sys.path.insert(0, egg_dir)
-        import pydevd_pycharms
+        # import pydevd_pycharms
 
-        pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+        # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
     except:
         pass
 
@@ -688,7 +688,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    ref_exporter.process_all_reference()
+    # ref_exporter.process_all_reference()
     ref_exporter.process_all_render_layer()
-    ref_exporter.process_camera()
-    ref_exporter.process_all_config()
+    # ref_exporter.process_camera()
+    # ref_exporter.process_all_config()

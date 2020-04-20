@@ -63,6 +63,9 @@ layer_setting:
             #"redshiftOptions.unifiedMaxSamples": 16
             #           adaptive error threshold:
             #"redshiftOptions.unifiedAdaptiveErrorThreshold": 0.010
+            #       motion bluer [row layout]
+            #           enable:
+            #"redshiftOptions.motionBlurEnable": 0 # {0: disable , 1: enable}
             ### opt [tab]
             #       maximum trace depth [row layout]
             #           reflection:

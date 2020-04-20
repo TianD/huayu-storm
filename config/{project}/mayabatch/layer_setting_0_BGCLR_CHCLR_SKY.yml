@@ -50,7 +50,7 @@ layer_setting:
             #           combined:
             "redshiftOptions.combinedMaxTraceDepth": 6
     -   layer_name: SKY
-        selector_list: [*SKY_OBJECT_SELECTOR]
+        selector_list: ['sky_object_selector']
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]

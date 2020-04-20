@@ -690,7 +690,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    # ref_exporter.process_all_reference()
+    ref_exporter.process_all_reference()
     ref_exporter.process_all_render_layer()
     ref_exporter.process_camera()
     ref_exporter.process_all_config()

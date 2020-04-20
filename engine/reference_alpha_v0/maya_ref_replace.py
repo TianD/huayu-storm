@@ -1,10 +1,26 @@
 # coding=utf8
-import json
 import re
+from collections import OrderedDict
 
 import maya.cmds as maya_cmds
 import maya.mel as maya_mel
 import pymel.core as pymel_core
+import yaml
+
+
+def represent_ordereddict(dumper, data):
+    value = []
+
+    for item_key, item_value in data.items():
+        node_key = dumper.represent_data(item_key)
+        node_value = dumper.represent_data(item_value)
+
+        value.append((node_key, node_value))
+
+    return yaml.nodes.MappingNode(u'tag:yaml.org,2002:map', value)
+
+
+yaml.add_representer(OrderedDict, represent_ordereddict)
 
 try:
     import maya.app.renderSetup.views.overrideUtils as override_utils
@@ -586,18 +602,21 @@ class ReferenceHelper(LogHelper):
 
 class ReferenceExporter(ReferenceHelper):
     def format_json_dict_with_format_dict(self, json_dict, format_dict):
-        json_string = json.dumps(json_dict)
-        json_string = json_string.format(**format_dict)
-        return json.loads(json_string)
+        yaml_string = yaml.dump(json_dict)
+        yaml_string = yaml_string.format(**format_dict)
+        return yaml.load(yaml_string)
 
     def process_all_config(self):
         layer_render_setting = self.config_helper.export_config().get('{project}')
+        layer_render_setting = self.format_json_dict_with_format_dict(
+            layer_render_setting, self.scene_helper.scene_format_dict()
+        )
+
         for file_name, file_render_setting_dict in layer_render_setting.items():
             self.scene_helper.load_render_plugin()
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
-                output_file_name = output_file_name.format(**self.scene_helper.scene_format_dict())
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
 
@@ -611,10 +630,6 @@ class ReferenceExporter(ReferenceHelper):
                                 file_render_layer_setting.get('render_setting', '').items()
                             )
                         ]
-                        current_render_setting_list = \
-                            self.format_json_dict_with_format_dict(
-                                current_render_setting_list, self.scene_helper.scene_format_dict()
-                            )
 
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             current_render_setting_list, current_layer_name
@@ -674,7 +689,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
-    ref_exporter.process_camera()
+    # ref_exporter.process_all_reference()
+    # ref_exporter.process_all_render_layer()
+    # ref_exporter.process_camera()
     ref_exporter.process_all_config()

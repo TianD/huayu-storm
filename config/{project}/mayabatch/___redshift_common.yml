@@ -3,6 +3,13 @@ render_plugin_name: redshift4maya.mll
 common_setting:
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
+    object_selector:
+        bg_object_selector: '*:SET'
+        lgt_object_selector: 'LGT*:*'
+        sky_object_selector: 'SKY*:*'
+        chr_object_selector: '*:CHR'
+        pro_object_selector: '*:PRO'
+        chrlgt_object_selector: 'CHRLGT*:*'
     import_file:
         - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/LGT.mb"
         - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/Sky.mb"

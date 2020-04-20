@@ -1,5 +1,5 @@
 basic_config: ___redshift_common.yml
-output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/layer_setting_0_BGCLR_CHCLR_SKY.mb'
+output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}/Q{sequence:03}/S{shot:03}_BGCLR.mb'
 layer_setting:
     -   layer_name: BGCLR
         selector_list: ['bg_object_selector','chr_object_selector','pro_object_selector','chrlgt_object_selector']

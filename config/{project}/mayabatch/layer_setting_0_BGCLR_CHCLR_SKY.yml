@@ -1,7 +1,7 @@
 basic_config: ___redshift_common.yml
 output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/layer_setting_0_BGCLR_CHCLR_SKY.mb'
 layer_setting:
-    -   layer_name: BGCLR
+    -   layer_name: 0BGCLR
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]
@@ -20,7 +20,7 @@ layer_setting:
             #       brute force gi [row layout]
             #           num rays:
             "redshiftOptions.bruteForceGINumRays": 512
-    -   layer_name: CHCLR
+    -   layer_name: 1CHCLR
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]
@@ -47,7 +47,7 @@ layer_setting:
             "redshiftOptions.refractionMaxTraceDepth": 6
             #           combined:
             "redshiftOptions.combinedMaxTraceDepth": 6
-    -   layer_name: SKY
+    -   layer_name: 2SKY
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]

@@ -52,12 +52,13 @@ CHR_OBJECT_SELECTOR = '*:CHR'
 PRO_OBJECT_SELECTOR = '*:PRO'
 CHRLGT_OBJECT_SELECTOR = 'CHRLGT*{}:*'.format(LAYER_NAMESPACE_SUFFIX)
 
+# layer order [reversed]
 RENDER_LAYER_RULES = [
     # layer name ,  layer select pattern
-    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
     [LAYER_LGT, [LGT_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
     [LAYER_SKY, [SKY_OBJECT_SELECTOR]],
     [LAYER_CHR_COLOR, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
+    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
     # [LAYER_IDP, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]],
 ]
 
@@ -598,7 +599,7 @@ class ReferenceExporter(ReferenceHelper):
 
                 for file_render_layer_setting in file_render_layer_setting_list:
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
-
+                    maya_cmds.confirmDialog(message=current_layer_name)
                     if current_layer_name:
                         current_render_setting_list = [
                             list(current_render_setting_item)

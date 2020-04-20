@@ -1,7 +1,16 @@
+selector_list:
+    - &BG_OBJECT_SELECTOR '*:SET'
+    - &LGT_OBJECT_SELECTOR 'LGT*:*'
+    - &SKY_OBJECT_SELECTOR 'SKY*:*'
+    - &CHR_OBJECT_SELECTOR '*:CHR'
+    - &PRO_OBJECT_SELECTOR '*:PRO'
+    - &CHRLGT_OBJECT_SELECTOR 'CHRLGT*:*'
+
 basic_config: ___redshift_common.yml
 output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/layer_setting_2_LGT.mb'
 layer_setting:
     -   layer_name: LGT
+        selector_list: [*LGT_OBJECT_SELECTOR]
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]

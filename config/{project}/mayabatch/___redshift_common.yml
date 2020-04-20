@@ -18,6 +18,7 @@ common_setting:
 
 layer_setting:
     -   layer_name: masterLayer
+        selector_list: []
         render_setting:
             ### common setting [tab]
             #       file output [row layout ]

@@ -405,6 +405,9 @@ class SceneHelperForRedshift(SceneHelper):
 
     # todo extract to SceneHelperForRedshift
     def process_all_render_layer(self):
+        # disable masterLayer
+        maya_mel.eval('renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";')
+        # process layers
         for render_layer_select_rule in RENDER_LAYER_RULES:
             layer_name = render_layer_select_rule[0]
             select_pattern_list = render_layer_select_rule[1]

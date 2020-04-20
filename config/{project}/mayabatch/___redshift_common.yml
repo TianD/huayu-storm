@@ -37,7 +37,7 @@ layer_setting:
             #           start frame:a
             "defaultRenderGlobals.fs": 1
             #           end frame:
-            "defaultRenderGlobals.ef": 100
+            "defaultRenderGlobals.ef": 3000
             #           by frame:
             "defaultRenderGlobals.bfs": 1
             #           frame padding:

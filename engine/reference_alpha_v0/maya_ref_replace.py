@@ -594,11 +594,11 @@ class ReferenceExporter(ReferenceHelper):
         layer_render_setting = self.config_helper.export_config().get('{project}')
         for file_name, file_render_setting_dict in layer_render_setting.items():
             self.scene_helper.load_render_plugin()
-            output_file_name = file_render_setting_dict.get('output_file_name', '').format(
-                **self.scene_helper.scene_format_dict()
-            )
+            output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
+                output_file_name = output_file_name.format(**self.scene_helper.scene_format_dict())
+
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
 
                 for file_render_layer_setting in file_render_layer_setting_list:

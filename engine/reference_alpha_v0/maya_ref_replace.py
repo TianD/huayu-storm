@@ -348,7 +348,7 @@ class SceneHelper(LogHelper):
         except:
             pass
 
-    def load_plugin(self, plugin_name):
+    def load_render_plugin(self, plugin_name):
         maya_cmds.loadPlugin(plugin_name)
 
     def set_render_layer_to_current(self, render_layer_name):
@@ -368,7 +368,7 @@ class SceneHelper(LogHelper):
 class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
-        self.load_plugin()
+        self.load_render_plugin()
         self.set_attr_with_command_param_list_batch_list(
             [
                 ["defaultRenderGlobals.currentRenderer", "redshift"]
@@ -457,8 +457,8 @@ class SceneHelperForRedshift(SceneHelper):
                         ]
                     )
 
-    def load_plugin(self, plugin_name=PLUGIN_REDSHIFT):
-        super(SceneHelperForRedshift, self).load_plugin(plugin_name)
+    def load_render_plugin(self, plugin_name=PLUGIN_REDSHIFT):
+        super(SceneHelperForRedshift, self).load_render_plugin(plugin_name)
 
 
 class ReferenceHelper(LogHelper):
@@ -593,13 +593,14 @@ class ReferenceExporter(ReferenceHelper):
     def process_all_config(self):
         layer_render_setting = self.config_helper.export_config().get('{project}')
         for file_name, file_render_setting_dict in layer_render_setting.items():
+            self.scene_helper.load_render_plugin()
             output_file_name = file_render_setting_dict.get('output_file_name', '')
             if output_file_name:
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
 
                 for file_render_layer_setting in file_render_layer_setting_list:
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
-                    maya_cmds.confirmDialog(message=current_layer_name)
+
                     if current_layer_name:
                         current_render_setting_list = [
                             list(current_render_setting_item)
@@ -691,5 +692,5 @@ if __name__ == '__main__':
 
     # ref_exporter.process_all_reference()
     ref_exporter.process_all_render_layer()
-    # ref_exporter.process_camera()
-    # ref_exporter.process_all_config()
+    ref_exporter.process_camera()
+    ref_exporter.process_all_config()

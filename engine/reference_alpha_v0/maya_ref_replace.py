@@ -468,6 +468,7 @@ class ReferenceHelper(LogHelper):
         self.scene_helper = SceneHelperForRedshift(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
+        # todo remove this
         self.ADD_RULES = [
             {
                 KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,

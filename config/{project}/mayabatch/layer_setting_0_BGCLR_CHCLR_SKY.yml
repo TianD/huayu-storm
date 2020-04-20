@@ -14,9 +14,9 @@ layer_setting:
             ### GI [tab]
             #       general [row layout]
             #           primary gi engine:
-            "redshiftOptions.primaryGIEngine": 1 #0,1,2,3,4   { 1: photon map }
+            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 1: photon map }
             #           secondary gi engine:
-            "redshiftOptions.secondaryGIEngine": 2 #  { 2: irradiance point cloud }
+            "redshiftOptions.secondaryGIEngine": 4 #  { 2: irradiance point cloud }
             #       brute force gi [row layout]
             #           num rays:
             "redshiftOptions.bruteForceGINumRays": 512

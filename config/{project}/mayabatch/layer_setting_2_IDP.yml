@@ -3,33 +3,20 @@ basic_config: ___redshift_common.yml
 render_type: arnold
 render_plugin_name: mtoa.mll
 
-output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}_Q{sequence:03}_S{shot:03}_LGT.mb'
+output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}_Q{sequence:03}_S{shot:03}_IDP.mb'
 layer_setting:
-    -   layer_name: LGT
-        selector_list: ['lgt_object_selector']
+    -   layer_name: IDP
         render_setting:
-            ### output [tab]
-            #       unified sampling [row layout]
-            #           min samples:
-            "redshiftOptions.unifiedMinSamples": 32
-            #           max samples:
-            "redshiftOptions.unifiedMaxSamples": 256
-            #           adaptive error threshold:
-            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
-            ### AOV [tab]
-            #       general [row layout]
-            #           mode:
-            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
-            ### GI [tab]
-            #       general [row layout]
-            #           primary gi engine:
-            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 4: brute force }
-            #           secondary gi engine:
-            "redshiftOptions.secondaryGIEngine": 4 #  { 4: brute force }
-            #       brute force gi [row layout]
-            #           num rays:
-            #"redshiftOptions.bruteForceGINumRays": 512
-            ### System [tab]
-            #       Material Override [row layout]
-            #           enable:
-            "redshiftOptions.materialOverrideEnable": 1 #0,1
+        ### AOVs [tab]
+        #       AOV Browser [row layout]
+        #           Active AOVS [column]
+        #               [x] crypto_asset
+        #               [x] crypto_material
+        #               [x] crypto_object
+        #       AOVs [row layout]
+        #           [x] crypto_asset      rgb  exr gaussian
+        #           [x] crypto_material   rgb  exr gaussian
+        #           [x] crypto_object     rgb  exr gaussian
+        ### Diagnostics
+        #       Error Handling [row layout]
+        #           [ ]Abort On Error

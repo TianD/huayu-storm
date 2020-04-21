@@ -533,6 +533,8 @@ class ReferenceExporter(ReferenceHelper):
         self.scene_helper.load_render_plugin(render_plugin_name)
         self.scene_helper.set_current_render(render_type)
 
+    IMPORT_FILE_NAMESPACE_SUFFIX = '_'
+
     def process_all_config(self):
         current_scene_file_name = self.scene_helper.get_current_scene_name()
 
@@ -558,7 +560,10 @@ class ReferenceExporter(ReferenceHelper):
                 current_key, [], file_render_setting_dict
             )
             for import_file_layer_name, import_file in import_file_list:
-                maya_cmds.file(import_file, i=True, f=True, namespace=import_file_layer_name)
+                maya_cmds.file(
+                    import_file, i=True, f=True,
+                    namespace=import_file_layer_name + ReferenceExporter.IMPORT_FILE_NAMESPACE_SUFFIX
+                )
 
             # -------------------------------- set camera --------------------------------
             ref_exporter.process_camera()

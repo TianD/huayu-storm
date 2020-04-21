@@ -9,7 +9,7 @@ common_setting:
         sky_object_selector: 'SKY*:*'
         chr_object_selector: '*:CHR'
         pro_object_selector: '*:PRO'
-        chrlgt_object_selector: 'CHRLGT*:*'
+        chrlgt_object_selector: 'CHLGT*:*'
     import_file:
         - [ "LGT" , "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/LGT.mb" ]
         - [ "SKY" , "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/Sky.mb" ]

@@ -658,9 +658,7 @@ class ReferenceExporter(ReferenceHelper):
             )
             for import_file_layer_name, import_file in import_file_list:
                 maya_cmds.file(import_file, i=True, f=True, namespace=import_file_layer_name)
-            self.debug(file_render_setting_dict)
-            self.debug(import_file_list)
-            continue
+
             # -------------------------------- set camera ------------------------------
             ref_exporter.process_camera()
             # -------------------------------- process all layer ------------------------------
@@ -691,6 +689,8 @@ class ReferenceExporter(ReferenceHelper):
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             current_render_setting_list, current_layer_name
                         )
+
+                    # set primaryVisibility for objects
                     if current_layer_name == LAYER_BG_COLOR:
                         self.scene_helper.set_render_layer_to_current(current_layer_name)
                         character_list = self.scene_helper.list_with_pattern(CHR_OBJECT_SELECTOR)

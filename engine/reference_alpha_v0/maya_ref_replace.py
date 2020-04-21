@@ -620,22 +620,15 @@ class ReferenceExporter(ReferenceHelper):
         return yaml.load(yaml_string)
 
     def process_all_config(self):
-        layer_file_setting = self.config_helper.export_config().get('{project}')
-
-        # get common render plugin name
-        project_render_plugin_name = layer_file_setting.get('render_plugin_name')
+        layer_file_setting = self.config_helper.export_config().get('{project}', {})
 
         layer_file_setting = self.format_json_dict_with_format_dict(
             layer_file_setting, self.scene_helper.scene_format_dict()
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
-            # render_type = layer_render_setting.get('render_type')
-            layer_file_render_plugin_name = layer_file_setting.get('render_plugin_name')
-            render_plugin_name = layer_file_render_plugin_name or project_render_plugin_name
-
-            self.debug(layer_file_render_plugin_name, render_plugin_name)
-
+            # load render plugin
+            render_plugin_name = file_render_setting_dict.get('render_plugin_name')
             self.scene_helper.load_render_plugin(render_plugin_name)
 
             output_file_name = file_render_setting_dict.get('output_file_name', '')
@@ -653,7 +646,7 @@ class ReferenceExporter(ReferenceHelper):
                         current_render_setting_list = [
                             list(current_render_setting_item)
                             for current_render_setting_item in list(
-                                file_render_layer_setting.get('render_setting', '').items()
+                                (file_render_layer_setting.get('render_setting') or {}).items()
                             )
                         ]
 
@@ -702,9 +695,9 @@ if __name__ == '__main__':
         import sys
 
         sys.path.insert(0, egg_dir)
-        import pydevd_pycharms
+        # import pydevd_pycharms
 
-        pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+        # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
 
     except:
         pass

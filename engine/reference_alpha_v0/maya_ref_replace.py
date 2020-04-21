@@ -270,12 +270,13 @@ class SceneHelper(LogHelper):
                         attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
                     )
 
+    KEY_SCRIPT = 'script'
     KEY_RETURN_VALUE = 'return_result'
 
     def get_value_with_exec(self, code):
         local_dict = {}
         exec (code, globals(), local_dict)
-        return local_dict.get(SceneHelper.KEY_RETURN_VALUE)
+        return local_dict.get(SceneHelper.KEY_SCRIPT, {}).get(SceneHelper.KEY_RETURN_VALUE)
 
     def __set_override_for_render_layer_for_maya_old(
             self, attr_key, attr_value, input_render_layer_name='', create_if_not_existed=True

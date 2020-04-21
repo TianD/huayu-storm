@@ -632,7 +632,7 @@ class ReferenceExporter(ReferenceHelper):
         for file_name, file_render_setting_dict in layer_file_setting.items():
             # render_type = layer_render_setting.get('render_type')
             layer_file_render_plugin_name = layer_file_setting.get('render_plugin_name')
-            render_plugin_name = layer_file_render_plugin_name or render_plugin_name
+            render_plugin_name = layer_file_render_plugin_name or project_render_plugin_name
             self.scene_helper.load_render_plugin(render_plugin_name)
 
             output_file_name = file_render_setting_dict.get('output_file_name', '')

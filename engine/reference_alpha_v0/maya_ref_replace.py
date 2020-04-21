@@ -302,6 +302,9 @@ class SceneHelper(LogHelper):
     def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list):
         for command_param_list in command_param_list_batch_list:
             attr_key, attr_value = command_param_list
+            # if is dict
+            #   attr_value =>
+            #       script: 'import os\nreturn_value = os.path.dirname('')'
             if isinstance(attr_value, dict) or isinstance(attr_value, OrderedDict):
                 attr_value = self.get_value_with_exec(attr_value.get(SceneHelper.KEY_SCRIPT, ''))
 

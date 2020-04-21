@@ -627,13 +627,13 @@ class ReferenceExporter(ReferenceHelper):
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
-            # load render plugin
-            render_plugin_name = file_render_setting_dict.get('render_plugin_name')
-            self.scene_helper.load_render_plugin(render_plugin_name)
 
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
+                # load render plugin
+                render_plugin_name = file_render_setting_dict.get('render_plugin_name')
+                self.scene_helper.load_render_plugin(render_plugin_name)
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
                 # reverse layer to make order ok

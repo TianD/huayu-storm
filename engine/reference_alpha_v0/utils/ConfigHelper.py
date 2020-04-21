@@ -127,25 +127,23 @@ class ConfigHelper(LogHelper):
                 if layer_setting_basic_config_file_name:
                     current_common_config_dict = common_config_dict.get(layer_setting_basic_config_file_name, {})
 
-                    render_type = current_common_config_dict.get('render_type', '')
-                    render_plugin_name = current_common_config_dict.get('render_plugin_name', '')
-
-                    layer_setting_dict['basic_config'] = {
-                        'render_type': render_type,
-                        'render_plugin_name': render_plugin_name,
-                    }
-
-                    common_layer_setting = current_common_config_dict['layer_setting']
-                    layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
-
                     # update override to basic config
                     render_type = layer_setting_dict.get('render_type')
                     render_plugin_name = layer_setting_dict.get('render_plugin_name')
                     if render_type and render_plugin_name:
-                        layer_setting_dict['basic_config'] = {
-                            'render_type': render_type,
-                            'render_plugin_name': render_plugin_name,
-                        }
+                        layer_setting_dict['render_type'] = render_type
+                        layer_setting_dict['render_plugin_name'] = render_type
+                    else:
+                        # get common render type / plugin_name
+                        render_type = current_common_config_dict.get('render_type', '')
+                        render_plugin_name = current_common_config_dict.get('render_plugin_name', '')
+
+                        layer_setting_dict['render_type'] = render_type
+                        layer_setting_dict['render_plugin_name'] = render_plugin_name
+
+                    common_layer_setting = current_common_config_dict.get('layer_setting', [])
+                    layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
+
 
                     layer_setting_file_base_name = self.path_and_file_helper.get_base_name(layer_setting_file_base_name)
                     return_all_layer_setting_dict[project_name][layer_setting_file_base_name] = layer_setting_dict

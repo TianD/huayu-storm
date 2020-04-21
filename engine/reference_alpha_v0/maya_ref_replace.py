@@ -633,6 +633,9 @@ class ReferenceExporter(ReferenceHelper):
             # render_type = layer_render_setting.get('render_type')
             layer_file_render_plugin_name = layer_file_setting.get('render_plugin_name')
             render_plugin_name = layer_file_render_plugin_name or project_render_plugin_name
+
+            self.debug(layer_file_render_plugin_name, render_plugin_name)
+
             self.scene_helper.load_render_plugin(render_plugin_name)
 
             output_file_name = file_render_setting_dict.get('output_file_name', '')
@@ -699,9 +702,10 @@ if __name__ == '__main__':
         import sys
 
         sys.path.insert(0, egg_dir)
-        # import pydevd_pycharms
+        import pydevd_pycharms
 
-        # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+        pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+
     except:
         pass
 

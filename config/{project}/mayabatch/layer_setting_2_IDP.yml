@@ -18,6 +18,13 @@ layer_setting:
         #               [x] crypto_material
         #               [x] crypto_object
         #       AOVs [row layout]
+        "":
+            script: # add AOVs
+                import maya.cmds as cmds
+                import mtoa.aovs as aovs
+                aovs.AOVInterface().addAOV('crypto_asset' )
+                aovs.AOVInterface().addAOV('crypto_material' )
+                aovs.AOVInterface().addAOV('crypto_object' )
         #           [x] crypto_asset      rgb  exr gaussian
         #           [x] crypto_material   rgb  exr gaussian
         #           [x] crypto_object     rgb  exr gaussian

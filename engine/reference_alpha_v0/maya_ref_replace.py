@@ -632,6 +632,8 @@ class ReferenceExporter(ReferenceHelper):
             if output_file_name:
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
+                # reverse layer to make order ok
+                file_render_layer_setting_list.reverse()
 
                 for file_render_layer_setting in file_render_layer_setting_list:
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
@@ -705,4 +707,4 @@ if __name__ == '__main__':
     # ref_exporter.process_all_reference()
     # ref_exporter.process_all_render_layer()
     # ref_exporter.process_camera()
-    ref_exporter.process_all_config()
+    # ref_exporter.process_all_config()

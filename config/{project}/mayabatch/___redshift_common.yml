@@ -35,11 +35,20 @@ layer_setting:
             #           animation:
             "defaultRenderGlobals.animation": 1
             #           start frame:a
-            "defaultRenderGlobals.fs": 1
+            "defaultRenderGlobals.fs":
+                script: |
+                    import maya.cmds as maya_cmds
+                    return_result = 1
             #           end frame:
-            "defaultRenderGlobals.ef": 3000
+            "defaultRenderGlobals.ef":
+                script: |
+                    import maya.cmds as maya_cmds
+                    return_result = 1
             #           by frame:
-            "defaultRenderGlobals.bfs": 1
+            "defaultRenderGlobals.bfs":
+                script: |
+                    import maya.cmds as maya_cmds
+                    return_result = 1
             #           frame padding:
             "defaultRenderGlobals.extensionPadding": 4
             #       renderable camera [row layout]

@@ -631,7 +631,7 @@ class ReferenceExporter(ReferenceHelper):
                                 command_list, LAYER_BG_COLOR
                             )
                 # -------------------------------- export file ---------------------------
-                # self.scene_helper.export(output_file_name)
+                self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()

@@ -38,16 +38,15 @@ layer_setting:
             "defaultRenderGlobals.fs":
                 script: |
                     import maya.cmds as maya_cmds
-                    return_result = 1
+                    return_result = maya_cmds.playbackOptions(q=True,animationStartTime=True)
             #           end frame:
             "defaultRenderGlobals.ef":
                 script: |
                     import maya.cmds as maya_cmds
-                    return_result = 1
+                    return_result = maya_cmds.playbackOptions(q=True,animationEndTime=True)
             #           by frame:
             "defaultRenderGlobals.bfs":
                 script: |
-                    import maya.cmds as maya_cmds
                     return_result = 1
             #           frame padding:
             "defaultRenderGlobals.extensionPadding": 4

@@ -132,7 +132,7 @@ class ConfigHelper(LogHelper):
                     render_plugin_name = layer_setting_dict.get('render_plugin_name')
                     if render_type and render_plugin_name:
                         layer_setting_dict['render_type'] = render_type
-                        layer_setting_dict['render_plugin_name'] = render_type
+                        layer_setting_dict['render_plugin_name'] = render_plugin_name
                     else:
                         # get common render type / plugin_name
                         render_type = current_common_config_dict.get('render_type', '')

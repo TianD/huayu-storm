@@ -621,6 +621,11 @@ class ReferenceExporter(ReferenceHelper):
 
     def process_all_config(self):
         layer_render_setting = self.config_helper.export_config().get('{project}')
+
+        # render_type = layer_render_setting.get('render_type')
+        render_plugin_name = layer_render_setting.get('render_plugin_name')
+        self.scene_helper.load_render_plugin(render_plugin_name)
+
         layer_render_setting = self.format_json_dict_with_format_dict(
             layer_render_setting, self.scene_helper.scene_format_dict()
         )

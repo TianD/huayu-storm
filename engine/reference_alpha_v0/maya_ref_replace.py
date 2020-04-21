@@ -387,8 +387,15 @@ class SceneHelper(LogHelper):
         maya_cmds.file(rename=file_name)
         maya_cmds.file(force=True, save=True)
 
-    def export(self, file_name):
+    def get_current_scene_name(self):
         scene_file_name = pymel_core.system.sceneName()
+        return scene_file_name
+
+    def open_scene_forcelly(self, scene_file_name):
+        maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
+
+    def export(self, file_name):
+        scene_file_name = self.get_current_scene_name()
         self.save_as(file_name)
         maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
 
@@ -633,6 +640,8 @@ class ReferenceExporter(ReferenceHelper):
         self.scene_helper.set_current_render(render_type)
 
     def process_all_config(self):
+        current_scene_file_name = self.scene_helper.get_current_scene_name()
+
         layer_file_setting = self.config_helper.export_config().get('{project}', {})
 
         layer_file_setting = self.format_json_dict_with_format_dict(
@@ -640,6 +649,8 @@ class ReferenceExporter(ReferenceHelper):
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
+            # reopen base file
+            self.scene_helper.open_scene_forcelly(current_scene_file_name)
             # -------------------------------- import files ------------------------------
             current_key = 'common_setting.import_file'
             import_file_list = self.config_helper.get_json_value_with_key_path(

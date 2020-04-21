@@ -19,7 +19,7 @@ layer_setting:
         #               [x] crypto_object
         #       AOVs [row layout]
         "":
-            script: # add AOVs
+            script: | # add AOVs
                 import maya.cmds as cmds
                 import mtoa.aovs as aovs
                 aovs.AOVInterface().addAOV('crypto_asset' )

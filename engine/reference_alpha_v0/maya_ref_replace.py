@@ -635,6 +635,10 @@ class ReferenceExporter(ReferenceHelper):
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
 
+            ref_exporter.process_all_reference()
+            ref_exporter.process_all_render_layer()
+            ref_exporter.process_camera()
+
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
@@ -650,6 +654,9 @@ class ReferenceExporter(ReferenceHelper):
 
                 for file_render_layer_setting in file_render_layer_setting_list:
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
+
+                    if current_layer_name != LAYER_IDP:
+                        continue
 
                     if current_layer_name:
                         current_render_setting_list = [
@@ -677,7 +684,7 @@ class ReferenceExporter(ReferenceHelper):
                             command_list, LAYER_BG_COLOR
                         )
 
-                self.scene_helper.export(output_file_name)
+                # self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
@@ -718,7 +725,4 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    ref_exporter.process_all_reference()
-    ref_exporter.process_all_render_layer()
-    ref_exporter.process_camera()
     ref_exporter.process_all_config()

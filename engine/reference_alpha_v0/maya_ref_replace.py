@@ -649,6 +649,12 @@ class ReferenceExporter(ReferenceHelper):
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
+            # get selector dict
+            current_key = 'common_setting.object_selector'
+            selector_dict = self.config_helper.get_json_value_with_key_path(
+                current_key, {}, file_render_setting_dict
+            )
+
             # reopen base file
             self.scene_helper.open_scene_forcelly(current_scene_file_name)
             # --------------------- load reference from anim to render -------------------
@@ -669,18 +675,40 @@ class ReferenceExporter(ReferenceHelper):
                 # -------------------------------- set render ----------------------------
                 self.ensure_set_render(file_render_setting_dict)
 
+                # -------------------------------- get layer list ------------------------
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
                 # reverse layer to make order ok
                 file_render_layer_setting_list.reverse()
 
                 for file_render_layer_setting in file_render_layer_setting_list:
+                    # ----------------------- process each layer -------------------------
+
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
-
-                    # ----------------- DEBUG PART ---------------------------------------
-                    # if current_layer_name != LAYER_IDP:
-                    #     continue
-
                     if current_layer_name:
+                        ###### --------------------- add objects to layer --------------------
+                        __current_selector_key_list = file_render_layer_setting.get('selector_list', [])
+                        current_selector_list = []
+                        for current_selector_key in __current_selector_key_list:
+                            current_selector = current_selector_list.append(
+                                selector_dict.get(current_selector_key)
+                            )
+                            if current_selector:
+                                current_selector_list.append(current_selector)
+
+                        if current_selector_list == []:
+                            current_selector_list = list(selector_dict.values())
+
+                        for selector in current_selector_list:
+                            self.scene_helper.set_render_layer_object_pattern_for_maya_old(
+                                object_pattern=selector, render_layer_name=current_layer_name
+                            )
+
+                        # ----------------- DEBUG PART ---------------------------------------
+                        # if current_layer_name != LAYER_IDP:
+                        #     continue
+
+                        ###### --------------------- add objects to layer --------------------
+
                         current_render_setting_list = [
                             list(current_render_setting_item)
                             for current_render_setting_item in list(
@@ -692,21 +720,22 @@ class ReferenceExporter(ReferenceHelper):
                             current_render_setting_list, current_layer_name
                         )
 
-                    # set primaryVisibility for objects
-                    if current_layer_name == LAYER_BG_COLOR:
-                        self.scene_helper.set_render_layer_to_current(current_layer_name)
-                        character_list = self.scene_helper.list_with_pattern(CHR_OBJECT_SELECTOR)
-                        command_list = [
-                            [
-                                '{}.primaryVisibility'.format(pymel_core.PyNode(character_transform).getShape().name()),
-                                0
+                        # set primaryVisibility for objects
+                        if current_layer_name == LAYER_BG_COLOR:
+                            self.scene_helper.set_render_layer_to_current(current_layer_name)
+                            character_list = self.scene_helper.list_with_pattern(CHR_OBJECT_SELECTOR)
+                            command_list = [
+                                [
+                                    '{}.primaryVisibility'.format(
+                                        pymel_core.PyNode(character_transform).getShape().name()),
+                                    0
+                                ]
+                                for character_transform in character_list if
+                                pymel_core.PyNode(character_transform).getShape()
                             ]
-                            for character_transform in character_list if
-                            pymel_core.PyNode(character_transform).getShape()
-                        ]
-                        self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                            command_list, LAYER_BG_COLOR
-                        )
+                            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+                                command_list, LAYER_BG_COLOR
+                            )
                 # -------------------------------- export file ---------------------------
                 # self.scene_helper.export(output_file_name)
 

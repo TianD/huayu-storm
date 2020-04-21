@@ -117,23 +117,6 @@ REPLACE_RULES = [
 KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
-IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE = [
-    '',  # r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\SCN.mb"  # scene , import sky file content
-]
-
-IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\LGT.mb"  # scene , import sky file content
-]
-IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\Sky.mb"  # sky , import sky file content
-]
-IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\CHLGT.mb"  # chrlight , in layer chcolor
-]
-IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV = [
-    r"E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\AOV.mb"  # Aov
-]
-
 PLUGIN_REDSHIFT = 'redshift4maya.mll'
 
 
@@ -510,44 +493,6 @@ class ReferenceHelper(LogHelper):
         self.scene_helper = SceneHelperForRedshift(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
-        # todo remove this
-        self.ADD_RULES = [
-            {
-                KEY_RENDER_LAYER_NAME: LAYER_BG_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_BG_COLOR + LAYER_NAMESPACE_SUFFIX,
-                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_scene,
-                KEY_REPLACE_PARAMS: {}
-            },
-            {
-                KEY_RENDER_LAYER_NAME: LAYER_SKY,
-                KEY_NAMESPACE_NAME: LAYER_SKY + LAYER_NAMESPACE_SUFFIX,
-                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_sky,
-                KEY_REPLACE_PARAMS: {}
-            },
-            {
-                KEY_RENDER_LAYER_NAME: LAYER_LGT,
-                KEY_NAMESPACE_NAME: LAYER_LGT + LAYER_NAMESPACE_SUFFIX,
-                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_light,
-                KEY_REPLACE_PARAMS: {}
-            },
-            {
-                KEY_RENDER_LAYER_NAME: LAYER_CHR_COLOR,
-                KEY_NAMESPACE_NAME: LAYER_CHR_COLOR + LAYER_NAMESPACE_SUFFIX,
-                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_character,
-                KEY_REPLACE_PARAMS: {}
-            },
-            {
-                KEY_RENDER_LAYER_NAME: LAYER_AOV,
-                KEY_NAMESPACE_NAME: LAYER_AOV + LAYER_NAMESPACE_SUFFIX,
-                KEY_LAYER_PROCESS_FUNC: self.get_file_path_list_from_shot_file_for_aov,
-                KEY_REPLACE_PARAMS: {}
-            },
-            # {'chclr': 'add_char/props'},
-            # {'light': 'config_file'},  # just a maya file
-            # {'sky': 'config_file'},  # just a maya file
-            # {'aov': 'config_file'},  # just a maya file
-        ]
-
     def __reference_filter(self):
         return []
 
@@ -574,57 +519,6 @@ class ReferenceHelper(LogHelper):
                         reference_source, replace_from, replace_to
                     )
         return new_file_path
-
-    def __replace_reference_with_rules(self, reference_item):
-        reference_source = reference_item.path
-        # reference_name_space = reference_item.fullNamespace  # attrs: namespace , fullNamespace
-        for rule in REPLACE_RULES:
-            reference_target = \
-                self.__get_reference_file_path_with_rule(reference_source, rule)
-            if self.scene_helper.path_and_file_helper.is_file_existed(reference_target) and \
-                    self.scene_helper.path_and_file_helper.is_different_file(
-                        reference_source, reference_target,
-                    ):
-                reference_item.replaceWith(reference_target)
-
-    def __add_reference_with_rules(self, reference_source):
-        for rule in self.ADD_RULES:
-            namespace_name = rule.get(KEY_NAMESPACE_NAME, '')
-            if namespace_name:
-                kwargs = {'namespace': namespace_name}
-            else:
-                kwargs = {}
-            reference_target_list = \
-                self.__get_reference_file_path_with_rule(reference_source, rule)
-            for reference_target in reference_target_list:
-                if self.scene_helper.path_and_file_helper.is_file_existed(reference_target):
-                    pymel_core.system.createReference(reference_target, **kwargs)
-
-    def get_file_path_list_from_shot_file_for_sky(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_SKY
-
-    def get_file_path_list_from_shot_file_for_scene(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_SCENE
-
-    def get_file_path_list_from_shot_file_for_light(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_LIGTH
-
-    def get_file_path_list_from_shot_file_for_character(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_CHCOLOR
-
-    def get_file_path_list_from_shot_file_for_aov(self):
-        return IMPORT_FILE_PATH_LIST_FOR_LAYER_AOV
-
-    def process_all_reference(self):
-        reference_list = self.get_reference_list(self.__reference_filter())
-        reference_path = ''
-        # replace
-        for reference_item in reference_list:
-            reference_path = reference_item.path
-            self.__replace_reference_with_rules(reference_item)
-
-        # add reference
-        self.__add_reference_with_rules(reference_source=reference_path)
 
 
 class ReferenceExporter(ReferenceHelper):
@@ -745,17 +639,6 @@ class ReferenceExporter(ReferenceHelper):
     def process_camera(self):
         current_camera = self.scene_helper.get_current_camera()
         self.scene_helper.set_renderable_camera(current_camera)
-
-    def export_all(self):
-        # xx_anim -> xx_render
-        #   add scene as bg
-        #   add char / props
-        self.process_all_reference()
-        # create render layer
-        self.process_all_render_layer()
-        # set camera
-        self.process_camera()
-        self.process_all_config()
 
 
 if __name__ == '__main__':

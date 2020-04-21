@@ -392,6 +392,13 @@ class SceneHelper(LogHelper):
         self.save_as(file_name)
         maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
 
+    def set_current_render(self, render_name):
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                ["defaultRenderGlobals.currentRenderer", render_name]
+            ]
+        )
+
 
 class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
@@ -632,8 +639,10 @@ class ReferenceExporter(ReferenceHelper):
 
             if output_file_name:
                 # load render plugin
+                render_type = file_render_setting_dict.get('render_type')
                 render_plugin_name = file_render_setting_dict.get('render_plugin_name')
                 self.scene_helper.load_render_plugin(render_plugin_name)
+                self.scene_helper.set_current_render(render_type)
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
                 # reverse layer to make order ok

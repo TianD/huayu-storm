@@ -7,6 +7,9 @@ output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/projec
 layer_setting:
     -   layer_name: IDP
         render_setting:
+        ### common setting [tab]
+        #       file output [row layout ]
+        #           [x] Merge AOVs
         ### AOVs [tab]
         #       AOV Browser [row layout]
         #           Active AOVS [column]

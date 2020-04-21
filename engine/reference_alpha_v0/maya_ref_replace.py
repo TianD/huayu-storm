@@ -270,6 +270,13 @@ class SceneHelper(LogHelper):
                         attr_key, attr_value, input_render_layer_name, create_if_not_existed=False
                     )
 
+    KEY_RETURN_VALUE = 'return_result'
+
+    def get_value_with_exec(self, code):
+        local_dict = {}
+        exec (code, globals(), local_dict)
+        return local_dict.get(SceneHelper.KEY_RETURN_VALUE)
+
     def __set_override_for_render_layer_for_maya_old(
             self, attr_key, attr_value, input_render_layer_name='', create_if_not_existed=True
     ):
@@ -294,6 +301,8 @@ class SceneHelper(LogHelper):
     def set_attr_with_command_param_list_batch_list(self, command_param_list_batch_list):
         for command_param_list in command_param_list_batch_list:
             attr_key, attr_value = command_param_list
+            if isinstance(attr_value, dict) or isinstance(attr_value, OrderedDict):
+                attr_value = self.get_value_with_exec(attr_value)
 
             if isinstance(attr_value, str) or isinstance(attr_value, unicode):
                 attr_type = 'string'

@@ -626,6 +626,12 @@ class ReferenceExporter(ReferenceHelper):
         yaml_string = yaml_string.format(**format_dict)
         return yaml.load(yaml_string)
 
+    def ensure_set_render(self, file_render_setting_dict):
+        render_type = file_render_setting_dict.get('render_type')
+        render_plugin_name = file_render_setting_dict.get('render_plugin_name')
+        self.scene_helper.load_render_plugin(render_plugin_name)
+        self.scene_helper.set_current_render(render_type)
+
     def process_all_config(self):
         layer_file_setting = self.config_helper.export_config().get('{project}', {})
 
@@ -634,19 +640,24 @@ class ReferenceExporter(ReferenceHelper):
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
-
-            ref_exporter.process_all_reference()
-            ref_exporter.process_all_render_layer()
+            # -------------------------------- import files ------------------------------
+            current_key = 'common_setting.import_file'
+            import_file_list = self.config_helper.get_json_value_with_key_path(
+                current_key, [], file_render_setting_dict
+            )
+            for import_file_layer_name, import_file in import_file_list:
+                maya_cmds.file(import_file, i=True, f=True, namespace=import_file_layer_name)
+            self.debug(file_render_setting_dict)
+            self.debug(import_file_list)
+            continue
+            # -------------------------------- set camera ------------------------------
             ref_exporter.process_camera()
-
+            # -------------------------------- process all layer ------------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
-                # load render plugin
-                render_type = file_render_setting_dict.get('render_type')
-                render_plugin_name = file_render_setting_dict.get('render_plugin_name')
-                self.scene_helper.load_render_plugin(render_plugin_name)
-                self.scene_helper.set_current_render(render_type)
+                # -------------------------------- set render ------------------------------
+                self.ensure_set_render(file_render_setting_dict)
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
                 # reverse layer to make order ok
@@ -683,7 +694,7 @@ class ReferenceExporter(ReferenceHelper):
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             command_list, LAYER_BG_COLOR
                         )
-
+                # -------------------------------- export file ------------------------------
                 # self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):

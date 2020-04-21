@@ -11,10 +11,10 @@ common_setting:
         pro_object_selector: '*:PRO'
         chrlgt_object_selector: 'CHRLGT*:*'
     import_file:
-        - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/LGT.mb"
-        - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/Sky.mb"
-        - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/CHLGT.mb"
-        - "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/AOV.mb"
+        - ["LGT","E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/LGT.mb"]
+        - ["SKY","E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/Sky.mb"]
+        - ["CHLGT","E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/CHLGT.mb"]
+        - ["AOV","E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/AOV.mb"]
 
 layer_setting:
     -   layer_name: masterLayer

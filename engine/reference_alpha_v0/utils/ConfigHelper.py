@@ -125,7 +125,11 @@ class ConfigHelper(LogHelper):
             for layer_setting_file_base_name, layer_setting_dict in all_layer_setting_dict.items():
                 layer_setting_basic_config_file_name = layer_setting_dict.get('basic_config', '')
                 if layer_setting_basic_config_file_name:
-                    current_common_config_dict = common_config_dict.get(layer_setting_basic_config_file_name, {})
+                    current_common_config_dict = \
+                        common_config_dict.get(layer_setting_basic_config_file_name, OrderedDict())
+
+                    layer_setting_dict['common_setting'] = \
+                        current_common_config_dict.get('common_setting', OrderedDict())
 
                     # update override to basic config
                     render_type = layer_setting_dict.get('render_type')
@@ -143,7 +147,6 @@ class ConfigHelper(LogHelper):
 
                     common_layer_setting = current_common_config_dict.get('layer_setting', [])
                     layer_setting_dict['layer_setting'] = common_layer_setting + layer_setting_dict['layer_setting']
-
 
                     layer_setting_file_base_name = self.path_and_file_helper.get_base_name(layer_setting_file_base_name)
                     return_all_layer_setting_dict[project_name][layer_setting_file_base_name] = layer_setting_dict

@@ -651,6 +651,7 @@ class ReferenceExporter(ReferenceHelper):
         for file_name, file_render_setting_dict in layer_file_setting.items():
             # reopen base file
             self.scene_helper.open_scene_forcelly(current_scene_file_name)
+            # --------------------- load reference from anim to render -------------------
             # -------------------------------- import files ------------------------------
             current_key = 'common_setting.import_file'
             import_file_list = self.config_helper.get_json_value_with_key_path(
@@ -659,13 +660,13 @@ class ReferenceExporter(ReferenceHelper):
             for import_file_layer_name, import_file in import_file_list:
                 maya_cmds.file(import_file, i=True, f=True, namespace=import_file_layer_name)
 
-            # -------------------------------- set camera ------------------------------
+            # -------------------------------- set camera --------------------------------
             ref_exporter.process_camera()
-            # -------------------------------- process all layer ------------------------------
+            # -------------------------------- process all layer -------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
-                # -------------------------------- set render ------------------------------
+                # -------------------------------- set render ----------------------------
                 self.ensure_set_render(file_render_setting_dict)
 
                 file_render_layer_setting_list = file_render_setting_dict.get('layer_setting', [])
@@ -675,8 +676,9 @@ class ReferenceExporter(ReferenceHelper):
                 for file_render_layer_setting in file_render_layer_setting_list:
                     current_layer_name = file_render_layer_setting.get('layer_name', '')
 
-                    if current_layer_name != LAYER_IDP:
-                        continue
+                    # ----------------- DEBUG PART ---------------------------------------
+                    # if current_layer_name != LAYER_IDP:
+                    #     continue
 
                     if current_layer_name:
                         current_render_setting_list = [
@@ -705,7 +707,7 @@ class ReferenceExporter(ReferenceHelper):
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                             command_list, LAYER_BG_COLOR
                         )
-                # -------------------------------- export file ------------------------------
+                # -------------------------------- export file ---------------------------
                 # self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):

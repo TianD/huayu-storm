@@ -20,6 +20,10 @@ layer_setting:
     -   layer_name: masterLayer
         selector_list: []
         render_setting:
+            "": # disable default render layer
+                script: |
+                    from maya import mel
+                    mel.eval('renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";')
             ### common setting [tab]
             #       file output [row layout ]
             #           file_name_prefix: ""

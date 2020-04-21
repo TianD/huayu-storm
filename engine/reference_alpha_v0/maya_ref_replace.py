@@ -620,18 +620,21 @@ class ReferenceExporter(ReferenceHelper):
         return yaml.load(yaml_string)
 
     def process_all_config(self):
-        layer_render_setting = self.config_helper.export_config().get('{project}')
+        layer_file_setting = self.config_helper.export_config().get('{project}')
 
-        # render_type = layer_render_setting.get('render_type')
-        render_plugin_name = layer_render_setting.get('render_plugin_name')
-        self.scene_helper.load_render_plugin(render_plugin_name)
+        # get common render plugin name
+        project_render_plugin_name = layer_file_setting.get('render_plugin_name')
 
-        layer_render_setting = self.format_json_dict_with_format_dict(
-            layer_render_setting, self.scene_helper.scene_format_dict()
+        layer_file_setting = self.format_json_dict_with_format_dict(
+            layer_file_setting, self.scene_helper.scene_format_dict()
         )
 
-        for file_name, file_render_setting_dict in layer_render_setting.items():
-            self.scene_helper.load_render_plugin()
+        for file_name, file_render_setting_dict in layer_file_setting.items():
+            # render_type = layer_render_setting.get('render_type')
+            layer_file_render_plugin_name = layer_file_setting.get('render_plugin_name')
+            render_plugin_name = layer_file_render_plugin_name or render_plugin_name
+            self.scene_helper.load_render_plugin(render_plugin_name)
+
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
             if output_file_name:
@@ -669,7 +672,7 @@ class ReferenceExporter(ReferenceHelper):
                             command_list, LAYER_BG_COLOR
                         )
 
-            self.scene_helper.export(output_file_name)
+                self.scene_helper.export(output_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()
@@ -709,7 +712,7 @@ if __name__ == '__main__':
 
     ref_exporter = ReferenceExporter()
 
-    # ref_exporter.process_all_reference()
-    # ref_exporter.process_all_render_layer()
-    # ref_exporter.process_camera()
-    # ref_exporter.process_all_config()
+    ref_exporter.process_all_reference()
+    ref_exporter.process_all_render_layer()
+    ref_exporter.process_camera()
+    ref_exporter.process_all_config()

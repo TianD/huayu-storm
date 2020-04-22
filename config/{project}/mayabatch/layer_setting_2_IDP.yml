@@ -19,7 +19,7 @@ layer_setting:
             #               [x] crypto_object
             #       AOVs [row layout]
             "__script_for_add_aov__":
-                script: | # add AOVs
+                script: | # add AOVs`````
                     import maya.cmds as cmds
                     print(cmds.getAttr('defaultRenderGlobals.currentRenderer'))
                     print(cmds.ls('*Arnold*'))

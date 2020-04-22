@@ -385,20 +385,24 @@ class SceneHelper(LogHelper):
     def set_current_render(self, render_name):
         self.set_attr_with_command_param_list_batch_list(
             [
-                ["defaultRenderGlobals.currentRenderer", "redshift"]
+                ["defaultRenderGlobals.currentRenderer", render_name]
             ]
         )
+
+        # ---------- ensure arnold nodes created ---------------
+        # Deletes the render settings window UI completely
+        if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
+            maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
+
+            # Remake the render settings UI
+            maya_mel.eval('unifiedRenderGlobalsWindow;')
 
 
 class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
         self.load_render_plugin()
-        self.set_attr_with_command_param_list_batch_list(
-            [
-                ["defaultRenderGlobals.currentRenderer", "redshift"]
-            ]
-        )
+        self.set_current_render(PLUGIN_REDSHIFT)
 
     def create_idp_with_type_and_name(self, name=''):
         """

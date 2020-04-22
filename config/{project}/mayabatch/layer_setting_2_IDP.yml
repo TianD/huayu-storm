@@ -9,7 +9,7 @@ layer_setting:
         render_setting:
             ### common setting [tab]
             #       file output [row layout ]
-            #           [x] Merge AOVs
+#                       [x] Merge AOVs
             "defaultArnoldDriver.mergeAOVs": 1
             ### AOVs [tab]
             #       AOV Browser [row layout]

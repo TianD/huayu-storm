@@ -117,7 +117,10 @@ REPLACE_RULES = [
 KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
 
+RENDER_REDSHIFT = 'redshift'
 PLUGIN_REDSHIFT = 'redshift4maya.mll'
+
+RENDER_ARNOLD = 'arnold'
 
 
 class SceneHelper(LogHelper):
@@ -389,10 +392,11 @@ class SceneHelper(LogHelper):
             ]
         )
 
-        # ---------- ensure arnold nodes created ---------------
-        # Deletes the render settings window UI completely
-        if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
-            maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
+        if render_name == RENDER_ARNOLD:
+            # ---------- ensure arnold nodes created ---------------
+            # Deletes the render settings window UI completely
+            if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
+                maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
 
             # Remake the render settings UI
             maya_mel.eval('unifiedRenderGlobalsWindow;')
@@ -402,7 +406,7 @@ class SceneHelperForRedshift(SceneHelper):
     def __init__(self, logger=None):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
         self.load_render_plugin()
-        self.set_current_render(PLUGIN_REDSHIFT)
+        self.set_current_render(RENDER_REDSHIFT)
 
     def create_idp_with_type_and_name(self, name=''):
         """

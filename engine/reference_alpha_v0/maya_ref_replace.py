@@ -570,6 +570,10 @@ class ReferenceExporter(ReferenceHelper):
             # -------------------------------- process all layer -------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
+            # -------------------------------- DEBUG LAYER FILE CODE ---------------------
+            # if 'IDP' not in output_file_name:
+            #     continue
+
             if output_file_name:
                 # -------------------------------- set render ----------------------------
                 self.ensure_set_render(file_render_setting_dict)

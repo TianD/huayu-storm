@@ -7,28 +7,28 @@ output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/projec
 layer_setting:
     -   layer_name: IDP
         render_setting:
-        ### common setting [tab]
-        #       file output [row layout ]
-        #           [x] Merge AOVs
-        "defaultArnoldDriver.mergeAOVs": 1
-        ### AOVs [tab]
-        #       AOV Browser [row layout]
-        #           Active AOVS [column]
-        #               [x] crypto_asset
-        #               [x] crypto_material
-        #               [x] crypto_object
-        #       AOVs [row layout]
-        "":
-            script: | # add AOVs
-                import maya.cmds as cmds
-                import mtoa.aovs as aovs
-                aovs.AOVInterface().addAOV('crypto_asset' )
-                aovs.AOVInterface().addAOV('crypto_material' )
-                aovs.AOVInterface().addAOV('crypto_object' )
-        #           [x] crypto_asset      rgb  exr gaussian
-        #           [x] crypto_material   rgb  exr gaussian
-        #           [x] crypto_object     rgb  exr gaussian
-        ### Diagnostics
-        #       Error Handling [row layout]
-        #           [ ]Abort On Error
-        "defaultArnoldRenderOptions.abortOnError": 0
+            ### common setting [tab]
+            #       file output [row layout ]
+            #           [x] Merge AOVs
+            "defaultArnoldDriver.mergeAOVs": 1
+            ### AOVs [tab]
+            #       AOV Browser [row layout]
+            #           Active AOVS [column]
+            #               [x] crypto_asset
+            #               [x] crypto_material
+            #               [x] crypto_object
+            #       AOVs [row layout]
+            "__script_for_add_aov__":
+                script: | # add AOVs
+                    import maya.cmds as cmds
+                    import mtoa.aovs as aovs
+                    aovs.AOVInterface().addAOV('crypto_asset' )
+                    aovs.AOVInterface().addAOV('crypto_material' )
+                    aovs.AOVInterface().addAOV('crypto_object' )
+            #           [x] crypto_asset      rgb  exr gaussian
+            #           [x] crypto_material   rgb  exr gaussian
+            #           [x] crypto_object     rgb  exr gaussian
+            ### Diagnostics
+            #       Error Handling [row layout]
+            #           [ ]Abort On Error
+            "defaultArnoldRenderOptions.abortOnError": 0

@@ -383,11 +383,7 @@ class SceneHelper(LogHelper):
         maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
 
     def set_current_render(self, render_name):
-        self.set_attr_with_command_param_list_batch_list(
-            [
-                ["defaultRenderGlobals.currentRenderer", render_name]
-            ]
-        )
+        maya_mel.eval('setCurrentRenderer {}'.format(render_name))
 
 
 class SceneHelperForRedshift(SceneHelper):

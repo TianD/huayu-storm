@@ -21,6 +21,8 @@ layer_setting:
             "__script_for_add_aov__":
                 script: | # add AOVs
                     import maya.cmds as cmds
+                    print(cmds.getAttr('defaultRenderGlobals.currentRenderer'))
+                    print(cmds.ls('*Arnold*'))
                     import mtoa.aovs as aovs
                     aovs.AOVInterface().addAOV('crypto_asset' )
                     aovs.AOVInterface().addAOV('crypto_material' )

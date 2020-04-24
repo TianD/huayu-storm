@@ -2,6 +2,11 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import inspect
+import os
+
+__file__ = os.path.abspath(inspect.getsourcefile(lambda: 0))
+
 import json
 from collections import OrderedDict
 

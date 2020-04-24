@@ -2,7 +2,7 @@ basic_config: ___redshift_common.yml
 output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}_Q{sequence:03}_S{shot:03}_LGT.mb'
 layer_setting:
     -   layer_name: LGT
-        selector_list: ['lgt_object_selector']
+        selector_list: ['lgt_object_selector','chr_object_selector']]
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]

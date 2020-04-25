@@ -687,24 +687,22 @@ class ReferenceExporter(ReferenceHelper):
 
                             self.debug('[get character_str_list] => ', character_str_list)
                             if character_str_list:
+                                command_list = []
 
-                                if character_override_attr_list:
-                                    command_list = []
+                                for character_override_attr in character_override_attr_list:
+                                    attr_name = character_override_attr[0]
+                                    attr_value = character_override_attr[1]
 
-                                    for character_override_attr in character_override_attr_list:
-                                        attr_name = character_override_attr[0]
-                                        attr_value = character_override_attr[1]
+                                    command_list += [
+                                        ['{}.{}'.format(character_str, attr_name), attr_value]
+                                        for character_str in character_str_list
+                                    ]
 
-                                        command_list += [
-                                            ['{}.{}'.format(character_str, attr_name), attr_value]
-                                            for character_str in character_str_list
-                                        ]
+                                self.debug('[ command_list ]', command_list)
 
-                                    self.debug('[ command_list ]', command_list)
-
-                                    self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                                        command_list, LAYER_BG_COLOR
-                                    )
+                                self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+                                    command_list, LAYER_BG_COLOR
+                                )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)
 

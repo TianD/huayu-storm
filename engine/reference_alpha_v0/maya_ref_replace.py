@@ -643,12 +643,16 @@ class ReferenceExporter(ReferenceHelper):
                         )
 
                         # set primaryVisibility for objects
-                        if current_layer_name == LAYER_BG_COLOR:
+                        character_override_selector_list = \
+                            current_render_layer_setting.get('character_override_selector_list', [])
+                        # get all attr list : primaryVisibility -> 0 , other -> 1
+                        character_override_attr_list = \
+                            current_render_layer_setting.get('character_override_attr_list', [])
+
+                        # if current_layer_name == LAYER_BG_COLOR:
+                        if character_override_selector_list and character_override_attr_list:
                             self.debug('[get LAYER_BG_COLOR] => ', current_layer_name)
                             self.scene_helper.set_render_layer_to_current(current_layer_name)
-
-                            character_override_selector_list = \
-                                current_render_layer_setting.get('character_override_selector_list', [])
 
                             character_str_list = []
                             for character_override_selector in character_override_selector_list:
@@ -657,9 +661,6 @@ class ReferenceExporter(ReferenceHelper):
 
                             self.debug('[get character_str_list] => ', character_str_list)
                             if character_str_list:
-                                # get all attr list : primaryVisibility -> 0 , other -> 1
-                                character_override_attr_list = \
-                                    current_render_layer_setting.get('character_override_attr_list', [])
 
                                 if character_override_attr_list:
                                     command_list = []

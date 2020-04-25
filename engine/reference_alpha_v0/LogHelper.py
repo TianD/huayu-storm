@@ -3,6 +3,36 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import json
+import logging.handlers
+import os
+import sys
+
+# Set up logger with appropriate handler
+LOG_FILENAME = os.path.join(os.environ['appdata'], 'maya', os.path.basename(sys.argv[0]) + '.log')
+
+log_file_dir = os.path.dirname(LOG_FILENAME)
+if not os.path.isdir(log_file_dir):
+    os.mkdir(log_file_dir)
+
+app_logger = logging.getLogger()
+app_logger.setLevel(logging.DEBUG)
+
+# file size
+__size_byte = 1
+__size_mb = 1024 * 1024 * __size_byte
+file_size_mb = 30 * __size_mb
+
+log_file_handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=file_size_mb, backupCount=5)
+log_file_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)s - %(filename)s[:%(lineno)d] - %(message)s")
+)
+app_logger.addHandler(log_file_handler)
+
+std_handler = logging.StreamHandler()
+std_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)-10s - %(filename)-20s[:%(lineno)d] - %(message)s")
+)
+app_logger.addHandler(std_handler)
 
 
 class LogHelper(object):

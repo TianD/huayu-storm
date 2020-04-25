@@ -307,6 +307,7 @@ class SceneHelper(LogHelper):
             self.debug(attr_key, attr_value, **kwargs)
 
             try:
+                self.debug('[set attr] => {} {}'.format(attr_key, attr_value))
                 maya_cmds.setAttr(attr_key, attr_value, **kwargs)
             except:
                 pass

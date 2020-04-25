@@ -564,16 +564,22 @@ class ReferenceExporter(ReferenceHelper):
 
         layer_file_setting = self.config_helper.export_config().get('{project}', {})
 
-        layer_file_setting = self.format_json_dict_with_format_dict(
-            layer_file_setting, self.scene_helper.scene_format_dict()
-        )
-
+        layer_file_setting_formatted = OrderedDict()
+        # format with regex
         for file_name, file_render_setting_dict in layer_file_setting.items():
             current_key = 'common_setting.episode_scene_shot_regex'
             episode_scene_shot_regex = self.config_helper.get_json_value_with_key_path(
                 current_key, {}, file_render_setting_dict
             )
+            self.scene_helper.load_camera_regex(episode_scene_shot_regex)
 
+            file_render_setting_dict = self.format_json_dict_with_format_dict(
+                file_render_setting_dict, self.scene_helper.scene_format_dict()
+            )
+
+            layer_file_setting_formatted[file_name] = file_render_setting_dict
+
+        for file_name, file_render_setting_dict in layer_file_setting_formatted.items():
             # get selector dict
             current_key = 'common_setting.object_selector'
             selector_dict = self.config_helper.get_json_value_with_key_path(

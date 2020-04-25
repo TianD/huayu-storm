@@ -675,7 +675,8 @@ if __name__ == '__main__':
     # reference_helper.process_all_reference()
     # reference_helper.info(reference_helper.get_reference_list(), **reference_helper.FORMAT_JSON_DICT_KWARG)
     # reference_helper.replace_reference()
+    from LogHelper import app_logger
 
-    ref_exporter = ReferenceExporter()
+    ref_exporter = ReferenceExporter(logger=app_logger)
 
     ref_exporter.process_all_config()

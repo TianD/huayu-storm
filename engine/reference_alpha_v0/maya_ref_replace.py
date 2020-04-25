@@ -294,7 +294,9 @@ class SceneHelper(LogHelper):
             self.debug('[ready to set ] => ', attr_key, attr_value)
 
             if isinstance(attr_value, dict) or isinstance(attr_value, OrderedDict):
-                attr_value = self.get_value_with_exec(attr_value.get(SceneHelper.KEY_SCRIPT, ''))
+                script_content = attr_value.get(SceneHelper.KEY_SCRIPT, '')
+                if script_content:
+                    attr_value = self.get_value_with_exec(script_content)
 
             if isinstance(attr_value, str) or isinstance(attr_value, unicode):
                 attr_type = 'string'

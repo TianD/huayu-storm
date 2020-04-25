@@ -602,13 +602,13 @@ class ReferenceExporter(ReferenceHelper):
                 # reverse layer to make order ok
                 file_render_layer_setting_list.reverse()
 
-                for file_render_layer_setting in file_render_layer_setting_list:
+                for current_render_layer_setting in file_render_layer_setting_list:
                     # ----------------------- process each layer -------------------------
 
-                    current_layer_name = file_render_layer_setting.get('layer_name', '')
+                    current_layer_name = current_render_layer_setting.get('layer_name', '')
                     if current_layer_name:
                         ###### --------------------- add objects to layer --------------------
-                        __current_selector_key_list = file_render_layer_setting.get('selector_list', [])
+                        __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
                         current_selector_list = []
                         for current_selector_key in __current_selector_key_list:
                             current_selector = current_selector_list.append(
@@ -634,7 +634,7 @@ class ReferenceExporter(ReferenceHelper):
                         current_render_setting_list = [
                             list(current_render_setting_item)
                             for current_render_setting_item in list(
-                                (file_render_layer_setting.get('render_setting') or {}).items()
+                                (current_render_layer_setting.get('render_setting') or {}).items()
                             )
                         ]
 
@@ -644,16 +644,38 @@ class ReferenceExporter(ReferenceHelper):
 
                         # set primaryVisibility for objects
                         if current_layer_name == LAYER_BG_COLOR:
+                            self.debug('[get LAYER_BG_COLOR] => ', current_layer_name)
                             self.scene_helper.set_render_layer_to_current(current_layer_name)
-                            character_str_list = \
-                                self.scene_helper.list_with_pattern_for_shape_override(CHR_OBJECT_SELECTOR)
-                            command_list = [
-                                ['{}.primaryVisibility'.format(character_str), 0]
-                                for character_str in character_str_list
-                            ]
-                            self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                                command_list, LAYER_BG_COLOR
-                            )
+
+                            character_override_selector_list = \
+                                current_render_layer_setting.get('character_override_selector_list', [])
+
+                            character_str_list = []
+                            for character_override_selector in character_override_selector_list:
+                                character_str_list += \
+                                    self.scene_helper.list_with_pattern_for_shape_override(character_override_selector)
+
+                            self.debug('[get character_str_list] => ', character_str_list)
+                            if character_str_list:
+                                # get all attr list : primaryVisibility -> 0 , other -> 1
+                                character_override_attr_list = \
+                                    current_render_layer_setting.get('character_override_attr_list', [])
+
+                                if character_override_attr_list:
+                                    command_list = []
+
+                                    for character_override_attr in character_override_attr_list:
+                                        attr_name = character_override_attr[0]
+                                        attr_value = character_override_attr[1]
+
+                                        command_list += [
+                                            ['{}.{}'.format(character_str, attr_name), attr_value]
+                                            for character_str in character_str_list
+                                        ]
+
+                                    self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
+                                        command_list, LAYER_BG_COLOR
+                                    )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)
 

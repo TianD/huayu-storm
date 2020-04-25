@@ -37,8 +37,6 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
-EPISODE_SCENE_SHOT_REGX = 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'  # TODO: 需要提到配置中去
-
 LAYER_MASTER = 'masterLayer'
 LAYER_BG_COLOR = 'BGCLR'
 LAYER_CHR_COLOR = 'CHCLR'

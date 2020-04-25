@@ -148,6 +148,7 @@ class SceneHelper(LogHelper):
         return maya_cmds.ls(object_pattern)
 
     def list_with_pattern_for_shape_override(self, object_pattern):
+        self.debug('[ ready to get  shape_str_list ]', object_pattern)
         selected_items = maya_cmds.ls(object_pattern)
         shape_str_list = []
         for item in selected_items:

@@ -22,7 +22,15 @@ layer_setting:
         selector_list: []
         character_override_selector_list: [ 'chr_object_selector' ]
         character_override_attr_list: [
-            ['primaryVisibility',0]
+            ['castsShadows', 1],
+            ['receiveShadows', 1],
+            ['holdOut' ,0],
+            ['motionBlur', 1],
+            ['primaryVisibility', 1],
+            ['smoothShading', 1],
+            ['visibleInReflections', 1],
+            ['visibleInRefractions', 1],
+            ['doubleSided', 1],
         ]
         render_setting:
             "": # disable default render layer

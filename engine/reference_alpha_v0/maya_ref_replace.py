@@ -700,8 +700,9 @@ class ReferenceExporter(ReferenceHelper):
 
                                 self.debug('[ command_list ]', command_list)
 
+
                                 self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                                    command_list, LAYER_BG_COLOR
+                                    command_list, current_layer_name
                                 )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)

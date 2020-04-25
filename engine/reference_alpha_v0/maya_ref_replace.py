@@ -134,7 +134,12 @@ class SceneHelper(LogHelper):
         self.episode = ''
         self.sequence = ''
         self.shot = ''
+        self.camera_regex = ''
         # fill epsiode/sequence/shot
+        # self.get_episode_sequence_shot_from_filename()
+
+    def load_camera_regex(self, camera_regex):
+        self.camera_regex = camera_regex
         self.get_episode_sequence_shot_from_filename()
 
     def select_with_clear(self, object_pattern):
@@ -167,7 +172,7 @@ class SceneHelper(LogHelper):
         name_item_list = scene_file_name.split(SceneHelper.NAME_SPLITTER)
         if len(name_item_list) > 5:
             scene_info_match_list = \
-                re.findall(EPISODE_SCENE_SHOT_REGX, scene_file_name, re.I)
+                re.findall(self.camera_regex, scene_file_name, re.I)
             self.debug(scene_info_match_list)
 
             if scene_info_match_list:
@@ -564,6 +569,11 @@ class ReferenceExporter(ReferenceHelper):
         )
 
         for file_name, file_render_setting_dict in layer_file_setting.items():
+            current_key = 'common_setting.episode_scene_shot_regex'
+            episode_scene_shot_regex = self.config_helper.get_json_value_with_key_path(
+                current_key, {}, file_render_setting_dict
+            )
+
             # get selector dict
             current_key = 'common_setting.object_selector'
             selector_dict = self.config_helper.get_json_value_with_key_path(

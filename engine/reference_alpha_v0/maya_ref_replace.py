@@ -153,6 +153,7 @@ class SceneHelper(LogHelper):
         for item in selected_items:
             shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh")
             shape_str_list += shapes
+        self.debug('[ shape_str_list ]', shape_str_list)
         return shape_str_list
 
     def scene_format_dict(self):
@@ -687,6 +688,8 @@ class ReferenceExporter(ReferenceHelper):
                                             ['{}.{}'.format(character_str, attr_name), attr_value]
                                             for character_str in character_str_list
                                         ]
+
+                                    self.debug('[ command_list ]', command_list)
 
                                     self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                                         command_list, LAYER_BG_COLOR

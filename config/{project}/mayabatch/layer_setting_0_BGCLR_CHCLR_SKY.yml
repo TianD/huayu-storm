@@ -4,7 +4,17 @@ layer_setting:
     -   layer_name: BGCLR
         selector_list: ['bg_object_selector','chr_object_selector','pro_object_selector','chrlgt_object_selector']
         character_override_selector_list: [ 'chr_object_selector' ]
-        character_override_attr_list: [['primaryVisibility',0]]
+        character_override_attr_list: [
+        ['castsShadows', 1],
+        ['receiveShadows', 1],
+        ['holdOut' ,0],
+        ['motionBlur', 1],
+        ['primaryVisibility', 1],
+        ['smoothShading', 1],
+        ['visibleInReflections', 1],
+        ['visibleInRefractions', 1],
+        ['doubleSided', 1],
+        ]
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]

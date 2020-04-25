@@ -665,7 +665,7 @@ class ReferenceExporter(ReferenceHelper):
 
                         # if current_layer_name == LAYER_BG_COLOR:
                         if character_override_selector_list and character_override_attr_list:
-                            self.debug('[get LAYER_BG_COLOR] => ', current_layer_name)
+                            self.debug('[get layer] => ', current_layer_name)
                             self.scene_helper.set_render_layer_to_current(current_layer_name)
 
                             character_str_list = []

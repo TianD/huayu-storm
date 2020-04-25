@@ -557,6 +557,19 @@ class ReferenceExporter(ReferenceHelper):
         self.scene_helper.load_render_plugin(render_plugin_name)
         self.scene_helper.set_current_render(render_type)
 
+    def get_pattern_list_from_selector_list(self, selector_key_list, selector_dict):
+        current_pattern_list = []
+        for current_selector_key in selector_key_list:
+            current_selector = selector_dict.get(current_selector_key)
+
+            if current_selector:
+                current_pattern_list.append(current_selector)
+
+        if current_pattern_list == []:
+            current_pattern_list = list(selector_dict.values())
+
+        return current_pattern_list
+
     IMPORT_FILE_NAMESPACE_SUFFIX = '_'
 
     def process_all_config(self):
@@ -625,20 +638,13 @@ class ReferenceExporter(ReferenceHelper):
                     if current_layer_name:
                         ###### --------------------- add objects to layer --------------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
-                        current_selector_list = []
-                        for current_selector_key in __current_selector_key_list:
-                            current_selector = current_selector_list.append(
-                                selector_dict.get(current_selector_key)
-                            )
-                            if current_selector:
-                                current_selector_list.append(current_selector)
+                        current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                            __current_selector_key_list, selector_dict
+                        )
 
-                        if current_selector_list == []:
-                            current_selector_list = list(selector_dict.values())
-
-                        for selector in current_selector_list:
+                        for current_select_pattern in current_select_pattern_list:
                             self.scene_helper.set_render_layer_object_pattern_for_maya_old(
-                                object_pattern=selector, render_layer_name=current_layer_name
+                                object_pattern=current_select_pattern, render_layer_name=current_layer_name
                             )
 
                         # ----------------- DEBUG PART ---------------------------------------
@@ -670,10 +676,14 @@ class ReferenceExporter(ReferenceHelper):
                             self.debug('[get layer] => ', current_layer_name)
                             self.scene_helper.set_render_layer_to_current(current_layer_name)
 
+                            current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                                character_override_selector_list, selector_dict
+                            )
+
                             character_str_list = []
-                            for character_override_selector in character_override_selector_list:
+                            for current_select_pattern in current_select_pattern_list:
                                 character_str_list += \
-                                    self.scene_helper.list_with_pattern_for_shape_override(character_override_selector)
+                                    self.scene_helper.list_with_pattern_for_shape_override(current_select_pattern)
 
                             self.debug('[get character_str_list] => ', character_str_list)
                             if character_str_list:

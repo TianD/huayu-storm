@@ -309,8 +309,8 @@ class SceneHelper(LogHelper):
             try:
                 self.debug('[ set attr ] => {} {}'.format(attr_key, attr_value))
                 maya_cmds.setAttr(attr_key, attr_value, **kwargs)
-            except:
-                pass
+            except Exception as e:
+                self.debug('[ set failed ] => caused by ', e)
             finally:
                 self.debug('[ set failed ] => ', command_param_list)
 

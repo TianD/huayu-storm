@@ -291,6 +291,8 @@ class SceneHelper(LogHelper):
             # if is dict
             #   attr_value =>
             #       script: 'import os\nreturn_value = os.path.dirname('')'
+            self.debug('[ready to set ] => ', attr_key, attr_value)
+
             if isinstance(attr_value, dict) or isinstance(attr_value, OrderedDict):
                 attr_value = self.get_value_with_exec(attr_value.get(SceneHelper.KEY_SCRIPT, ''))
 
@@ -304,15 +306,13 @@ class SceneHelper(LogHelper):
             else:
                 kwargs = {}
 
-            self.debug(attr_key, attr_value, **kwargs)
-
             try:
-                self.debug('[set attr] => {} {}'.format(attr_key, attr_value))
+                self.debug('[ set attr ] => {} {}'.format(attr_key, attr_value))
                 maya_cmds.setAttr(attr_key, attr_value, **kwargs)
             except:
                 pass
             finally:
-                self.debug('failed on:', command_param_list)
+                self.debug('[ set failed ] => ', command_param_list)
 
     def set_attr_with_command_param_list_batch_list_with_render_layer(
             self,

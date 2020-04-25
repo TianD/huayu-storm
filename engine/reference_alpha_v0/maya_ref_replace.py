@@ -144,6 +144,14 @@ class SceneHelper(LogHelper):
     def list_with_pattern(self, object_pattern):
         return maya_cmds.ls(object_pattern)
 
+    def list_with_pattern_for_shape_override(self, object_pattern):
+        selected_items = maya_cmds.ls(object_pattern)
+        shape_str_list = []
+        for item in selected_items:
+            shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh")
+            shape_str_list += shapes
+        return shape_str_list
+
     def scene_format_dict(self):
         return \
             {
@@ -637,15 +645,11 @@ class ReferenceExporter(ReferenceHelper):
                         # set primaryVisibility for objects
                         if current_layer_name == LAYER_BG_COLOR:
                             self.scene_helper.set_render_layer_to_current(current_layer_name)
-                            character_list = self.scene_helper.list_with_pattern(CHR_OBJECT_SELECTOR)
+                            character_str_list = \
+                                self.scene_helper.list_with_pattern_for_shape_override(CHR_OBJECT_SELECTOR)
                             command_list = [
-                                [
-                                    '{}.primaryVisibility'.format(
-                                        pymel_core.PyNode(character_transform).getShape().name()),
-                                    0
-                                ]
-                                for character_transform in character_list if
-                                pymel_core.PyNode(character_transform).getShape()
+                                ['{}.primaryVisibility'.format(character_str), 0]
+                                for character_str in character_str_list
                             ]
                             self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                                 command_list, LAYER_BG_COLOR

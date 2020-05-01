@@ -52,6 +52,19 @@ def get_first_image_of_dir(**shot_info):
     return files[0]
 
 
+def get_nuke_project(**shot_info):
+    shot_config = shot_info.get('config')
+    nuke_dir = shot_config.get('nuke', {}).get('dir')
+    nuke_file = shot_config.get('nuke', {}).get('file')
+    nuke_path = '%s/%s' % (nuke_dir, nuke_file)
+    format_nuke_path = fmt.format(nuke_path, **shot_info)
+    format_nuke_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_nuke_path)
+    files = glob.glob(format_nuke_path)
+    if len(files) == 0:
+        files = ['']
+    return os.path.basename(files[0])
+
+
 @app.route('/api/get_project_list')
 def get_project_list():
     temp_dict = {}
@@ -101,7 +114,12 @@ def get_project_list():
                                                               project=pk,
                                                               episode=ek,
                                                               sequence=qk,
-                                                              config=sv)
+                                                              config=sv),
+                            'nuke_project': get_nuke_project(project=pk,
+                                                             episode=ek,
+                                                             sequence=qk,
+                                                             shot=sk,
+                                                             config=sv)
                         }
                     )
                 ec_full_qc.extend(qc)

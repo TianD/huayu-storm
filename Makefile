@@ -81,6 +81,10 @@ run_flask:
 	pushd engine ;\
 		venv/Scripts/python engine.py
 
+run_zmq_server:
+	pushd engine ;\
+		venv/Scripts/python zmq_server.py
+
 py_setup_deps:
 	pushd engine ;\
 		venv/Scripts/pip install -r requirement.txt

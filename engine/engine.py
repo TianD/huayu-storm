@@ -274,7 +274,7 @@ def maya_layer_process():
     #                             **new_maya_data)
 
     file_path = shot_info.get(
-        'name', r'E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_EP129_Q001_S001_an_c003.mb'
+        'name__', r'E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_EP129_Q001_S001_an_c003.mb'
     )
     script_path = r'E:\codeLib\___test___\my_proj\huayu_project\huayu-storm\engine\reference_alpha_v0'
     maya_bin = r"C:\Program Files\Autodesk\Maya2017\bin\maya.exe"

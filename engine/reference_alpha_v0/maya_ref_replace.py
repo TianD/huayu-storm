@@ -170,7 +170,9 @@ class SceneHelper(LogHelper):
         scene_file_name = self.path_and_file_helper.get_base_name(scene_file_path)
 
         name_item_list = scene_file_name.split(SceneHelper.NAME_SPLITTER)
-        if len(name_item_list) > 5:
+
+        self.debug('[ name_item_list ]', name_item_list)
+        if len(name_item_list) >= 3:
             scene_info_match_list = \
                 re.findall(self.camera_regex, scene_file_name, re.I)
             self.debug(scene_info_match_list)
@@ -699,7 +701,6 @@ class ReferenceExporter(ReferenceHelper):
                                     ]
 
                                 self.debug('[ command_list ]', command_list)
-
 
                                 self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
                                     command_list, current_layer_name

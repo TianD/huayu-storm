@@ -7,8 +7,8 @@ import os
 import re
 import sys
 
-import zmq
 import yaml
+import zmq
 from flask import Flask, send_file, request
 from flask_cors import CORS
 from gevent import monkey
@@ -239,6 +239,73 @@ def seq2mov_process():
 
 @app.route('/api/maya_layer_process', methods=['POST'])
 def maya_layer_process():
+    """
+    shot_info = {
+        u'status': u'Ready',
+        u'id': 1,
+        u'key': 0,
+        u'name': u'E:\\codeLib\\___test___\\my_proj\\huayu_project\\huayu-storm\\src\\components\\Overview.js'
+    }
+    """
+    shot_info = json.loads(request.data)
+    # project = shot_info.get('project')
+    # maya_config_path = os.path.join(config_dir, project, 'mayabatch/config.yml')
+    # with open(maya_config_path, 'r') as f:
+    #     maya_config = yaml.load(f)
+    # maya_exe = maya_config.get('maya_exe') or '{maya_exe}'
+    # maya_template = maya_config.get('maya_template') or '{maya_template}'
+    # py_cmd = maya_config.get('py_cmd') or '{py_cmd}'
+    # maya_data = maya_config.get('data') or {}
+    # maya_cmd = maya_config.get('maya_cmd')
+    # image_config = shot_info.get('config', {}).get('images')
+    # image_path = os.path.join(image_config.get('dir'), image_config.get('file')).replace('\\', '/')
+    # new_maya_data = {}
+    # for key, value in maya_data.items():
+    #     if key.endswith('_layer'):
+    #         format_image_path = fmt.format(image_path, layer=value, **shot_info)
+    #         new_maya_data.setdefault('%s_path' % key, format_image_path)
+    #     else:
+    #         new_maya_data.setdefault(key, value)
+
+    # format_command = fmt.format(maya_cmd,
+    #                             maya_exe=maya_exe,
+    #                             maya_template=maya_template,
+    #                             py_cmd=py_cmd,
+    #                             **new_maya_data)
+
+    file_path = shot_info.get(
+        'name', r'E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\DR_EP129_Q001_S001_an_c003.mb'
+    )
+    script_path = r'E:\codeLib\___test___\my_proj\huayu_project\huayu-storm\engine\reference_alpha_v0'
+    maya_bin = r"C:\Program Files\Autodesk\Maya2017\bin\maya.exe"
+
+    command = r"""
+        import maya.cmds as mc
+        mc.file('{file_path}',open=True,force=True,iv=True)
+        import sys
+        import os
+        sys.path.insert(0,os.path.dirname('{script_path}'))
+        execfile('{script_path}')
+        """.strip().format(file_path=file_path, script_path=script_path).replace('\\', '/')
+
+    command = ';'.join(
+        command_line.strip()
+        for command_line in command.splitlines()
+    )
+
+    formatted_command = \
+        r"""  "{maya_bin}" -command "python(\"{command}\")  """.format(
+            maya_bin=maya_bin.replace('/', '\\'),
+            command=command,
+        ).strip()
+
+    print(formatted_command)
+
+    ZMQ_SOCKET.send_json(
+        {
+            'format_command': formatted_command, 'key': shot_info.get('key'), 'view': 'mayabatch'
+        }
+    )
     return json.dumps({'status': 'Queued'})
 
 
@@ -260,5 +327,6 @@ if __name__ == '__main__':
     def run_server():
         http_server = WSGIServer(('0.0.0.0', 5000), DebuggedApplication(app))
         http_server.serve_forever()
+
 
     run_server()

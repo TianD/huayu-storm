@@ -14,27 +14,31 @@ server.listen(8001);
 
 let win;
 let engineProc = null;
-// let zmqProc = null;
+let zmqProc = null;
 
 let tray = null;
 
 function createSubProc() {
-  let pycmd = path.resolve(__dirname, '../engine/run.bat')
+  // start zmq server
+  let zmqcmd = path.resolve(__dirname, '../engine/run_zmq.bat')
+  zmqProc = spawn(zmqcmd)
+  if (zmqProc != null) {
+    console.log('queue process success')
+  }
+
+  // start flask server
+  let pycmd = path.resolve(__dirname, '../engine/run_engine.bat')
   engineProc = spawn(pycmd)
   if (engineProc != null) {
     console.log('python process success')
   }
-  // let pycmd2 = path.resolve(__dirname, '../engine/run.bat')
-  // if (nodeProc != null) {
-  //   console.log('queue process success')
-  // }
 }
 
 function exitSubProc() {
   engineProc.kill()
-  // nodeProc.kill()
+  zmqProc.kill()
   engineProc = null
-  // nodeProc = null
+  zmqProc = null
 }
 
 function createWindow() {

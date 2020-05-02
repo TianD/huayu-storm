@@ -1,9 +1,9 @@
-flask
-flask-cors
-pyyaml
-gevent
-pyzmq
-python-socketio
+#flask
+#flask-cors
+#pyyaml
+#gevent
+#pyzmq
+#python-socketio
 
 
 certifi==2020.4.5.1

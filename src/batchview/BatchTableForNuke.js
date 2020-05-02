@@ -137,6 +137,7 @@ class BatchTableForNuke extends Component {
     }
 
     render() {
+        console.log(this.props.nukebatch_items)
         return (
             <div>
                 <Row>

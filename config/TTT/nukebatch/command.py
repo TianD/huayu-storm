@@ -35,7 +35,7 @@ Write_Read = nuke.toNode(Write_Read)
 Write_Read.knob('file').setValue(Write_output_path)
 
 root = nuke.toNode('Root')
-root['first_frame'].setValue(read_source['first'].getValue())
-root['last_frame'].setValue(read_source['last'].getValue())
+root['first_frame'].setValue(BGCLR_Read.knob('first').getValue())
+root['last_frame'].setValue(BGCLR_Read.knob('last').getValue())
 
 nuke.scriptSave(nuke_save_path)

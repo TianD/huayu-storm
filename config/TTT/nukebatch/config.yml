@@ -1,15 +1,15 @@
-nuke_exe: nuke_exe  # nuke exe path
+nuke_exe: '"C:/Program Files/Nuke10.0v4/Nuke10.0.exe"'  # nuke exe path
 nuke_template:  nuke_template   # nuke template path
 py_cmd: command.py # python command filename
 data: # data for nuke template
-    BGCLR_Read: Read1   # bgcolor read name
+    BGCLR_Read: Read11   # bgcolor read name
     BGCLR_layer: BGCLR # bgcolor layer name
-    SKY_Read: Read2 # sky read name
+    SKY_Read: SKY # sky read name
     SKY_layer: SKY # sky layer name
-    IDP_Read: Read3  # idp read name
+    IDP_Read: Read9  # idp read name
     IDP_layer: IDP  # idp layer name
-    CHRCLR_Read: Read4 # chrcolor read name
+    CHRCLR_Read: Read10 # chrcolor read name
     CHRCLR_layer: CHRCLR  # chrcolor layer name
-    Write_Read: Write1 # write read name
+    Write_Read: OUTPUT # write read name
 nuke_cmd: "{nuke_exe} -t {py_cmd} {nuke_template} {BGCLR_Read} {BGCLR_layer_path} {SKY_Read} {SKY_layer_path} {IDP_Read} {IDP_layer_path} {CHRCLR_Read} {CHRCLR_layer_path} {Write_Read} {Write_output_path} {nuke_save_path}"
                         # 0        1                 2            3                 4           5               6              7               8              9                10               11                12

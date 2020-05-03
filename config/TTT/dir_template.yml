@@ -5,8 +5,8 @@ compositing:
   dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.{ext}
 images:
-  dir: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}
-  file: ttt_{episode}_{sequence}_{shot}_cp_{version}.%04d.jpg
+  dir: E:/huayu-storm/TTT/images/{episode}/{sequence}/{shot}/{layer}
+  file: dr_{episode}_{sequence}_{shot}_l3Color_lr_001_{layer}.%04d.exr
 mov:
   dir: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_cp_{version}.mov
@@ -16,3 +16,6 @@ nuke:
 anim:
   dir: E:/huayu-storm/TTT/compositing/{episode}/{sequence}/{shot}
   file: ttt_{episode}_{sequence}_{shot}_an_{version}.mov
+nuke_template:
+  dir: E:/huayu-storm/TTT/nuke/nuke_moban/{episode}/{sequence}
+  file: "{episode}_{sequence}.nk"

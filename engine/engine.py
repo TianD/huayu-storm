@@ -29,13 +29,21 @@ monkey.patch_all()
 app = Flask(__name__)
 CORS(app)
 
-config_dir = os.path.join(os.path.dirname(__file__), '../config')
+config_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config')
 
-DEFAULT_IMAGE = os.path.join(os.path.dirname(__file__), '../public/default.png')
+DEFAULT_IMAGE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'public/default.png')
 
 ZMQ_CONTEXT = zmq.Context()
 ZMQ_SOCKET = ZMQ_CONTEXT.socket(zmq.PUSH)
 ZMQ_SOCKET.connect("tcp://localhost:5555")
+
+
+def get_frames_list(format_image_path):
+    reformat_image_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_image_path)
+    files = glob.glob(reformat_image_path)
+    collections, _ = clique.assemble(files)
+    if collections:
+        return collections[0].format('"{head}{padding}{tail} {range}"')
 
 
 def get_first_image_of_dir(**shot_info):
@@ -186,8 +194,13 @@ def nuke_setup_process():
     with open(nuke_config_path, 'r') as f:
         nuke_config = yaml.load(f)
     nuke_exe = nuke_config.get('nuke_exe') or '{nuke_exe}'
-    nuke_template = nuke_config.get('nuke_template') or '{nuke_template}'
+    nuke_template = nuke_config.get('nuke_template') or 'nuke_template'
+    nuke_template_dir = shot_info.get('config', {}).get(nuke_template, {}).get('dir')
+    nuke_template_file = shot_info.get('config', {}).get(nuke_template, {}).get('file')
+    nuke_template_path = '%s/%s' % (nuke_template_dir, nuke_template_file)
+    format_nuke_template_path = fmt.format(nuke_template_path, **shot_info)
     py_cmd = nuke_config.get('py_cmd') or '{py_cmd}'
+    py_cmd = os.path.join(config_dir, project, 'nukebatch', py_cmd)
     nuke_data = nuke_config.get('data') or {}
     nuke_cmd = nuke_config.get('nuke_cmd')
     image_config = shot_info.get('config', {}).get('images')
@@ -196,13 +209,14 @@ def nuke_setup_process():
     for key, value in nuke_data.items():
         if key.endswith('_layer'):
             format_image_path = fmt.format(image_path, layer=value, **shot_info)
-            new_nuke_data.setdefault('%s_path' % key, format_image_path)
+            reformat_image_path = get_frames_list(format_image_path)
+            new_nuke_data.setdefault('%s_path' % key, reformat_image_path)
         else:
             new_nuke_data.setdefault(key, value)
 
     format_command = fmt.format(nuke_cmd,
                                 nuke_exe=nuke_exe,
-                                nuke_template=nuke_template,
+                                nuke_template=format_nuke_template_path,
                                 py_cmd=py_cmd,
                                 **new_nuke_data)
     ZMQ_SOCKET.send_json({'format_command': format_command, 'key': shot_info.get('key'), 'view': 'nukebatch'})

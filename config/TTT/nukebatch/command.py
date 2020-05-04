@@ -34,8 +34,11 @@ CHRCLR_Read['file'].fromUserText(CHRCLR_image_path)
 Write_Read = nuke.toNode(Write_Read)
 Write_Read.knob('file').setValue(Write_output_path)
 
-root = nuke.toNode('Root')
+root = nuke.toNode('root')
 root['first_frame'].setValue(BGCLR_Read.knob('first').getValue())
 root['last_frame'].setValue(BGCLR_Read.knob('last').getValue())
+
+if not os.path.exists(os.path.dirname(nuke_save_path)):
+    os.makedirs(os.path.dirname(nuke_save_path))
 
 nuke.scriptSave(nuke_save_path)

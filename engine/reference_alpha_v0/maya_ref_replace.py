@@ -731,5 +731,5 @@ if __name__ == '__main__':
         ref_exporter = ReferenceExporter(logger=app_logger)
 
         ref_exporter.process_all_config()
-    except:
-        app_logger.warn("[-] some error happened")
+    except Exception as e:
+        app_logger.warn("[-] some error happened", e)

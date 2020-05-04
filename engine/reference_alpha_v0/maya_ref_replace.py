@@ -280,12 +280,17 @@ class SceneHelper(LogHelper):
         return local_dict.get(SceneHelper.KEY_RETURN_VALUE)
 
     def __set_override_for_render_layer_for_maya_old(
-            self, attr_key, attr_value, input_render_layer_name='', create_if_not_existed=True
+            self, attr_key, attr_value, input_render_layer_name='',
+            create_if_not_existed=True, skip_switch_render_layer=False
     ):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
-        self.set_render_layer_to_current(input_render_layer_name)
+        if not skip_switch_render_layer:
+            self.set_render_layer_to_current(input_render_layer_name)
+        else:
+            self.debug('[*] do skip_switch_render_layer')
+
         if input_render_layer_name != SceneHelper.DEFAULT_RENDER_LAYER_NAME:
             try:
                 maya_cmds.editRenderLayerAdjustment(attr_key)
@@ -333,12 +338,14 @@ class SceneHelper(LogHelper):
 
     def set_attr_with_command_param_list_batch_list_with_render_layer(
             self,
-            command_param_list_batch_list, override_render_layer_name=DEFAULT_RENDER_LAYER_NAME
+            command_param_list_batch_list, override_render_layer_name=DEFAULT_RENDER_LAYER_NAME,
+            skip_switch_render_layer=False
     ):
         for command_param_list in command_param_list_batch_list:
             attr_key, attr_value = command_param_list
             self.__set_override_for_render_layer_for_maya_old(
-                attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True
+                attr_key, attr_value, input_render_layer_name=override_render_layer_name, create_if_not_existed=True,
+                skip_switch_render_layer=skip_switch_render_layer
             )
 
     def set_render_layer_with_object_pattern_for_maya_new(self, bject_pattern='', render_layer_name=''):
@@ -653,6 +660,7 @@ class ReferenceExporter(ReferenceHelper):
                         # if current_layer_name != LAYER_IDP:
                         #     continue
 
+                        self.scene_helper.set_current_render(current_layer_name)
                         ###### --------------------- add objects to layer --------------------
 
                         current_render_setting_list = [
@@ -663,7 +671,7 @@ class ReferenceExporter(ReferenceHelper):
                         ]
 
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                            current_render_setting_list, current_layer_name
+                            current_render_setting_list, current_layer_name, skip_switch_render_layer=True
                         )
 
                         # set primaryVisibility for objects
@@ -703,7 +711,7 @@ class ReferenceExporter(ReferenceHelper):
                                 self.debug('[ command_list ]', command_list)
 
                                 self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                                    command_list, current_layer_name
+                                    command_list, current_layer_name, skip_switch_render_layer=True
                                 )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)

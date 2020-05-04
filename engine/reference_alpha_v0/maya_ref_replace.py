@@ -663,8 +663,8 @@ class ReferenceExporter(ReferenceHelper):
                             )
 
                         # ----------------- DEBUG PART ---------------------------------------
-                        if current_layer_name != LAYER_LGT:
-                            continue
+                        # if current_layer_name != LAYER_LGT:
+                        #     continue
 
                         self.scene_helper.set_current_render(current_layer_name)
                         ###### --------------------- add objects to layer --------------------

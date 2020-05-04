@@ -33,7 +33,7 @@ layer_setting:
             ['doubleSided', 1],
         ]
         render_setting:
-            "": # disable default render layer
+            "__disable_default_layer__": # disable default render layer
                 script: |
                     from maya import mel
                     mel.eval('renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";')

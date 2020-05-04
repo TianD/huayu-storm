@@ -410,6 +410,7 @@ class SceneHelper(LogHelper):
         maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
 
     def export(self, file_name):
+        self.debug('ready to export file: "{}"'.format(file_name))
         scene_file_name = self.get_current_scene_name()
         self.save_as(file_name)
         maya_cmds.file(scene_file_name, open=True, force=True, iv=True)  # ignore version
@@ -661,8 +662,8 @@ class ReferenceExporter(ReferenceHelper):
                             )
 
                         # ----------------- DEBUG PART ---------------------------------------
-                        # if current_layer_name != LAYER_IDP:
-                        #     continue
+                        if current_layer_name != LAYER_LGT:
+                            continue
 
                         self.scene_helper.set_current_render(current_layer_name)
                         ###### --------------------- add objects to layer --------------------

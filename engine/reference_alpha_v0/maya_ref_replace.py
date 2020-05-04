@@ -276,7 +276,7 @@ class SceneHelper(LogHelper):
 
     def get_value_with_exec(self, code):
         local_dict = {}
-        exec (code, globals(), local_dict)
+        exec(code, globals(), local_dict)
         return local_dict.get(SceneHelper.KEY_RETURN_VALUE)
 
     def __set_override_for_render_layer_for_maya_old(
@@ -717,24 +717,11 @@ class ReferenceExporter(ReferenceHelper):
 
 
 if __name__ == '__main__':
-    try:
-        egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
-        import sys
-
-        sys.path.insert(0, egg_dir)
-        # import pydevd_pycharms
-
-        # pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
-
-    except:
-        pass
-
-    # reference_helper = ReferenceHelper()
-    # reference_helper.process_all_reference()
-    # reference_helper.info(reference_helper.get_reference_list(), **reference_helper.FORMAT_JSON_DICT_KWARG)
-    # reference_helper.replace_reference()
     from LogHelper import app_logger
 
-    ref_exporter = ReferenceExporter(logger=app_logger)
+    try:
+        ref_exporter = ReferenceExporter(logger=app_logger)
 
-    ref_exporter.process_all_config()
+        ref_exporter.process_all_config()
+    except:
+        app_logger.warn("[-] some error happened")

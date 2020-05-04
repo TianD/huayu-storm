@@ -1,11 +1,14 @@
 # coding: utf-8
 
 import glob
+import inspect
 import io
 import json
 import os
 import re
 import sys
+
+__file__ = os.path.abspath(inspect.getsourcefile(lambda: 0))
 
 import yaml
 import zmq
@@ -301,6 +304,7 @@ def maya_layer_process():
         import os
         sys.path.insert(0,os.path.dirname('{script_path}'))
         execfile('{script_path}')
+        sys.exit()
         """.strip().format(file_path=file_path, script_path=script_path).replace('\\', '/')
 
     command = ';'.join(

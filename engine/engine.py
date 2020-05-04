@@ -47,30 +47,31 @@ def get_frames_list(format_image_path):
 
 
 def get_first_image_of_dir(**shot_info):
-    shot_config = shot_info.pop('config')
-    thumb_dir = shot_config.get('compositing', {}).get('dir')
-    thumb_file = shot_config.get('compositing', {}).get('file')
-    thumb_path = '%s/%s' % (thumb_dir, thumb_file)
-
+    thumb_path = _format_template_path('compositing', **shot_info)
     format_thumb_path = fmt.format(thumb_path, **shot_info)
-    format_thumb_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_thumb_path)
-    files = glob.glob(format_thumb_path)
+    reformat_thumb_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_thumb_path)
+    files = glob.glob(reformat_thumb_path)
     if len(files) == 0:
         files = ['']
     return files[0]
 
 
 def get_nuke_project(**shot_info):
-    shot_config = shot_info.get('config')
-    nuke_dir = shot_config.get('nuke', {}).get('dir')
-    nuke_file = shot_config.get('nuke', {}).get('file')
-    nuke_path = '%s/%s' % (nuke_dir, nuke_file)
-    format_nuke_path = fmt.format(nuke_path, **shot_info)
-    format_nuke_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_nuke_path)
-    files = glob.glob(format_nuke_path)
+    format_nuke_path = _format_template_path('nuke', **shot_info)
+    reformat_nuke_path = re.sub("({[0-9a-zA-Z]*}|%\d+d)", '*', format_nuke_path)
+    files = glob.glob(reformat_nuke_path)
     if len(files) == 0:
         files = ['']
     return os.path.basename(files[0])
+
+
+def _format_template_path(template_code, **shot_info):
+    shot_config = shot_info.get('config')
+    template_dir = shot_config.get(template_code, {}).get('dir')
+    template_file = shot_config.get(template_code, {}).get('file')
+    template_path = '%s/%s' % (template_dir, template_file)
+    format_template_path = fmt.format(template_path, **shot_info)
+    return format_template_path
 
 
 @app.route('/api/get_project_list')
@@ -176,13 +177,15 @@ def get_detail():
         length = len(collections) + len(remainders)
         for i, collection in enumerate(collections):
             temp_str = collection.format()
-            temp_str = temp_str.replace('\\', '/').split(key_dir)[-1][1:]
+            temp_dir = os.path.dirname(temp_str)
+            temp_file = os.path.basename(temp_str)
             dataSource.append(
-                {'key': str(i), 'type': key, 'path': temp_str, 'dir': key_dir, 'index': i, 'rowSpan': length})
+                {'key': str(i), 'type': key, 'path': temp_file, 'dir': temp_dir, 'index': i, 'rowSpan': length})
         for j, remainder in enumerate(remainders):
-            remainder = remainder.replace('\\', '/').split(key_dir)[-1][1:]
+            temp_dir = os.path.dirname(remainder)
+            temp_file = os.path.basename(remainder)
             dataSource.append(
-                {'key': str(i), 'type': key, 'path': remainder, 'dir': key_dir, 'index': j, 'rowSpan': length})
+                {'key': str(i), 'type': key, 'path': temp_file, 'dir': temp_dir, 'index': j, 'rowSpan': length})
     return json.dumps(dataSource)
 
 
@@ -194,11 +197,7 @@ def nuke_setup_process():
     with open(nuke_config_path, 'r') as f:
         nuke_config = yaml.load(f)
     nuke_exe = nuke_config.get('nuke_exe') or '{nuke_exe}'
-    nuke_template = nuke_config.get('nuke_template') or 'nuke_template'
-    nuke_template_dir = shot_info.get('config', {}).get(nuke_template, {}).get('dir')
-    nuke_template_file = shot_info.get('config', {}).get(nuke_template, {}).get('file')
-    nuke_template_path = '%s/%s' % (nuke_template_dir, nuke_template_file)
-    format_nuke_template_path = fmt.format(nuke_template_path, **shot_info)
+    format_nuke_template_path = _format_template_path('nuke_template', **shot_info)
     py_cmd = nuke_config.get('py_cmd') or '{py_cmd}'
     py_cmd = os.path.join(config_dir, project, 'nukebatch', py_cmd)
     nuke_data = nuke_config.get('data') or {}
@@ -214,10 +213,14 @@ def nuke_setup_process():
         else:
             new_nuke_data.setdefault(key, value)
 
+    format_nuke_path = _format_template_path('nuke', **shot_info)
+    compositing_path = _format_template_path('compositing', **shot_info)
     format_command = fmt.format(nuke_cmd,
                                 nuke_exe=nuke_exe,
                                 nuke_template=format_nuke_template_path,
                                 py_cmd=py_cmd,
+                                write_output_path=compositing_path,
+                                nuke_save_path=format_nuke_path,
                                 **new_nuke_data)
     ZMQ_SOCKET.send_json({'format_command': format_command, 'key': shot_info.get('key'), 'view': 'nukebatch'})
     return json.dumps({'status': 'Queued'})
@@ -243,9 +246,7 @@ def seq2mov_process():
                                      dir_config.get(input_template_code, {}).get('file'))
     input_template = Template(input_template_code, input_template_path)
     data = input_template.parse(input_file)
-    output_template_path = '%s/%s' % (dir_config.get(output_template_code, {}).get('dir'),
-                                      dir_config.get(output_template_code, {}).get('file'))
-    output_file = fmt.format(output_template_path, **data)
+    output_file = _format_template_path(output_template_code, **data)
     format_command = fmt.format(cmd, ffmpeg_exe=ffmpeg_exe, input_file=input_file, output_file=output_file)
     ZMQ_SOCKET.send_json({'format_command': format_command, 'key': file_info.get('key'), 'view': 'seq2movbatch'})
     return json.dumps({'status': 'Queued'})

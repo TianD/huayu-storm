@@ -11,5 +11,5 @@ data: # data for nuke template
     CHRCLR_Read: Read10 # chrcolor read name
     CHRCLR_layer: CHRCLR  # chrcolor layer name
     Write_Read: OUTPUT # write read name
-nuke_cmd: "{nuke_exe} -t {py_cmd} {nuke_template} {BGCLR_Read} {BGCLR_layer_path} {SKY_Read} {SKY_layer_path} {IDP_Read} {IDP_layer_path} {CHRCLR_Read} {CHRCLR_layer_path} {Write_Read} {Write_output_path} {nuke_save_path}"
+nuke_cmd: "{nuke_exe} -t {py_cmd} {nuke_template} {BGCLR_Read} {BGCLR_layer_path} {SKY_Read} {SKY_layer_path} {IDP_Read} {IDP_layer_path} {CHRCLR_Read} {CHRCLR_layer_path} {Write_Read} {write_output_path} {nuke_save_path}"
                         # 0        1                 2            3                 4           5               6              7               8              9                10               11                12

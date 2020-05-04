@@ -650,6 +650,7 @@ class ReferenceExporter(ReferenceHelper):
 
                     current_layer_name = current_render_layer_setting.get('layer_name', '')
                     if current_layer_name:
+                        self.debug('[*] start to process layer : {}'.format(current_layer_name))
                         ###### --------------------- add objects to layer --------------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
                         current_select_pattern_list = self.get_pattern_list_from_selector_list(

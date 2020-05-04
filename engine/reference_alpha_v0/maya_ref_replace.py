@@ -667,6 +667,7 @@ class ReferenceExporter(ReferenceHelper):
                         #     continue
 
                         self.scene_helper.set_current_render(current_layer_name)
+                        skip_switch_render_layer = False
                         ###### --------------------- add objects to layer --------------------
 
                         current_render_setting_list = [
@@ -677,7 +678,8 @@ class ReferenceExporter(ReferenceHelper):
                         ]
 
                         self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                            current_render_setting_list, current_layer_name, skip_switch_render_layer=True
+                            current_render_setting_list, current_layer_name,
+                            skip_switch_render_layer=skip_switch_render_layer
                         )
 
                         # set primaryVisibility for objects
@@ -717,7 +719,8 @@ class ReferenceExporter(ReferenceHelper):
                                 self.debug('[ command_list ]', command_list)
 
                                 self.scene_helper.set_attr_with_command_param_list_batch_list_with_render_layer(
-                                    command_list, current_layer_name, skip_switch_render_layer=True
+                                    command_list, current_layer_name,
+                                    skip_switch_render_layer=skip_switch_render_layer
                                 )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)

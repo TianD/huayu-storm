@@ -364,10 +364,10 @@ class SceneHelper(LogHelper):
 
     def __get_render_layer_with_auto_create(self, render_layer_name):
         if render_layer_name == SceneHelper.DEFAULT_RENDER_LAYER_NAME:
-            render_layer_name = pymel_core.nodetypes.RenderLayer.defaultRenderLayer().name()
+            render_layer_name = 'defaultRenderLayer'
 
         try:
-            render_layer = pymel_core.nodetypes.RenderLayer.findLayerByName(render_layer_name)
+            render_layer = pymel_core.PyNode(render_layer_name)
         except:
             render_layer = pymel_core.rendering.createRenderLayer(name=render_layer_name, empty=True)
 
@@ -388,8 +388,8 @@ class SceneHelper(LogHelper):
         try:
             selected = self.list_with_pattern(object_pattern)
             render_layer.addMembers(selected)
-        except:
-            pass
+        except Exception as e:
+            self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
 
     def load_render_plugin(self, plugin_name):
         maya_cmds.loadPlugin(plugin_name)

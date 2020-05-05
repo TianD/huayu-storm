@@ -287,7 +287,7 @@ def maya_layer_process():
     )
 
     formatted_command = \
-        r"""  "{maya_bin}" -command "python(\"{command}\")  """.format(
+        r"""  "{maya_bin}" -command "python(\"{command}\");quit -f;"  """.format(
             maya_bin=maya_bin.replace('/', '\\'),
             command=command,
         ).strip()

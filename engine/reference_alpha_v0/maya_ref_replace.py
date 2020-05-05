@@ -392,7 +392,8 @@ class SceneHelper(LogHelper):
             self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
 
     def load_render_plugin(self, plugin_name):
-        maya_cmds.loadPlugin(plugin_name)
+        pymel_core.loadPlugin(plugin_name, quiet=True)
+        pymel_core.pluginInfo(plugin_name, edit=True, autoload=True)
 
     def set_render_layer_to_current(self, render_layer_name):
         render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
@@ -755,5 +756,7 @@ if __name__ == '__main__':
         ref_exporter = ReferenceExporter(logger=app_logger)
 
         ref_exporter.process_all_config()
+
+        app_logger.warn("[*] all process done")
     except Exception as e:
         app_logger.warn("[-] some error happened , error : {}".format(e))

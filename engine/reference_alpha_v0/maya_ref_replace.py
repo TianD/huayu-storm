@@ -749,6 +749,7 @@ if __name__ == '__main__':
     #
     # except Exception as e:
     #     print('[-] set debug failed')
+    import traceback
 
     from LogHelper import app_logger
 
@@ -760,4 +761,5 @@ if __name__ == '__main__':
 
         app_logger.debug("[*] all process done")
     except Exception as e:
+        app_logger.debug(traceback.format_exc())
         app_logger.debug("[-] some error happened , error : {}".format(e))

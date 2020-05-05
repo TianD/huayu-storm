@@ -152,7 +152,7 @@ class SceneHelper(LogHelper):
         selected_items = maya_cmds.ls(object_pattern)
         shape_str_list = []
         for item in selected_items:
-            shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh")
+            shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh") or []
             shape_str_list += shapes
         self.debug('[ shape_str_list ]', shape_str_list)
         return shape_str_list
@@ -322,7 +322,7 @@ class SceneHelper(LogHelper):
                 if script_content:
                     attr_value = self.get_value_with_exec(script_content)
 
-            if isinstance(attr_value, str) or isinstance(attr_value, unicode):
+            if isinstance(attr_value, str):
                 attr_type = 'string'
             else:
                 attr_type = ''
@@ -423,13 +423,13 @@ class SceneHelper(LogHelper):
         )
 
         # if render_name == RENDER_ARNOLD:
-        #     # ---------- ensure arnold nodes created ---------------
-        #     # Deletes the render settings window UI completely
-        #     if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
-        #         maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
-        #
-        #     # Remake the render settings UI
-        #     maya_mel.eval('unifiedRenderGlobalsWindow;')
+        # ---------- ensure arnold nodes created ---------------
+        # Deletes the render settings window UI completely
+        if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
+            maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
+
+        # Remake the render settings UI
+        maya_mel.eval('unifiedRenderGlobalsWindow;')
 
 
 class SceneHelperForRedshift(SceneHelper):
@@ -670,8 +670,8 @@ class ReferenceExporter(ReferenceHelper):
                         # if current_layer_name != LAYER_LGT:
                         #     continue
 
-                        self.scene_helper.set_current_render(current_layer_name)
-                        skip_switch_render_layer = False
+                        self.scene_helper.set_render_layer_to_current(current_layer_name)
+                        skip_switch_render_layer = True
                         ###### --------------------- add objects to layer --------------------
 
                         current_render_setting_list = [
@@ -696,7 +696,6 @@ class ReferenceExporter(ReferenceHelper):
                         # if current_layer_name == LAYER_BG_COLOR:
                         if character_override_selector_list and character_override_attr_list:
                             self.debug('[get layer] => ', current_layer_name)
-                            self.scene_helper.set_render_layer_to_current(current_layer_name)
 
                             current_select_pattern_list = self.get_pattern_list_from_selector_list(
                                 character_override_selector_list, selector_dict
@@ -738,6 +737,18 @@ class ReferenceExporter(ReferenceHelper):
 
 
 if __name__ == '__main__':
+    # try:
+    #     egg_dir = 'C:/Users/alpha/AppData/Local/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/debug-eggs'
+    #     import sys
+    #
+    #     sys.path.insert(0, egg_dir)
+    #     import pydevd_pycharm
+    #
+    #     pydevd_pycharm.settrace('localhost', port=9000, stdoutToServer=True, stderrToServer=True)
+    #
+    # except Exception as e:
+    #     print('[-] set debug failed')
+
     from LogHelper import app_logger
 
     try:

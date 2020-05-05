@@ -266,30 +266,6 @@ def maya_layer_process():
     }
     """
     shot_info = json.loads(request.data)
-    # project = shot_info.get('project')
-    # maya_config_path = os.path.join(config_dir, project, 'mayabatch/config.yml')
-    # with open(maya_config_path, 'r') as f:
-    #     maya_config = yaml.load(f)
-    # maya_exe = maya_config.get('maya_exe') or '{maya_exe}'
-    # maya_template = maya_config.get('maya_template') or '{maya_template}'
-    # py_cmd = maya_config.get('py_cmd') or '{py_cmd}'
-    # maya_data = maya_config.get('data') or {}
-    # maya_cmd = maya_config.get('maya_cmd')
-    # image_config = shot_info.get('config', {}).get('images')
-    # image_path = os.path.join(image_config.get('dir'), image_config.get('file')).replace('\\', '/')
-    # new_maya_data = {}
-    # for key, value in maya_data.items():
-    #     if key.endswith('_layer'):
-    #         format_image_path = fmt.format(image_path, layer=value, **shot_info)
-    #         new_maya_data.setdefault('%s_path' % key, format_image_path)
-    #     else:
-    #         new_maya_data.setdefault(key, value)
-
-    # format_command = fmt.format(maya_cmd,
-    #                             maya_exe=maya_exe,
-    #                             maya_template=maya_template,
-    #                             py_cmd=py_cmd,
-    #                             **new_maya_data)
 
     file_path = shot_info.get('name')
     script_path = os.path.join(__file__, '..', r'reference_alpha_v0\maya_ref_replace.py')

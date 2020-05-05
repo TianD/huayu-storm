@@ -7,8 +7,8 @@ common_setting:
         bg_object_selector: '*:SET'
         lgt_object_selector: 'LGT*:*'
         sky_object_selector: 'SKY*:*'
-        chr_object_selector: '*:CHR'
-        pro_object_selector: '*:PRO'
+        chr_object_selector: 'CHLGT*:*'
+        pro_object_selector: 'PRO*:*'
         chrlgt_object_selector: 'CHLGT*:*'
     import_file:
         # [ "import prefix" , "file path" ]
@@ -20,8 +20,9 @@ common_setting:
 layer_setting:
     -   layer_name: masterLayer
         selector_list: []
-        character_override_selector_list: [ 'chr_object_selector' ]
+        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
+
         ['castsShadows', 1],
         ['receiveShadows', 1],
         ['holdOut' ,0],
@@ -31,6 +32,7 @@ layer_setting:
         ['visibleInReflections', 1],
         ['visibleInRefractions', 1],
         ['doubleSided', 1],
+
         ]
         render_setting:
             "defaultRenderLayer.renderable": 0

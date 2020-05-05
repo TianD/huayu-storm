@@ -1,4 +1,5 @@
 # coding=utf8
+import os
 import re
 from collections import OrderedDict
 
@@ -590,10 +591,10 @@ class ReferenceExporter(ReferenceHelper):
 
     IMPORT_FILE_NAMESPACE_SUFFIX = '_'
 
-    def process_all_config(self):
+    def process_all_config(self, project_name):
         current_scene_file_name = self.scene_helper.get_current_scene_name()
 
-        layer_file_setting = self.config_helper.export_config().get('{project}', {})
+        layer_file_setting = self.config_helper.export_config().get(project_name, {})
 
         layer_file_setting_formatted = OrderedDict()
         # format with regex
@@ -754,7 +755,8 @@ if __name__ == '__main__':
     try:
         ref_exporter = ReferenceExporter(logger=app_logger)
 
-        ref_exporter.process_all_config()
+        # get project_name from env
+        ref_exporter.process_all_config(os.environ.get('PROJECT_NAME'))
 
         app_logger.debug("[*] all process done")
     except Exception as e:

@@ -270,16 +270,20 @@ def maya_layer_process():
     file_path = shot_info.get('name')
     script_path = os.path.join(__file__, '..', r'reference_alpha_v0\maya_ref_replace.py')
     maya_bin = r"C:\Program Files\Autodesk\Maya2017\bin\maya.exe"
+    project_name = shot_info.get('project_name', 'DeerRun')
 
     command = r"""
         import sys
         import os
         import maya.cmds as mc
         mc.file('{file_path}',open=True,force=True,iv=True)
+        os.environ['PROJECT_NAME']='{project_name}'
         sys.path.insert(0,os.path.dirname('{script_path}'))
         execfile('{script_path}')
         mc.quit(a=1,f=1,ec=1)
-        """.strip().format(file_path=file_path, script_path=script_path).replace('\\', '/')
+        """.strip().format(
+        file_path=file_path, project_name=project_name, script_path=script_path
+    ).replace('\\', '/')
 
     command = ';'.join(
         command_line.strip()

@@ -91,5 +91,6 @@ py_setup_deps:
 
 release:
 	@make set_nodejs_env command=' \
+		npm run build ;\
 		npm run package ;\
 	';

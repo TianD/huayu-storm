@@ -1,4 +1,5 @@
 # coding=utf8
+import os
 import re
 from collections import OrderedDict
 
@@ -753,7 +754,6 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print('[-] set debug failed')
     import traceback
-    import os
 
     from LogHelper import app_logger
 

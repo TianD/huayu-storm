@@ -7,8 +7,8 @@ common_setting:
         bg_object_selector: '*:SET'
         lgt_object_selector: 'LGT*:*'
         sky_object_selector: 'SKY*:*'
-        chr_object_selector: 'CHLGT*:*'
-        pro_object_selector: 'PRO*:*'
+        chr_object_selector: '*:*CHR'
+        pro_object_selector: '*:*PRO'
         chrlgt_object_selector: 'CHLGT*:*'
     import_file:
         # [ "import prefix" , "file path" ]

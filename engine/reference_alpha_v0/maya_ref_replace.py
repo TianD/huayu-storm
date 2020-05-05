@@ -22,12 +22,6 @@ def represent_ordereddict(dumper, data):
 
 yaml.add_representer(OrderedDict, represent_ordereddict)
 
-# try:
-#     import maya.app.renderSetup.views.overrideUtils as override_utils
-#     from maya.app import renderSetup
-# except:
-#     pass
-
 # todo remove reload
 import LogHelper
 
@@ -224,6 +218,11 @@ class SceneHelper(LogHelper):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
         # attr_key = attr_key  # 'defaultResolution.width'
         # attr_value = value  # 2000
+        try:
+            import maya.app.renderSetup.views.overrideUtils as override_utils
+            from maya.app import renderSetup
+        except:
+            pass
 
         node_name, node_attr = attr_key.split('.')
 

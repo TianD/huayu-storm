@@ -272,13 +272,13 @@ def maya_layer_process():
     maya_bin = r"C:\Program Files\Autodesk\Maya2017\bin\maya.exe"
 
     command = r"""
-        import maya.cmds as mc
-        mc.file('{file_path}',open=True,force=True,iv=True)
         import sys
         import os
+        import maya.cmds as mc
+        mc.file('{file_path}',open=True,force=True,iv=True)
         sys.path.insert(0,os.path.dirname('{script_path}'))
         execfile('{script_path}')
-        sys.exit()
+        mc.quit(a=1,f=1,ec=1)
         """.strip().format(file_path=file_path, script_path=script_path).replace('\\', '/')
 
     command = ';'.join(

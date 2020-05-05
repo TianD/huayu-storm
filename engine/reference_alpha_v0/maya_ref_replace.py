@@ -22,11 +22,11 @@ def represent_ordereddict(dumper, data):
 
 yaml.add_representer(OrderedDict, represent_ordereddict)
 
-try:
-    import maya.app.renderSetup.views.overrideUtils as override_utils
-    from maya.app import renderSetup
-except:
-    pass
+# try:
+#     import maya.app.renderSetup.views.overrideUtils as override_utils
+#     from maya.app import renderSetup
+# except:
+#     pass
 
 # todo remove reload
 import LogHelper

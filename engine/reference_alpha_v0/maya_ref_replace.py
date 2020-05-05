@@ -757,6 +757,6 @@ if __name__ == '__main__':
 
         ref_exporter.process_all_config()
 
-        app_logger.warn("[*] all process done")
+        app_logger.debug("[*] all process done")
     except Exception as e:
-        app_logger.warn("[-] some error happened , error : {}".format(e))
+        app_logger.debug("[-] some error happened , error : {}".format(e))

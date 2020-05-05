@@ -297,7 +297,7 @@ class SceneHelper(LogHelper):
 
         if input_render_layer_name != SceneHelper.DEFAULT_RENDER_LAYER_NAME:
             try:
-                maya_cmds.editRenderLayerAdjustment(attr_key)
+                maya_cmds.editRenderLayerAdjustment(attr_key, layer=input_render_layer_name)
             except Exception as e:
                 self.debug(e)
 

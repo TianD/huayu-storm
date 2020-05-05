@@ -1,5 +1,4 @@
 # coding=utf8
-import os
 import re
 from collections import OrderedDict
 
@@ -627,10 +626,14 @@ class ReferenceExporter(ReferenceHelper):
                 current_key, [], file_render_setting_dict
             )
             for import_file_layer_name, import_file in import_file_list:
-                maya_cmds.file(
-                    import_file, i=True, f=True,
-                    namespace=import_file_layer_name + ReferenceExporter.IMPORT_FILE_NAMESPACE_SUFFIX
-                )
+                if os.path.exists(import_file):
+                    self.debug('[*] import file')
+                    maya_cmds.file(
+                        import_file, i=True, f=True,
+                        namespace=import_file_layer_name + ReferenceExporter.IMPORT_FILE_NAMESPACE_SUFFIX
+                    )
+                else:
+                    self.debug('[-] import file , not existed : {}'.format(import_file))
 
             # -------------------------------- set camera --------------------------------
             ref_exporter.process_camera()
@@ -750,6 +753,7 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print('[-] set debug failed')
     import traceback
+    import os
 
     from LogHelper import app_logger
 

@@ -1,10 +1,12 @@
 # coding: utf-8
+import os
+import subprocess
 import sys
 import time
 import traceback
-import subprocess
-import zmq
+
 import socketio
+import zmq
 
 context = zmq.Context()
 socket = context.socket(zmq.PULL)
@@ -19,7 +21,12 @@ if __name__ == '__main__':
             cmd = message.get('format_command')
             view = message.get('view')
             key = message.get('key')
-            result = subprocess.call(cmd, shell=True)
+
+            # clear py3 env
+            env = os.environ
+            env['PYTHONPATH'] = ''
+
+            result = subprocess.call(cmd, shell=True, env=env)
             sio.connect('http://localhost:8001')
             status = 'Failed' if result else 'Finished'
             time.sleep(5)
@@ -29,4 +36,3 @@ if __name__ == '__main__':
         except Exception as e:
             print(traceback.format_exc())
             sys.exit()
-

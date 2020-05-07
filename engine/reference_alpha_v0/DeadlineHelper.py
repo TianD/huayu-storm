@@ -44,7 +44,7 @@ class DeadlineHelper(LogHelper):
         self.__plugin_info_file_path = ''
         self.__deadline_command_path = ''
 
-    def load_job_info(self, scene_file_path):
+    def load_submit_parameter(self, scene_file_path):
         self.__file_base_name = self.path_and_file_helper.get_file_path_md5()
         # todo deadline command exe path , read from yaml-config
         deadline_parameter_dict = {
@@ -76,6 +76,7 @@ class DeadlineHelper(LogHelper):
 
     def submit_to_deadline(self):
         self.__write_job_and_plugin_file()
+        # todo add run_command to helper
         self.path_and_file_helper.run_command(
             '{deadline_command_path} -SubmitMultipleJobs -job {job_info_file_path} {plugin_info_file_path}'.format(
                 deadline_command_path=self.__deadline_command_path,
@@ -83,3 +84,9 @@ class DeadlineHelper(LogHelper):
                 plugin_info_file_path=self.__plugin_info_file_path
             )
         )
+
+
+if __name__ == '__main__':
+    deadline_helper = DeadlineHelper()
+    deadline_helper.load_submit_parameter()
+    deadline_helper.submit_to_deadline()

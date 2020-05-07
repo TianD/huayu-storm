@@ -1,15 +1,19 @@
 # coding=utf8
 from __future__ import absolute_import
 
+import os
+
+scene_file_path = ''
+
 deadline_parameter_dict = {
-    'scene_name': '',
-    'scene_file_path': '',
-    'project_dir': '',
-    'maya_version': '',  # 2017
-    'submit_user_name': 'python_submitter',
-    'frame_range': '1-129',
-    'machine_name': 'machine',
-    'output_dir': 'z:/',
+    'scene_name': os.path.basename(scene_file_path),
+    'scene_file_path': scene_file_path,
+    'project_dir': '',  # todo read from yaml-config
+    'maya_version': '',  # todo read from yaml-config
+    'submit_user_name': 'python_submitter',  # fixed submitter name
+    'frame_range': '1-129',  # todo read from maya file
+    'machine_name': 'machine',  # todo read with api
+    'output_dir': 'z:/',  # todo read from yaml-config
 }
 
 # jobInfo.job

@@ -17,17 +17,19 @@ deadline_parameter_dict = {
 }
 
 # jobInfo.job
-job_info_string = """
+job_info_format_string = """
 Name={scene_name}
 UserName={submit_user_name}
 Frames={frame_range}
 MachineName={machine_name}
 Plugin=MayaBatch
 OutputDirectory0={output_dir}
-""".format(**deadline_parameter_dict)
+"""
+
+job_info_string = job_info_format_string.format(**deadline_parameter_dict)
 
 # plugInfo.job
-plugin_info_string = """
+plugin_info_format_string = """
 SceneFile={scene_file_path}
 Version={maya_version}
 Build=64bit
@@ -42,4 +44,11 @@ StartupScript=
 CommandLineOptions=
 UseOnlyCommandLineOptions=0
 IgnoreError211=False
-""".format(**deadline_parameter_dict)
+"""
+
+plugin_info_string = plugin_info_format_string.format(**deadline_parameter_dict)
+
+# todo write file
+#   calc file_path as md5 , use md5 as file name 
+#   submit command
+#       deadlinecommand -SubmitMultipleJobs -job %e_jobInfo.txt %e_plugInfo.txt

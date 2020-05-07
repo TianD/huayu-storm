@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import fnmatch
+import hashlib
 import os
 
 from LogHelper import LogHelper
@@ -10,6 +11,26 @@ from LogHelper import LogHelper
 class PathAndFileHelper(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
+
+    def ensure_dir_exists(self, dir_path):
+        if not os.path.isdir(dir_path):
+            os.makedirs(dir_path)
+
+    def ensure_file_dir_exits(self, file_path):
+        file_path_dir = self.get_dir_name(file_path)
+        self.ensure_dir_exists(file_path_dir)
+
+    def get_file_path_md5(self, file_path):
+        md5_handler = hashlib.md5()
+        md5_handler.update(file_path.encode(encoding='utf8'))
+        md5_string = md5_handler.hexdigest()
+        return md5_string
+
+    def write_content_to_file(self, file_path, content):
+        self.ensure_file_dir_exits(file_path)
+
+        with open(file_path, 'w') as f:
+            f.write(content)
 
     def get_dir_name(self, file_path):
         return os.path.dirname(file_path)
@@ -116,3 +137,6 @@ if __name__ == '__main__':
         file_path, ['T*', '*{*'], only_file=True
     )
     print(config_file_list)
+
+    # test write content to file
+    path_and_file_helper.write_content_to_file('c:/abc/adf/adf.cxt', '123132\ndfdasf')

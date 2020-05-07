@@ -20,7 +20,7 @@ Frames={frame_range}
 MachineName={machine_name}
 Plugin=MayaBatch
 OutputDirectory0={output_dir}
-"""
+""".format(**deadline_parameter_dict)
 
 # plugInfo.job
 plugin_info_string = """
@@ -38,4 +38,4 @@ StartupScript=
 CommandLineOptions=
 UseOnlyCommandLineOptions=0
 IgnoreError211=False
-"""
+""".format(**deadline_parameter_dict)

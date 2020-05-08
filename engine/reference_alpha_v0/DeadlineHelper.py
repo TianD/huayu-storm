@@ -78,7 +78,7 @@ class DeadlineHelper(LogHelper):
 
         maya_batch_bin_path = \
             self.config_helper.get_json_value_with_key_path(
-                'common_setting.maya_bin_path', '', layer_config
+                'common_setting.maya_batch_bin_path', '', layer_config
             )
 
         self.__deadline_command_bin_path = deadline_command_bin_path

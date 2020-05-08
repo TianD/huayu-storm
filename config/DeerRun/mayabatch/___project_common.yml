@@ -4,6 +4,8 @@ common_setting:
     # for deadline to submit scene file
     project_dir: 'z:/DeerRun'
     output_dir: 'f:/output'
+    maya_version: '2017'
+    deadline_command_bin_path: "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand.exe"
     # for make maya render layer file
     maya_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/maya.exe'
     # 匹配场景镜头

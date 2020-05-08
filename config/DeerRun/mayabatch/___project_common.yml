@@ -6,8 +6,9 @@ common_setting:
     output_dir: 'f:/output'
     maya_version: '2017'
     deadline_command_bin_path: "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand.exe"
-    # for make maya render layer file
+    # for make maya render layer file / deadline get file [frame start/end]
     maya_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/maya.exe'
+    maya_batch_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/mayabatch.exe'
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     object_selector:

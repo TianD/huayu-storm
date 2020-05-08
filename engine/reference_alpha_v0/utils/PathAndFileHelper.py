@@ -4,6 +4,8 @@ from __future__ import absolute_import
 import fnmatch
 import hashlib
 import os
+import re
+import subprocess
 
 from LogHelper import LogHelper
 
@@ -11,6 +13,14 @@ from LogHelper import LogHelper
 class PathAndFileHelper(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
+
+    def get_path_to_slash(self, path_string):
+        return path_string.replace('\\', '/')
+
+    def get_path_to_back_slash(self, path_string):
+        return path_string.replace('/', '\\')
+
+    get_windows_command_exe_path = get_path_to_back_slash
 
     def ensure_dir_exists(self, dir_path):
         if not os.path.isdir(dir_path):
@@ -123,6 +133,22 @@ class PathAndFileHelper(LogHelper):
             self.warn('current path is not dir : {}'.format(dir_path))
 
         return return_path_list
+
+    def run_command_with_extractor(self, command, extractor_regex_string):
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+
+        regex_pattern = re.compile(extractor_regex_string)
+        extracted_list = []
+        while True:
+            current_line = process.stdout.readline()
+            if not current_line:
+                break
+            else:
+                extracted_list = regex_pattern.findall(current_line.decode('utf-8'))
+                if len(extracted_list) > 0:
+                    break
+        process.wait()
+        return extracted_list
 
 
 if __name__ == '__main__':

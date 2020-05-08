@@ -45,7 +45,9 @@ class DeadlineHelper(LogHelper):
         self.__file_base_name = ''
         self.__job_info_file_path = ''
         self.__plugin_info_file_path = ''
-        self.__deadline_command_path = ''
+        self.__deadline_command_bin_path = ''
+        self.__maya_bin_path = ''
+        self.__maya_batch_bin_path = ''
 
     def load_submit_parameter(self, project_name, scene_file_path):
         all_config = self.config_helper.get_all_config()
@@ -69,7 +71,19 @@ class DeadlineHelper(LogHelper):
                 'common_setting.output_dir', '', layer_config
             )
 
-        self.__deadline_command_path = deadline_command_bin_path
+        maya_bin_path = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.maya_bin_path', '', layer_config
+            )
+
+        maya_batch_bin_path = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.maya_bin_path', '', layer_config
+            )
+
+        self.__deadline_command_bin_path = deadline_command_bin_path
+        self.__maya_bin_path = maya_bin_path
+        self.__maya_batch_bin_path = maya_batch_bin_path
 
         self.__file_base_name = self.path_and_file_helper.get_file_path_md5(scene_file_path)
         deadline_parameter_dict = {
@@ -78,11 +92,52 @@ class DeadlineHelper(LogHelper):
             'project_dir': project_dir,
             'maya_version': maya_version,
             'submit_user_name': 'python_submitter',  # fixed submitter name
-            'frame_range': '1-129',  # todo read from maya file
+            'frame_range': self.__get_maya_frame_start_and_end(scene_file_path),
             'machine_name': socket.gethostname(),
             'output_dir': output_dir,
         }
         self.deadline_parameter_dict = deadline_parameter_dict
+
+    def __get_maya_frame_start_and_end(self, scene_file_path):
+        command = r"""
+            import sys
+            import os
+            import maya.cmds as mc
+            mc.file('{file_path}',open=True,force=True,iv=True)
+            frame_start = mc.playbackOptions(q=True,animationStartTime=True)
+            frame_end = mc.playbackOptions(q=True,animationEndTime=True)
+            frame_start = int(frame_start)
+            frame_end = int(frame_end)
+            print('[config] {{}} {{}} [config]'.format(frame_start,frame_end))
+            mc.quit(a=1,f=1,ec=1)
+        """.strip().format(
+            file_path=self.path_and_file_helper.get_path_to_slash(scene_file_path),
+        ).replace('\\', '/')
+
+        command = ';'.join(
+            command_line.strip()
+            for command_line in command.splitlines()
+        )
+
+        formatted_command = \
+            r"""  "{maya_bin}" -command "python(\"{command}\");"  """.format(
+                maya_bin=self.path_and_file_helper.get_windows_command_exe_path(self.__maya_batch_bin_path),
+                command=command,
+            ).strip()
+
+        frame_start_end_list = self.path_and_file_helper.run_command_with_extractor(
+            formatted_command,
+            r'\[config\]\s+(\d+)\s(\d+)\s+\[config\]'
+        )
+
+        frame_start = 0
+        frame_end = 0
+        try:
+            frame_start, frame_end = frame_start_end_list[0]
+        except Exception as e:
+            self.error('get frame start / end from command falied', e)
+
+        return '{]-{}'.format(frame_start, frame_end)
 
     def __get_job_info(self):
         job_info_string = JOB_INFO_FORMAT_STRING.format(**self.deadline_parameter_dict)
@@ -104,7 +159,7 @@ class DeadlineHelper(LogHelper):
         # todo add run_command to helper
         self.path_and_file_helper.run_command(
             '{deadline_command_path} -SubmitMultipleJobs -job {job_info_file_path} {plugin_info_file_path}'.format(
-                deadline_command_path=self.__deadline_command_path,
+                deadline_command_path=self.__deadline_command_bin_path,
                 job_info_file_path=self.__job_info_file_path,
                 plugin_info_file_path=self.__plugin_info_file_path
             )

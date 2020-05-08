@@ -594,7 +594,7 @@ class ReferenceExporter(ReferenceHelper):
     def process_all_config(self, project_name):
         current_scene_file_name = self.scene_helper.get_current_scene_name()
 
-        layer_file_setting = self.config_helper.export_config().get(project_name, {})
+        layer_file_setting = self.config_helper.get_all_config().get(project_name, {})
 
         layer_file_setting_formatted = OrderedDict()
         # format with regex

@@ -1,8 +1,10 @@
 # coding=utf8
 from __future__ import absolute_import
 
+import socket
+
 from LogHelper import LogHelper
-from utils.PathAndFileHelper import PathAndFileHelper
+from utils.ConfigHelper import ConfigHelper
 
 # jobInfo.job
 JOB_INFO_FORMAT_STRING = """
@@ -37,25 +39,48 @@ class DeadlineHelper(LogHelper):
 
     def __init__(self, logger=None):
         super(DeadlineHelper, self).__init__(logger)
-        self.path_and_file_helper = PathAndFileHelper(logger=logger)
+        self.config_helper = ConfigHelper(logger=logger)
+        self.path_and_file_helper = self.config_helper.path_and_file_helper
         self.deadline_parameter_dict = {}
         self.__file_base_name = ''
         self.__job_info_file_path = ''
         self.__plugin_info_file_path = ''
         self.__deadline_command_path = ''
 
-    def load_submit_parameter(self, scene_file_path):
-        self.__file_base_name = self.path_and_file_helper.get_file_path_md5()
-        # todo deadline command exe path , read from yaml-config
+    def load_submit_parameter(self, project_name, scene_file_path):
+        all_config = self.config_helper.get_all_config()
+        current_project_config_dict = all_config.get(project_name, {})
+        layer_config = list(current_project_config_dict.values())[0]
+
+        deadline_command_bin_path = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.deadline_command_bin_path', '', layer_config
+            )
+        project_dir = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.project_dir', '', layer_config
+            )
+        maya_version = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.maya_version', '', layer_config
+            )
+        output_dir = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.output_dir', '', layer_config
+            )
+
+        self.__deadline_command_path = deadline_command_bin_path
+
+        self.__file_base_name = self.path_and_file_helper.get_file_path_md5(scene_file_path)
         deadline_parameter_dict = {
             'scene_name': self.path_and_file_helper.get_base_name(scene_file_path),
             'scene_file_path': scene_file_path,
-            'project_dir': '',  # todo read from yaml-config
-            'maya_version': '',  # todo read from yaml-config
+            'project_dir': project_dir,
+            'maya_version': maya_version,
             'submit_user_name': 'python_submitter',  # fixed submitter name
             'frame_range': '1-129',  # todo read from maya file
-            'machine_name': 'machine',  # todo read with api
-            'output_dir': 'z:/',  # todo read from yaml-config
+            'machine_name': socket.gethostname(),
+            'output_dir': output_dir,
         }
         self.deadline_parameter_dict = deadline_parameter_dict
 
@@ -88,5 +113,9 @@ class DeadlineHelper(LogHelper):
 
 if __name__ == '__main__':
     deadline_helper = DeadlineHelper()
-    deadline_helper.load_submit_parameter()
+    deadline_helper.load_submit_parameter(
+        'DeerRun',
+        r'E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\EP129_Q001_S001_BGCLR.mb'
+    )
+    print(deadline_helper.deadline_parameter_dict)
     deadline_helper.submit_to_deadline()

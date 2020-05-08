@@ -93,7 +93,7 @@ class ConfigHelper(LogHelper):
             value = default_value
         return value
 
-    def export_config(self):
+    def get_all_config(self):
         config_dir_root = self.path_and_file_helper.join_file_path(
             __file__, '../../../../config',
             **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
@@ -163,4 +163,4 @@ class ConfigHelper(LogHelper):
 
 if __name__ == '__main__':
     config_helper = ConfigHelper()
-    config_helper.show_json(config_helper.export_config())
+    config_helper.show_json(config_helper.get_all_config())

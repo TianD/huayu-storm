@@ -1,6 +1,9 @@
 render_type: redshift
 render_plugin_name: redshift4maya.mll
 common_setting:
+    # for deadline to submit scene file
+    project_dir: 'z:/DeerRun'
+    output_dir: 'f:/output'
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     object_selector:

@@ -137,7 +137,7 @@ class DeadlineHelper(LogHelper):
         except Exception as e:
             self.error('get frame start / end from command falied', e)
 
-        return '{]-{}'.format(frame_start, frame_end)
+        return '{}-{}'.format(frame_start, frame_end)
 
     def __get_job_info(self):
         job_info_string = JOB_INFO_FORMAT_STRING.format(**self.deadline_parameter_dict)

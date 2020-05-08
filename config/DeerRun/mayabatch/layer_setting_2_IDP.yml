@@ -1,4 +1,4 @@
-basic_config: ___redshift_common.yml
+basic_config: ___project_common.yml
 # override keys
 render_type: arnold
 render_plugin_name: mtoa.mll

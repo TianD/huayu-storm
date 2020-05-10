@@ -141,6 +141,10 @@ class PathAndFileHelper(LogHelper):
 
         return return_path_list
 
+    def run_command(self, command):
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+        process.wait()
+
     def run_command_with_extractor(self, command, extractor_regex_string):
         process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 

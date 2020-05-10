@@ -155,10 +155,10 @@ class DeadlineHelper(LogHelper):
         return job_info_string
 
     def __write_job_and_plugin_file(self):
-        # todo get base dir for temp job info files
         self.__job_info_file_path_base_name = '{}_jobInfo.txt'.format(self.__file_base_name)
         self.__plugin_info_file_path_base_name = '{}_pluginInfo.txt'.format(self.__file_base_name)
 
+        # add dir to temp file
         self.__job_info_file_path = self.path_and_file_helper.join_file_path(
             self.DEADLINE_SCRIPT_TEMP_DIR, self.__job_info_file_path_base_name,
         )

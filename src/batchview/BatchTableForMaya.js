@@ -90,7 +90,8 @@ class BatchTableForMaya extends Component {
                 key: i,
                 id: i + 1,
                 name: result.filePaths[i],
-                status: 'Ready'
+                project: this.props.mayabatch_filters,
+                status: 'Ready',
             }
             file_list.push(file_data)
         }
@@ -102,6 +103,12 @@ class BatchTableForMaya extends Component {
     }
 
     change_project(value) {
+        let files = this.props.mayabatch_items;
+        let new_files = [];
+        for (let i = 0; i < files.length; i++) {
+            new_files.push({...files[i], project: value})
+        }
+        this.props.set_mayabatch_items(new_files)
         this.props.set_mayabatch_filters(value)
     }
 

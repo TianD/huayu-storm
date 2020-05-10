@@ -79,68 +79,76 @@ def _format_template_path(template_code, **shot_info):
 
 @app.route('/api/get_project_list')
 def get_project_list():
+    project_list = os.listdir(config_dir)
+    result = [{'value': project} for project in project_list]
+    return json.dumps(result)
+
+
+@app.route('/api/get_shot_list', methods=['POST'])
+def get_shot_list():
+    project = json.loads(request.data)
+    if not project.get('value'):
+        return json.dumps([])
     temp_dict = {}
-    for project in os.listdir(config_dir):
-        project_config_path = os.path.join(config_dir, project, 'dir_template.yml')
-        with open(project_config_path, 'r') as f:
-            project_config = yaml.load(f)
-        anim = project_config.get('anim') or {}
-        anim_dir = anim.get('dir')
-        try:
-            format_anim_dir = re.sub("{[0-9a-zA-Z_]*}", '*', anim_dir)
-        except:
-            continue
-        dir_list = glob.glob(format_anim_dir)
-        for one_dir in dir_list:
-            anim_template = Template('anim_dir', anim_dir)
-            data = anim_template.parse(one_dir.replace('\\', '/'))
-            episode = data.get('episode')
-            sequence = data.get('sequence')
-            shot = data.get('shot')
-            temp_dict.setdefault(project, dict()). \
-                setdefault(episode, dict()). \
-                setdefault(sequence, dict()). \
-                setdefault(shot, project_config)
+    project = project.get('value')
+    project_config_path = os.path.join(config_dir, project, 'dir_template.yml')
+    with open(project_config_path, 'r') as f:
+        project_config = yaml.load(f)
+    anim = project_config.get('anim') or {}
+    anim_dir = anim.get('dir')
+    try:
+        format_anim_dir = re.sub("{[0-9a-zA-Z_]*}", '*', anim_dir)
+    except:
+        return json.dumps([])
+    dir_list = glob.glob(format_anim_dir)
+    for one_dir in dir_list:
+        anim_template = Template('anim_dir', anim_dir)
+        data = anim_template.parse(one_dir.replace('\\', '/'))
+        episode = data.get('episode')
+        sequence = data.get('sequence')
+        shot = data.get('shot')
+        temp_dict.setdefault(episode, dict()). \
+                  setdefault(sequence, dict()). \
+                  setdefault(shot, project_config)
 
     result = []
-    for pk, pv in temp_dict.items():
-        pc = [{'label': 'All', 'value': 'all'}]
-        pc_full_qc = []
-        for ek, ev in pv.items():
-            ec = [{'label': 'All', 'value': 'all'}]
-            ec_full_qc = []
-            for qk, qv in ev.items():
-                qc = []
-                for sk, sv in qv.items():
-                    qc.append(
-                        {
-                            'label': '%s_%s_%s' % (ek, qk, sk),
-                            'key': '%s_%s_%s' % (ek, qk, sk),
-                            'shot': sk,
-                            'project': pk,
-                            'episode': ek,
-                            'sequence': qk,
-                            'config': sv,
-                            'status': 'Ready',
-                            'preview': get_first_image_of_dir(shot=sk,
-                                                              project=pk,
-                                                              episode=ek,
-                                                              sequence=qk,
-                                                              config=sv),
-                            'nuke_project': get_nuke_project(project=pk,
-                                                             episode=ek,
-                                                             sequence=qk,
-                                                             shot=sk,
-                                                             config=sv)
-                        }
-                    )
-                ec_full_qc.extend(qc)
-                ec.append({'label': qk, 'value': qk, 'shots': qc})
-            pc_full_qc.extend(ec_full_qc)
-            ec[0].setdefault('shots', ec_full_qc)
-            pc.append({'label': ek, 'value': ek, 'children': ec})
-        pc[0].setdefault('shots', pc_full_qc)
-        result.append({'label': pk, 'value': pk, 'children': pc})
+    pc = {'label': 'All', 'value': 'all'}
+    pc_full_qc = []
+    for ek, ev in temp_dict.items():
+        ec = [{'label': 'All', 'value': 'all'}]
+        ec_full_qc = []
+        for qk, qv in ev.items():
+            qc = []
+            for sk, sv in qv.items():
+                qc.append(
+                    {
+                        'label': '%s_%s_%s' % (ek, qk, sk),
+                        'key': '%s_%s_%s' % (ek, qk, sk),
+                        'shot': sk,
+                        'project': project,
+                        'episode': ek,
+                        'sequence': qk,
+                        'config': sv,
+                        'status': 'Ready',
+                        'preview': get_first_image_of_dir(shot=sk,
+                                                          project=project,
+                                                          episode=ek,
+                                                          sequence=qk,
+                                                          config=sv),
+                        'nuke_project': get_nuke_project(project=project,
+                                                         episode=ek,
+                                                         sequence=qk,
+                                                         shot=sk,
+                                                         config=sv)
+                    }
+                )
+            ec_full_qc.extend(qc)
+            ec.append({'label': qk, 'value': qk, 'shots': qc})
+        pc_full_qc.extend(ec_full_qc)
+        ec[0].setdefault('shots', ec_full_qc)
+        result.append({'label': ek, 'value': ek, 'children': ec})
+    pc.setdefault('shots', pc_full_qc)
+    result.append(pc)
     return json.dumps(result)
 
 

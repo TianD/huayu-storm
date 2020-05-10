@@ -10,6 +10,11 @@ class Api {
         return axios.get('/get_project_list')
     }
 
+    get_shot_list(project) {
+        console.log(project)
+        return axios.post('/get_shot_list', {'value': project})
+    }
+
     get_thumbnail_url(shot) {
         return axios.defaults.baseURL + "/get_thumbnail?preview=" + shot["preview"]
     }

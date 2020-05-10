@@ -20,18 +20,18 @@ let tray = null;
 
 function createSubProc() {
   // start zmq server
-  // let zmqcmd = path.resolve(__dirname, '../engine/run_zmq.bat')
-  // zmqProc = spawn(zmqcmd)
-  // if (zmqProc != null) {
-  //   console.log('queue process success')
-  // }
+  let zmqcmd = path.resolve(__dirname, '../engine/run_zmq.bat')
+  zmqProc = spawn(zmqcmd)
+  if (zmqProc != null) {
+    console.log('queue process success')
+  }
 
   // start flask server
-  // let pycmd = path.resolve(__dirname, '../engine/run_engine.bat')
-  // engineProc = spawn(pycmd)
-  // if (engineProc != null) {
-  //   console.log('python process success')
-  // }
+  let pycmd = path.resolve(__dirname, '../engine/run_engine.bat')
+  engineProc = spawn(pycmd)
+  if (engineProc != null) {
+    console.log('python process success')
+  }
 }
 
 function exitSubProc() {
@@ -53,8 +53,8 @@ function createWindow() {
   })
 
   // 并且为你的应用加载index.html
-  // win.loadFile('./build/index.html')
-  win.loadURL('http://localhost:3000/');
+  win.loadFile('./build/index.html')
+  // win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
   win.webContents.openDevTools()

@@ -179,6 +179,14 @@ class DeadlineHelper(LogHelper):
                 plugin_info_file_path=self.__plugin_info_file_path
             )
         )
+        # clear file
+        self.path_and_file_helper.delete_file(
+            self.__job_info_file_path
+        )
+
+        self.path_and_file_helper.delete_file(
+            self.__plugin_info_file_path
+        )
 
 
 if __name__ == '__main__':

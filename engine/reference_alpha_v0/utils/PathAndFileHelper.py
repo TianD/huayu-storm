@@ -73,6 +73,10 @@ class PathAndFileHelper(LogHelper):
     def get_real_path(self, *args):
         return os.path.realpath(*args)
 
+    def delete_file(self, file_path):
+        if self.is_file(file_path):
+            os.remove(file_path)
+
     def is_dir(self, path):
         return os.path.isdir(path)
 

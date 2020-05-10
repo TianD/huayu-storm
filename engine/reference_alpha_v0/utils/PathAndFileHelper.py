@@ -70,6 +70,9 @@ class PathAndFileHelper(LogHelper):
             joined_file_path = os.path.abspath(joined_file_path)
         return joined_file_path
 
+    def get_real_path(self, *args):
+        return os.path.realpath(*args)
+
     def is_dir(self, path):
         return os.path.isdir(path)
 

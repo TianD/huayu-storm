@@ -41,6 +41,13 @@ class DeadlineHelper(LogHelper):
         super(DeadlineHelper, self).__init__(logger)
         self.config_helper = ConfigHelper(logger=logger)
         self.path_and_file_helper = self.config_helper.path_and_file_helper
+
+        self.DEADLINE_SCRIPT_TEMP_DIR = \
+            self.path_and_file_helper.join_file_path(
+                __file__, '../../../cache_dir', 'deadline'
+            )
+        self.DEADLINE_SCRIPT_TEMP_DIR = self.path_and_file_helper.get_real_path(self.DEADLINE_SCRIPT_TEMP_DIR)
+
         self.deadline_parameter_dict = {}
         self.__file_base_name = ''
         self.__job_info_file_path = ''
@@ -149,8 +156,16 @@ class DeadlineHelper(LogHelper):
 
     def __write_job_and_plugin_file(self):
         # todo get base dir for temp job info files
-        self.__job_info_file_path = '{}_jobInfo.txt'.format(self.__file_base_name)
-        self.__plugin_info_file_path = '{}_pluginInfo.txt'.format(self.__file_base_name)
+        self.__job_info_file_path_base_name = '{}_jobInfo.txt'.format(self.__file_base_name)
+        self.__plugin_info_file_path_base_name = '{}_pluginInfo.txt'.format(self.__file_base_name)
+
+        self.__job_info_file_path = self.path_and_file_helper.join_file_path(
+            self.DEADLINE_SCRIPT_TEMP_DIR, self.__job_info_file_path_base_name,
+        )
+        self.__plugin_info_file_path = self.path_and_file_helper.join_file_path(
+            self.DEADLINE_SCRIPT_TEMP_DIR, self.__plugin_info_file_path_base_name,
+        )
+
         self.path_and_file_helper.write_content_to_file(self.__job_info_file_path, self.__get_job_info())
         self.path_and_file_helper.write_content_to_file(self.__plugin_info_file_path, self.__get_plugin_info())
 

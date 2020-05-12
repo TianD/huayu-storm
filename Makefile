@@ -94,3 +94,13 @@ release:
 		npm run build ;\
 		npm run package ;\
 	';
+
+##### release electron package #####
+_change_static_in_html:
+	sed -i 's|="/|="./|g' build/index.html
+
+release_app:
+	@make set_nodejs_env command=' \
+		npm run build ;\
+	';
+	@make _change_static_in_html

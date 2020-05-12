@@ -4,7 +4,7 @@ nodejs_version=12.16.1
 nodejs_filename=node-v$(nodejs_version)-win-x64
 nodejs_url=https://npm.taobao.org/mirrors/node/v$(nodejs_version)/$(nodejs_filename).7z
 nodejs_bin_dir=nodejs_bin
-PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/c/Program Files/7-Zip:/usr/bin:/mingw64/bin:/c/windows/system32/windowspowershell/v1.0:/c/windows/system32
+PATH="`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/c/Program Files/7-Zip:/usr/bin:/mingw64/bin:/c/windows/system32/windowspowershell/v1.0:/c/windows/system32"
 PATH_WIN=%cd%/$(nodejs_bin_dir)/$(nodejs_filename);%cd%/node_modules/.bin;%GIT_INSTALL_ROOT%/mingw64/bin;c:/windows/system32/windowspowershell/v1.0;c:/windows/system32
 
 pack_name_base=[`git rev-parse --abbrev-ref HEAD`]$(app_name)--`git describe --tags`

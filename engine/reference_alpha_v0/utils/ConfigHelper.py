@@ -10,7 +10,10 @@ __file__ = os.path.abspath(inspect.getsourcefile(lambda: 0))
 import json
 from collections import OrderedDict
 
-import yaml
+try:
+    import yaml
+except:
+    import yaml_py2 as yaml
 
 from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper

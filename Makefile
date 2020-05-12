@@ -106,10 +106,11 @@ _archive_electron_app:
 	@bash -c '\
 			echo ;\
 			pushd dist;\
-				echo 7z a $(pack_name) \
-				huayu-storm-win32-x64/locales \
-				-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
-				-sfx7z.sfx ;\
+				7z a $(pack_name) \
+					huayu-storm-win32-x64 \
+					-x!huayu-storm-win32-x64/locales \
+					-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
+					-sfx7z.sfx ;\
 		'
 
 release_app:

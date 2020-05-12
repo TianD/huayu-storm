@@ -1,11 +1,14 @@
 
-project_name='huayu-storm'
+app_name='huayu-storm'
 nodejs_version=12.16.1
 nodejs_filename=node-v$(nodejs_version)-win-x64
 nodejs_url=https://npm.taobao.org/mirrors/node/v$(nodejs_version)/$(nodejs_filename).7z
 nodejs_bin_dir=nodejs_bin
-PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/usr/bin:/mingw64/bin:/c/windows/system32/windowspowershell/v1.0:/c/windows/system32
+PATH=`pwd`/$(nodejs_bin_dir)/$(nodejs_filename):`pwd`/node_modules/.bin:/c/Program Files/7-Zip:/usr/bin:/mingw64/bin:/c/windows/system32/windowspowershell/v1.0:/c/windows/system32
 PATH_WIN=%cd%/$(nodejs_bin_dir)/$(nodejs_filename);%cd%/node_modules/.bin;%GIT_INSTALL_ROOT%/mingw64/bin;c:/windows/system32/windowspowershell/v1.0;c:/windows/system32
+
+pack_name_base=[`git rev-parse --abbrev-ref HEAD`]$(app_name)--`git describe --tags`
+pack_name=$(pack_name_base)-installer.exe
 
 help:
 	echo help
@@ -46,13 +49,13 @@ npm_run:
 	@make set_nodejs_env command='$(command)'
 
 del_app:
-	@rm -rf $(project_name)
+	@rm -rf $(app_name)
 
 create_app:
 	@make set_nodejs_env command=' \
 		node -v;\
-		npx create-react-app $(project_name) &&\
-		mv $(project_name)/* ./ &&\
+		npx create-react-app $(app_name) &&\
+		mv $(app_name)/* ./ &&\
 		npm install antd --save ;\
  	';
 
@@ -98,6 +101,14 @@ release:
 ##### release electron package #####
 _change_static_in_html:
 	sed -i 's|="/|="./|g' build/index.html
+
+_archive_electron_app:
+	@echo ;\
+		pushd dist;\
+		7z a $${pack_name} \
+			huayu-storm-win32-x64/locales \
+			-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
+			-sfx7z.sfx ;
 
 release_app:
 	@make set_nodejs_env command=' \

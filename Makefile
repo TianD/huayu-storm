@@ -121,3 +121,4 @@ release_app:
 	@make set_nodejs_env command=' \
 		npm run package ;\
 	';
+	@make _archive_electron_app

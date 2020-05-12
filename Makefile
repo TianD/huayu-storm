@@ -104,3 +104,6 @@ release_app:
 		npm run build ;\
 	';
 	@make _change_static_in_html
+	@make set_nodejs_env command=' \
+		npm run package ;\
+	';

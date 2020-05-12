@@ -103,12 +103,14 @@ _change_static_in_html:
 	sed -i 's|="/|="./|g' build/index.html
 
 _archive_electron_app:
-	@echo ;\
-		pushd dist;\
-		7z a $${pack_name} \
-			huayu-storm-win32-x64/locales \
-			-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
-			-sfx7z.sfx ;
+	@bash -c '\
+			echo ;\
+			pushd dist;\
+				echo 7z a $(pack_name) \
+				huayu-storm-win32-x64/locales \
+				-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
+				-sfx7z.sfx ;\
+		'
 
 release_app:
 	@make set_nodejs_env command=' \

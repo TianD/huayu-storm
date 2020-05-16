@@ -71,7 +71,7 @@ class DeadlineHelper(LogHelper):
         self.debug('[ name_item_list ]', name_item_list)
         if len(name_item_list) >= 3:
             scene_info_match_list = \
-                re.findall(self.file_regex, scene_file_name, re.I)
+                re.findall(file_regex, scene_file_name, re.I)
             self.debug(scene_info_match_list)
 
             if scene_info_match_list:

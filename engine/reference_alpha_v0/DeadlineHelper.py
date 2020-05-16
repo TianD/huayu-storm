@@ -132,10 +132,12 @@ class DeadlineHelper(LogHelper):
                 command=command,
             ).strip()
 
-        frame_start_end_list = self.path_and_file_helper.run_command_with_extractor(
-            formatted_command,
-            r'\[config\]\s+(\d+)\s(\d+)\s+\[config\]'
-        )
+        # frame_start_end_list = self.path_and_file_helper.run_command_with_extractor(
+        #     formatted_command,
+        #     r'\[config\]\s+(\d+)\s(\d+)\s+\[config\]'
+        # )
+
+        frame_start_end_list = [[1, 200]]
 
         frame_start = 0
         frame_end = 0
@@ -173,8 +175,9 @@ class DeadlineHelper(LogHelper):
         self.__write_job_and_plugin_file()
         # todo add run_command to helper
         self.path_and_file_helper.run_command(
-            '{deadline_command_path} -SubmitMultipleJobs -job {job_info_file_path} {plugin_info_file_path}'.format(
-                deadline_command_path=self.__deadline_command_bin_path,
+            '"{deadline_command_path}" -SubmitMultipleJobs -job {job_info_file_path} {plugin_info_file_path}'.format(
+                deadline_command_path=
+                self.path_and_file_helper.get_windows_command_exe_path(self.__deadline_command_bin_path),
                 job_info_file_path=self.__job_info_file_path,
                 plugin_info_file_path=self.__plugin_info_file_path
             )
@@ -193,7 +196,7 @@ if __name__ == '__main__':
     deadline_helper = DeadlineHelper()
     deadline_helper.load_submit_parameter(
         'DeerRun',
-        r'E:\codeLib\___test___\my_proj\py_scripts\pipeline_code\project\EP129_Q001_S001_BGCLR.mb'
+        r"F:\project\EP129_Q001_S001_BGCLR.mb"
     )
     print(deadline_helper.deadline_parameter_dict)
     deadline_helper.submit_to_deadline()

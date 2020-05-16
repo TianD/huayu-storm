@@ -142,11 +142,17 @@ class PathAndFileHelper(LogHelper):
         return return_path_list
 
     def run_command(self, command):
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
-        process.wait()
+        env = os.environ
+        env['PYTHONPATH'] = ''
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env)
+        print(process.wait())
 
     def run_command_with_extractor(self, command, extractor_regex_string):
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+
+        env = os.environ
+        env['PYTHONPATH'] = ''
+
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env)
 
         regex_pattern = re.compile(extractor_regex_string)
         extracted_list = []

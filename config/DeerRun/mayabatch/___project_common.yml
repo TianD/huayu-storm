@@ -11,14 +11,23 @@ common_setting:
     maya_batch_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/mayabatch.exe'
     # maya frame start / end file for deadline
     #   {project_file_name} => z:/xxx/anim_xx.mb # input file name
-    maya_file_info_file_path: '{project_file_name}_maya_info.json'
     maya_file_info_file_content_script:
         script: |
             import json
             ################ config maya info path #####################
-            maya_file_info_file_path={project_file_name}_maya_info.json
+            import os
+            project_file_base_name = os.path.basename({project_file_name})
+            maya_file_info_file_path = os.path.join(
+                {temp_dir_name}    , maya_config_json ,
+                project_file_base_name , '_maya_info.json'
+            )
 
-            maya_info_dict = {}
+            # ensure dir exists
+            maya_file_info_dir_path =os.path.dirname(maya_file_info_file_path)
+            if not os.path.isdir(maya_file_info_dir_path):
+                os.mkdirs(maya_file_info_dir_path)
+
+            maya_info_dict = {{}}
             frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
             maya_info_dict['frame_start'] = frame_start
 

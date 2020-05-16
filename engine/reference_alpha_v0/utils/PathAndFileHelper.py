@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import fnmatch
 import hashlib
+import json
 import os
 import re
 import subprocess
@@ -188,6 +189,22 @@ class PathAndFileHelper(LogHelper):
         process.wait()
         return extracted_list
 
+    def read_json_file_to_dict(self, json_file_path, default_value={}):
+        try:
+            with open(json_file_path, 'r') as f:
+                json_file_content = f.read()
+        except Exception as e:
+            self.debug('read json file : {} , error : {}'.format(json_file_path, e))
+            json_file_content = '{}'
+
+        try:
+            json_file_dict = json.loads(json_file_content)
+        except Exception as e:
+            self.debug('read json file : {} , error : {}'.format(json_file_path, e))
+            json_file_dict = default_value or {}
+
+        return json_file_dict
+
 
 if __name__ == '__main__':
     path_and_file_helper = PathAndFileHelper()
@@ -204,3 +221,6 @@ if __name__ == '__main__':
 
     # test write content to file
     path_and_file_helper.write_content_to_file('c:/abc/adf/adf.cxt', '123132\ndfdasf')
+    print(
+        path_and_file_helper.read_json_file_to_dict('c:/abc.json')
+    )

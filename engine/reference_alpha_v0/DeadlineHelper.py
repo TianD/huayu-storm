@@ -83,6 +83,11 @@ class DeadlineHelper(LogHelper):
                 'common_setting.maya_bin_path', '', layer_config
             )
 
+        maya_file_info_file_path = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.maya_file_info_file_path', '', layer_config
+            )
+
         maya_batch_bin_path = \
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.maya_batch_bin_path', '', layer_config

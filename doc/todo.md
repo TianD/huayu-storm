@@ -1,0 +1,2 @@
+- [x] write maya frame start / end to json 
+- [ ] submit deadline file after maya splited files

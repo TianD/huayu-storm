@@ -6,6 +6,9 @@ from collections import OrderedDict
 import maya.cmds as maya_cmds
 import maya.mel as maya_mel
 import pymel.core as pymel_core
+
+from DeadlineHelper import DeadlineHelper
+
 try:
     import yaml
 except:
@@ -592,6 +595,14 @@ class ReferenceExporter(ReferenceHelper):
 
         return current_pattern_list
 
+    def submit_to_deadline(self, project_name, scene_file_name):
+        deadline_helper = DeadlineHelper(logger=self.logger)
+        deadline_helper.load_submit_parameter(project_name, scene_file_name)
+        self.debug(deadline_helper.deadline_parameter_dict)
+        self.debug('READY submit project : "{}" , file : "{}" to deadeline'.format(project_name, scene_file_name))
+        deadline_helper.submit_to_deadline()
+        self.debug('DONE submit project : "{}" , file : "{}" to deadeline'.format(project_name, scene_file_name))
+
     IMPORT_FILE_NAMESPACE_SUFFIX = '_'
 
     def process_all_config(self, project_name):
@@ -755,6 +766,9 @@ class ReferenceExporter(ReferenceHelper):
                                 )
                 # -------------------------------- export file ---------------------------
                 self.scene_helper.export(output_file_name)
+                # -------------------------------- submit file to deadline --------------
+                output_scene_file_name = output_file_name
+                self.submit_to_deadline(project_name, output_scene_file_name)
 
     def process_all_render_layer(self):
         return self.scene_helper.process_all_render_layer()

@@ -27,6 +27,22 @@ common_setting:
                 '{temp_dir_name}'    , 'cache_dir/maya_config_json' ,
                 project_file_base_name + '_maya_info.json'
             )
+
+            # check file exists or not
+            if not os.path.isfile(maya_file_info_file_path):
+                # ensure dir exists
+                maya_file_info_dir_path = os.path.dirname(maya_file_info_file_path)
+                if not os.path.isdir(maya_file_info_dir_path):
+                    os.mkdirs(maya_file_info_dir_path)
+
+                maya_info_dict = dict()
+                maya_info_dict['frame_start'] = 1
+
+                maya_info_dict['frame_end'] = 2
+
+                with open( maya_file_info_file_path , 'w' ) as f:
+                    f.write( json.dumps(maya_info_dict) )
+
             return_result = maya_file_info_file_path.replace('\\','/')
 
     maya_file_info_file_content_script:

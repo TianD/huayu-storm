@@ -31,8 +31,8 @@ class PathAndFileHelper(LogHelper):
     def get_temp_dir_for_maya(self):
         return \
             self.join_file_path(
-                self.get_temp_dir(), 'maya_config'
-                                     ** {PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+                self.get_temp_dir(), 'maya_config',
+                **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
             )
 
     def get_path_to_slash(self, path_string):

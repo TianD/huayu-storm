@@ -605,6 +605,12 @@ class ReferenceExporter(ReferenceHelper):
             )
             self.scene_helper.load_camera_regex(episode_scene_shot_regex)
 
+            formate_dict = self.scene_helper.scene_format_dict()
+            formate_dict.update(
+                {
+                    'project_file_name': current_scene_file_name,
+                }
+            )
             file_render_setting_dict = self.format_json_dict_with_format_dict(
                 file_render_setting_dict, self.scene_helper.scene_format_dict()
             )

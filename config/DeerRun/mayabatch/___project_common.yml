@@ -10,8 +10,8 @@ common_setting:
     maya_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/maya.exe'
     maya_batch_bin_path: 'C:/Program Files/Autodesk/Maya2017/bin/mayabatch.exe'
     # maya frame start / end file for deadline
-    maya_file_info_file_path:
-        'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}_Q{sequence:03}_S{shot:03}_maya_info.json'
+    #   {project_file_name} => z:/xxx/anim_xx.mb # input file name
+    maya_file_info_file_path: '{project_file_name}_maya_info.json'
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     object_selector:

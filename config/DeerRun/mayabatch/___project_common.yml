@@ -24,7 +24,7 @@ common_setting:
             import os
             project_file_base_name = os.path.basename('{project_file_name}')
             maya_file_info_file_path = os.path.join(
-                '{temp_dir_name}'    , 'maya_config_json' ,
+                '{temp_dir_name}'    , 'cache_dir/maya_config_json' ,
                 project_file_base_name + '_maya_info.json'
             )
             return_result = maya_file_info_file_path.replace('\\','/')
@@ -36,14 +36,14 @@ common_setting:
             import os
             project_file_base_name = os.path.basename('{project_file_name}')
             maya_file_info_file_path = os.path.join(
-                '{temp_dir_name}'    , 'maya_config_json' ,
+                '{temp_dir_name}'    , 'cache_dir/maya_config_json' ,
                 project_file_base_name + '_maya_info.json'
             )
 
             # check file exists or not
             if not os.path.isfile(maya_file_info_file_path):
                 # ensure dir exists
-                maya_file_info_dir_path =os.path.dirname(maya_file_info_file_path)
+                maya_file_info_dir_path = os.path.dirname(maya_file_info_file_path)
                 if not os.path.isdir(maya_file_info_dir_path):
                     os.mkdirs(maya_file_info_dir_path)
 

@@ -58,6 +58,14 @@ class DeadlineHelper(LogHelper):
 
     def load_submit_parameter(self, project_name, scene_file_path):
         all_config = self.config_helper.get_all_config()
+
+        format_dict = {
+            'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path),
+            'episode': 1,
+            'sequence': 1,
+            'shot': 1,
+        }
+
         current_project_config_dict = all_config.get(project_name, {})
         layer_config = list(current_project_config_dict.values())[0]
 
@@ -92,6 +100,10 @@ class DeadlineHelper(LogHelper):
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.maya_batch_bin_path', '', layer_config
             )
+
+        maya_file_info_file_path = self.config_helper.get_value_with_exec(
+            self.config_helper.format_json_with_format_dict(maya_file_info_file_path, format_dict)
+        )
 
         # read file as config
         maya_file_info = self.path_and_file_helper.read_json_file_to_dict(maya_file_info_file_path, {})

@@ -24,10 +24,10 @@ common_setting:
             import os
             project_file_base_name = os.path.basename('{project_file_name}')
             maya_file_info_file_path = os.path.join(
-                '{temp_dir_name}'    , maya_config_json ,
-                project_file_base_name , '_maya_info.json'
+                '{temp_dir_name}'    , 'maya_config_json' ,
+                project_file_base_name + '_maya_info.json'
             )
-            return_result = maya_file_info_file_path
+            return_result = maya_file_info_file_path.replace('\\','/')
 
     maya_file_info_file_content_script:
         script: |
@@ -37,7 +37,7 @@ common_setting:
             project_file_base_name = os.path.basename('{project_file_name}')
             maya_file_info_file_path = os.path.join(
                 '{temp_dir_name}'    , 'maya_config_json' ,
-                project_file_base_name , '_maya_info.json'
+                project_file_base_name + '_maya_info.json'
             )
 
             # check file exists or not
@@ -47,7 +47,7 @@ common_setting:
                 if not os.path.isdir(maya_file_info_dir_path):
                     os.mkdirs(maya_file_info_dir_path)
 
-                maya_info_dict = {{}}
+                maya_info_dict = dict()
                 frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
                 maya_info_dict['frame_start'] = frame_start
 

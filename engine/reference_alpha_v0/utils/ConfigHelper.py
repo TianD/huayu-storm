@@ -115,18 +115,24 @@ class ConfigHelper(LogHelper):
             self.error(e)
             value = default_value
 
+        return value
+
+    def get_value_with_exec(self, code):
         # try get script value
-        code = value
         try:
-            code_string = json.loads(code)[ConfigHelper.KEY_SCRIPT]
+            code_string = code[ConfigHelper.KEY_SCRIPT]
             local_dict = {}
             exec(code_string, globals(), local_dict)
             return_value = local_dict.get(ConfigHelper.KEY_RETURN_VALUE)
         except Exception as e:
             self.debug('[-] exec failed , error : {}'.format(e))
-            return_value = value
-
+            return_value = code
         return return_value
+
+    def format_json_with_format_dict(self, json_object, format_dict):
+        json_string = yaml.dump(json_object)
+        json_string = json_string.format(**format_dict)
+        return yaml.load(json_string)
 
     def get_all_config(self):
         config_dir_root = self.path_and_file_helper.join_file_path(

@@ -648,6 +648,12 @@ class ReferenceExporter(ReferenceHelper):
             # -------------------------------- process all layer -------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 
+            # ---------------------- get maya_info.json path -----------------------------
+            current_key = 'common_setting.maya_file_info_file_content_script'
+            maya_file_info_file_content_script = self.config_helper.get_json_value_with_key_path(
+                current_key, '', file_render_setting_dict
+            )
+
             # -------------------------------- DEBUG LAYER FILE CODE ---------------------
             # if 'IDP' not in output_file_name:
             #     continue
@@ -667,6 +673,13 @@ class ReferenceExporter(ReferenceHelper):
                     current_layer_name = current_render_layer_setting.get('layer_name', '')
                     if current_layer_name:
                         self.debug('[*] start to process layer : {}'.format(current_layer_name))
+                        ###### --------------------- write maya_info.json --------------------
+                        self.scene_helper.set_attr_with_command_param_list_batch_list(
+                            [
+                                ['maya_file_info_file_content_script', maya_file_info_file_content_script]
+                            ]
+                        )
+
                         ###### --------------------- add objects to layer --------------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
                         current_select_pattern_list = self.get_pattern_list_from_selector_list(

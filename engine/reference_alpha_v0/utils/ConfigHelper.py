@@ -77,6 +77,7 @@ class YamlHelper(LogHelper):
 
 
 class ConfigHelper(LogHelper):
+
     def __init__(self, logger=None):
         super(ConfigHelper, self).__init__(logger=logger)
         self.path_and_file_helper = PathAndFileHelper(logger=logger)
@@ -98,6 +99,9 @@ class ConfigHelper(LogHelper):
     def show_json(self, json_dict):
         print(json.dumps(json_dict, indent=2))
 
+    KEY_SCRIPT = 'script'
+    KEY_RETURN_VALUE = 'return_result'
+
     def get_json_value_with_key_path(self, key_path, default_value, json_dict):
         try:
             key_list = key_path.split('.')
@@ -110,7 +114,19 @@ class ConfigHelper(LogHelper):
         except Exception as e:
             self.error(e)
             value = default_value
-        return value
+
+        # try get script value
+        code = value
+        try:
+            code_string = json.loads(code)[ConfigHelper.KEY_SCRIPT]
+            local_dict = {}
+            exec(code_string, globals(), local_dict)
+            return_value = local_dict.get(ConfigHelper.KEY_RETURN_VALUE)
+        except Exception as e:
+            self.debug('[-] exec failed , error : {}'.format(e))
+            return_value = value
+
+        return return_value
 
     def get_all_config(self):
         config_dir_root = self.path_and_file_helper.join_file_path(

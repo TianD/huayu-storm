@@ -12,6 +12,21 @@ common_setting:
     # maya frame start / end file for deadline
     #   {project_file_name} => z:/xxx/anim_xx.mb # input file name
     maya_file_info_file_path: '{project_file_name}_maya_info.json'
+    maya_file_info_file_content_script:
+        script: |
+            import json
+            ################ config maya info path #####################
+            maya_file_info_file_path={project_file_name}_maya_info.json
+
+            maya_info_dict = {}
+            frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
+            maya_info_dict['frame_start'] = frame_start
+
+            frame_end = maya_cmds.playbackOptions(q=True,animationEndTime=True)
+            maya_info_dict['frame_end'] = frame_end
+
+            with open( maya_file_info_file_path , 'w' ) as f:
+                f.write( json.dumps(maya_info_dict) )
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     object_selector:

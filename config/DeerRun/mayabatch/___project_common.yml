@@ -40,20 +40,22 @@ common_setting:
                 project_file_base_name , '_maya_info.json'
             )
 
-            # ensure dir exists
-            maya_file_info_dir_path =os.path.dirname(maya_file_info_file_path)
-            if not os.path.isdir(maya_file_info_dir_path):
-                os.mkdirs(maya_file_info_dir_path)
+            # check file exists or not
+            if not os.path.isfile(maya_file_info_file_path):
+                # ensure dir exists
+                maya_file_info_dir_path =os.path.dirname(maya_file_info_file_path)
+                if not os.path.isdir(maya_file_info_dir_path):
+                    os.mkdirs(maya_file_info_dir_path)
 
-            maya_info_dict = {{}}
-            frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
-            maya_info_dict['frame_start'] = frame_start
+                maya_info_dict = {{}}
+                frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
+                maya_info_dict['frame_start'] = frame_start
 
-            frame_end = maya_cmds.playbackOptions(q=True,animationEndTime=True)
-            maya_info_dict['frame_end'] = frame_end
+                frame_end = maya_cmds.playbackOptions(q=True,animationEndTime=True)
+                maya_info_dict['frame_end'] = frame_end
 
-            with open( maya_file_info_file_path , 'w' ) as f:
-                f.write( json.dumps(maya_info_dict) )
+                with open( maya_file_info_file_path , 'w' ) as f:
+                    f.write( json.dumps(maya_info_dict) )
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     object_selector:

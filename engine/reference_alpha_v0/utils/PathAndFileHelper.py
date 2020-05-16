@@ -14,6 +14,27 @@ class PathAndFileHelper(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger)
 
+    def get_app_dir_root(self):
+        return \
+            self.join_file_path(
+                __file__, '../../../..',
+                **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+            )
+
+    def get_temp_dir(self):
+        return \
+            self.join_file_path(
+                self.get_app_dir_root(),
+                **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+            )
+
+    def get_temp_dir_for_maya(self):
+        return \
+            self.join_file_path(
+                self.get_temp_dir(), 'maya_config'
+                                     ** {PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
+            )
+
     def get_path_to_slash(self, path_string):
         return path_string.replace('\\', '/')
 

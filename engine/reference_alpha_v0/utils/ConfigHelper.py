@@ -19,6 +19,22 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 
 
+# yaml ordered dumps / loads
+def represent_ordereddict(dumper, data):
+    value = []
+
+    for item_key, item_value in data.items():
+        node_key = dumper.represent_data(item_key)
+        node_value = dumper.represent_data(item_value)
+
+        value.append((node_key, node_value))
+
+    return yaml.nodes.MappingNode(u'tag:yaml.org,2002:map', value)
+
+
+yaml.add_representer(OrderedDict, represent_ordereddict)
+
+
 class YamlHelper(LogHelper):
     def __init__(self, logger=None):
         super(YamlHelper, self).__init__(logger=logger)
@@ -160,6 +176,12 @@ class ConfigHelper(LogHelper):
                     return_all_layer_setting_dict[project_name][layer_setting_file_base_name] = \
                         json.loads(json.dumps(layer_setting_dict))
 
+        # format temp_dir_name
+        return_all_layer_setting_dict_string = yaml.dump(return_all_layer_setting_dict)
+        return_all_layer_setting_dict_string = return_all_layer_setting_dict_string.replace(
+            '{temp_dir_name}', self.path_and_file_helper.get_temp_dir()
+        )
+        return_all_layer_setting_dict = yaml.load(return_all_layer_setting_dict_string)
         # self.show_json(all_layer_setting_dict)
         return return_all_layer_setting_dict
 

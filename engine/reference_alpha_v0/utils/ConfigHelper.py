@@ -179,7 +179,10 @@ class ConfigHelper(LogHelper):
         # format temp_dir_name
         return_all_layer_setting_dict_string = yaml.dump(return_all_layer_setting_dict)
         return_all_layer_setting_dict_string = return_all_layer_setting_dict_string.replace(
-            '{temp_dir_name}', self.path_and_file_helper.get_path_to_slash(self.path_and_file_helper.get_temp_dir())
+            '{temp_dir_name}',
+            self.path_and_file_helper.get_path_to_slash(
+                self.path_and_file_helper.get_temp_dir_for_maya()
+            )
         )
         return_all_layer_setting_dict = yaml.load(return_all_layer_setting_dict_string)
         # self.show_json(all_layer_setting_dict)

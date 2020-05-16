@@ -96,8 +96,8 @@ class DeadlineHelper(LogHelper):
         # read file as config
         maya_file_info = self.path_and_file_helper.read_json_file_to_dict(maya_file_info_file_path, {})
         maya_frame_range = '{frame_start}-{frame_end}'.format(
-            maya_file_info.get('frame_start', 1),
-            maya_file_info.get('frame_end', 2)
+            frame_start=maya_file_info.get('frame_start', 1),
+            frame_end=maya_file_info.get('frame_end', 2)
         )
 
         self.__deadline_command_bin_path = deadline_command_bin_path

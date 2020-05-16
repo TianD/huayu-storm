@@ -108,8 +108,8 @@ def get_shot_list():
         sequence = data.get('sequence')
         shot = data.get('shot')
         temp_dict.setdefault(episode, dict()). \
-                  setdefault(sequence, dict()). \
-                  setdefault(shot, project_config)
+            setdefault(sequence, dict()). \
+            setdefault(shot, project_config)
 
     result = []
     pc = {'label': 'All', 'value': 'all'}

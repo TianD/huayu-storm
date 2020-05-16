@@ -1,6 +1,7 @@
 # coding=utf8
 from __future__ import absolute_import
 
+import re
 import socket
 
 from LogHelper import LogHelper
@@ -56,18 +57,58 @@ class DeadlineHelper(LogHelper):
         self.__maya_bin_path = ''
         self.__maya_batch_bin_path = ''
 
+    NAME_SPLITTER = '_'
+
+    def get_episode_sequence_shot_from_filename(self, file_regex, scene_file_path):
+        scene_file_name = self.path_and_file_helper.get_base_name(scene_file_path)
+
+        name_item_list = scene_file_name.split(DeadlineHelper.NAME_SPLITTER)
+
+        episode = None
+        sequence = None
+        shot = None
+
+        self.debug('[ name_item_list ]', name_item_list)
+        if len(name_item_list) >= 3:
+            scene_info_match_list = \
+                re.findall(self.file_regex, scene_file_name, re.I)
+            self.debug(scene_info_match_list)
+
+            if scene_info_match_list:
+                valid_match_list = scene_info_match_list[0]
+            else:
+                valid_match_list = []
+            if len(valid_match_list) >= 3:
+                episode = valid_match_list[0]
+                sequence = valid_match_list[1]
+                shot = valid_match_list[2]
+            else:
+                self.error('no enough match item for episode_scene_shot')
+        else:
+            self.error('no enough match item for episode_scene_shot')
+
+        return episode, sequence, shot
+
     def load_submit_parameter(self, project_name, scene_file_path):
         all_config = self.config_helper.get_all_config()
 
-        format_dict = {
-            'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path),
-            'episode': 1,
-            'sequence': 1,
-            'shot': 1,
-        }
-
         current_project_config_dict = all_config.get(project_name, {})
         layer_config = list(current_project_config_dict.values())[0]
+
+        episode_scene_shot_regex = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.episode_scene_shot_regex', '', layer_config
+            )
+
+        episode, sequence, shot = \
+            self.get_episode_sequence_shot_from_filename(episode_scene_shot_regex, scene_file_path)
+
+        format_dict = {
+            'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path),
+            'episode': episode or 1,
+            'sequence': sequence or 1,
+            'shot': shot or 1,
+        }
 
         deadline_command_bin_path = \
             self.config_helper.get_json_value_with_key_path(

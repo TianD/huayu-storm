@@ -36,7 +36,7 @@ common_setting:
             import os
             project_file_base_name = os.path.basename('{project_file_name}')
             maya_file_info_file_path = os.path.join(
-                '{temp_dir_name}'    , maya_config_json ,
+                '{temp_dir_name}'    , 'maya_config_json' ,
                 project_file_base_name , '_maya_info.json'
             )
 

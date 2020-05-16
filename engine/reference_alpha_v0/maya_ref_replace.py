@@ -6,7 +6,10 @@ from collections import OrderedDict
 import maya.cmds as maya_cmds
 import maya.mel as maya_mel
 import pymel.core as pymel_core
-import yaml
+try:
+    import yaml
+except:
+    import yaml_py2 as yaml
 
 
 def represent_ordereddict(dumper, data):

@@ -129,49 +129,6 @@ class DeadlineHelper(LogHelper):
         }
         self.deadline_parameter_dict = deadline_parameter_dict
 
-    def __get_maya_frame_start_and_end(self, scene_file_path):
-        command = r"""
-            import sys
-            import os
-            import maya.cmds as mc
-            mc.file('{file_path}',open=True,force=True,iv=True)
-            frame_start = mc.playbackOptions(q=True,animationStartTime=True)
-            frame_end = mc.playbackOptions(q=True,animationEndTime=True)
-            frame_start = int(frame_start)
-            frame_end = int(frame_end)
-            print('[config] {{}} {{}} [config]'.format(frame_start,frame_end))
-            mc.quit(a=1,f=1,ec=1)
-        """.strip().format(
-            file_path=self.path_and_file_helper.get_path_to_slash(scene_file_path),
-        ).replace('\\', '/')
-
-        command = ';'.join(
-            command_line.strip()
-            for command_line in command.splitlines()
-        )
-
-        formatted_command = \
-            r"""  "{maya_bin}" -command "python(\"{command}\");"  """.format(
-                maya_bin=self.path_and_file_helper.get_windows_command_exe_path(self.__maya_batch_bin_path),
-                command=command,
-            ).strip()
-
-        # frame_start_end_list = self.path_and_file_helper.run_command_with_extractor(
-        #     formatted_command,
-        #     r'\[config\]\s+(\d+)\s(\d+)\s+\[config\]'
-        # )
-
-        frame_start_end_list = [[1, 200]]
-
-        frame_start = 0
-        frame_end = 0
-        try:
-            frame_start, frame_end = frame_start_end_list[0]
-        except Exception as e:
-            self.error('get frame start / end from command falied', e)
-
-        return '{}-{}'.format(frame_start, frame_end)
-
     def __get_job_info(self):
         job_info_string = JOB_INFO_FORMAT_STRING.format(**self.deadline_parameter_dict)
         return job_info_string

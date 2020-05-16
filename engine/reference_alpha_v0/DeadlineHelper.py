@@ -93,6 +93,13 @@ class DeadlineHelper(LogHelper):
                 'common_setting.maya_batch_bin_path', '', layer_config
             )
 
+        # read file as config
+        maya_file_info = self.path_and_file_helper.read_json_file_to_dict(maya_file_info_file_path, {})
+        maya_frame_range = '{frame_start}-{frame_end}'.format(
+            maya_file_info.get('frame_start', 1),
+            maya_file_info.get('frame_end', 2)
+        )
+
         self.__deadline_command_bin_path = deadline_command_bin_path
         self.__maya_bin_path = maya_bin_path
         self.__maya_batch_bin_path = maya_batch_bin_path
@@ -104,7 +111,7 @@ class DeadlineHelper(LogHelper):
             'project_dir': project_dir,
             'maya_version': maya_version,
             'submit_user_name': 'python_submitter',  # fixed submitter name
-            'frame_range': self.__get_maya_frame_start_and_end(scene_file_path),
+            'frame_range': maya_frame_range,
             'machine_name': socket.gethostname(),
             'output_dir': output_dir,
         }

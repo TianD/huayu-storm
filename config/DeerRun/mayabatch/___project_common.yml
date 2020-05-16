@@ -64,10 +64,10 @@ common_setting:
                     os.makedirs(maya_file_info_dir_path)
 
                 maya_info_dict = dict()
-                frame_start = maya_cmds.playbackOptions(q=True,animationStartTime=True)
+                frame_start = int(maya_cmds.playbackOptions(q=True,animationStartTime=True))
                 maya_info_dict['frame_start'] = frame_start
 
-                frame_end = maya_cmds.playbackOptions(q=True,animationEndTime=True)
+                frame_end = int(maya_cmds.playbackOptions(q=True,animationEndTime=True))
                 maya_info_dict['frame_end'] = frame_end
 
                 with open( maya_file_info_file_path , 'w' ) as f:

@@ -597,7 +597,7 @@ class ReferenceExporter(ReferenceHelper):
 
     def submit_to_deadline(self, project_name, scene_file_name):
         deadline_helper = DeadlineHelper(logger=self.logger)
-        deadline_helper.load_submit_parameter(project_name, scene_file_name)
+        deadline_helper.load_submit_parameter(project_name, self.scene_helper.get_current_scene_name(), scene_file_name)
         self.debug(deadline_helper.deadline_parameter_dict)
         self.debug('READY submit project : "{}" , file : "{}" to deadeline'.format(project_name, scene_file_name))
         deadline_helper.submit_to_deadline()
@@ -658,7 +658,7 @@ class ReferenceExporter(ReferenceHelper):
                     self.debug('[-] import file , not existed : {}'.format(import_file))
 
             # -------------------------------- set camera --------------------------------
-            ref_exporter.process_camera()
+            self.process_camera()
             # -------------------------------- process all layer -------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
 

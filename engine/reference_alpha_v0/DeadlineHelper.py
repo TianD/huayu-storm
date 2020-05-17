@@ -89,7 +89,7 @@ class DeadlineHelper(LogHelper):
 
         return episode, sequence, shot
 
-    def load_submit_parameter(self, project_name, scene_file_path):
+    def load_submit_parameter(self, project_name, scene_file_path_of_origin, scene_file_path):
         all_config = self.config_helper.get_all_config()
 
         current_project_config_dict = all_config.get(project_name, {})
@@ -101,10 +101,10 @@ class DeadlineHelper(LogHelper):
             )
 
         episode, sequence, shot = \
-            self.get_episode_sequence_shot_from_filename(episode_scene_shot_regex, scene_file_path)
+            self.get_episode_sequence_shot_from_filename(episode_scene_shot_regex, scene_file_path_of_origin)
 
         format_dict = {
-            'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path),
+            'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path_of_origin),
             'episode': episode or 1,
             'sequence': sequence or 1,
             'shot': shot or 1,
@@ -218,6 +218,7 @@ if __name__ == '__main__':
     deadline_helper = DeadlineHelper()
     deadline_helper.load_submit_parameter(
         'DeerRun',
+        r"F:\project\EP129_Q001_S001_BGCLR.mb",
         r"F:\project\EP129_Q001_S001_BGCLR.mb"
     )
     print(deadline_helper.deadline_parameter_dict)

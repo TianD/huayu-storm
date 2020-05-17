@@ -128,9 +128,7 @@ class DeadlineHelper(LogHelper):
                 'common_setting.output_dir', '', layer_config
             )
         # expand var
-        output_dir = self.config_helper.get_value_with_exec(
-            self.config_helper.format_json_with_format_dict(output_dir, format_dict)
-        )
+        output_dir = self.config_helper.format_json_with_format_dict(output_dir, format_dict)
 
         maya_bin_path = \
             self.config_helper.get_json_value_with_key_path(

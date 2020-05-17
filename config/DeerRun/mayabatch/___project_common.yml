@@ -3,7 +3,7 @@ render_plugin_name: redshift4maya.mll
 common_setting:
     # for deadline to submit scene file
     project_dir: 'z:/DeerRun'
-    output_dir: 'f:/output'
+    output_dir: 'f:/output/EP{episode:03}/Q{sequence:03}/S{shot:03}'
     maya_version: '2017'
     deadline_command_bin_path: "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand.exe"
     # for make maya render layer file / deadline get file [frame start/end]

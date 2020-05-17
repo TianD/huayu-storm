@@ -122,10 +122,15 @@ class DeadlineHelper(LogHelper):
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.maya_version', '', layer_config
             )
+
         output_dir = \
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.output_dir', '', layer_config
             )
+        # expand var
+        output_dir = self.config_helper.get_value_with_exec(
+            self.config_helper.format_json_with_format_dict(output_dir, format_dict)
+        )
 
         maya_bin_path = \
             self.config_helper.get_json_value_with_key_path(
@@ -136,15 +141,15 @@ class DeadlineHelper(LogHelper):
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.maya_file_info_file_path', '', layer_config
             )
+        # expand var
+        maya_file_info_file_path = self.config_helper.get_value_with_exec(
+            self.config_helper.format_json_with_format_dict(maya_file_info_file_path, format_dict)
+        )
 
         maya_batch_bin_path = \
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.maya_batch_bin_path', '', layer_config
             )
-
-        maya_file_info_file_path = self.config_helper.get_value_with_exec(
-            self.config_helper.format_json_with_format_dict(maya_file_info_file_path, format_dict)
-        )
 
         # read file as config
         maya_file_info = self.path_and_file_helper.read_json_file_to_dict(maya_file_info_file_path, {})

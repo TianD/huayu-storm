@@ -125,7 +125,7 @@ class ConfigHelper(LogHelper):
             exec(code_string, globals(), local_dict)
             return_value = local_dict.get(ConfigHelper.KEY_RETURN_VALUE)
         except Exception as e:
-            self.debug('[-] exec failed , error : {}'.format(e))
+            self.debug('[-] exec failed , error : {} , code : {} '.format(e, repr(code)))
             return_value = code
         return return_value
 

@@ -194,7 +194,13 @@ class DeadlineHelper(LogHelper):
         )
 
         self.path_and_file_helper.write_content_to_file(self.__job_info_file_path, self.__get_job_info())
-        self.path_and_file_helper.write_content_to_file(self.__plugin_info_file_path, self.__get_plugin_info())
+
+        # todo force set to arnold when IDP
+
+        plugin_info = self.__get_plugin_info()
+        if 'IDP' in plugin_info:
+            plugin_info = plugin_info.replace('Renderer=File', 'Renderer=Arnold')
+        self.path_and_file_helper.write_content_to_file(self.__plugin_info_file_path, plugin_info)
 
     def submit_to_deadline(self):
         self.__write_job_and_plugin_file()

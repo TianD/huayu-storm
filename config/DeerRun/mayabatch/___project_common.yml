@@ -74,6 +74,7 @@ common_setting:
                     f.write( json.dumps(maya_info_dict) )
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
+    # todo change to use reference path : '/characters/' , '/xxx/'
     object_selector:
         bg_object_selector: '*:SET'
         lgt_object_selector: 'LGT*:*'

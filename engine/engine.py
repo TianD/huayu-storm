@@ -277,7 +277,7 @@ def maya_layer_process():
 
     file_path = shot_info.get('name')
     script_path = os.path.join(__file__, '..', r'reference_alpha_v0\maya_ref_replace.py')
-    maya_bin = r"C:\Program Files\Autodesk\Maya2017\bin\maya.exe"
+    maya_batch_bin = r"C:\Program Files\Autodesk\Maya2017\bin\mayabatch.exe"
     project_name = shot_info.get('project_name', 'DeerRun')
 
     command = r"""
@@ -288,7 +288,6 @@ def maya_layer_process():
         os.environ['PROJECT_NAME']='{project_name}'
         sys.path.insert(0,os.path.dirname('{script_path}'))
         execfile('{script_path}')
-        mc.quit(a=1,f=1,ec=1)
         """.strip().format(
         file_path=file_path, project_name=project_name, script_path=script_path
     ).replace('\\', '/')
@@ -299,8 +298,8 @@ def maya_layer_process():
     )
 
     formatted_command = \
-        r"""  "{maya_bin}" -command "python(\"{command}\");quit -f;"  """.format(
-            maya_bin=maya_bin.replace('/', '\\'),
+        r"""  "{maya_bin}" -command "python(\"{command}\");"  """.format(
+            maya_bin=maya_batch_bin.replace('/', '\\'),
             command=command,
         ).strip()
 

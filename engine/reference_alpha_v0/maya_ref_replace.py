@@ -584,42 +584,12 @@ class SceneHelperForRedshift(SceneHelper):
         super(SceneHelperForRedshift, self).load_render_plugin(plugin_name)
 
 
-class ReferenceHelper(LogHelper):
-
+class ReferenceExporter(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger=logger)
         self.scene_helper = SceneHelperForRedshift(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
-    def __reference_filter(self):
-        return []
-
-    def get_reference_list(self, reference_filter=[]):
-        return pymel_core.listReferences()
-
-    def post_reference(self, reference_source, reference_target):
-        return
-
-    def __get_reference_file_path_with_rule(self, reference_source, rule):
-        # get replaced file name
-        new_file_path = ''
-        replace_from = rule.get(KEY_FROM, '')
-        replace_to = rule.get(KEY_TO, '')
-        replace_func = rule.get(KEY_LAYER_PROCESS_FUNC, None)
-
-        if replace_func:
-            print(rule)
-            new_file_path = replace_func()
-        else:
-            if replace_from and replace_to:
-                new_file_path = \
-                    self.scene_helper.get_file_path_with_replace_on_file_base_name(
-                        reference_source, replace_from, replace_to
-                    )
-        return new_file_path
-
-
-class ReferenceExporter(ReferenceHelper):
     def format_json_dict_with_format_dict(self, json_dict, format_dict):
         yaml_string = yaml.dump(json_dict)
         yaml_string = yaml_string.format(**format_dict)

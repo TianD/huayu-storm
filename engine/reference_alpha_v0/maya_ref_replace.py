@@ -38,27 +38,9 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
-LAYER_MASTER = 'masterLayer'
-LAYER_BG_COLOR = 'BGCLR'
-LAYER_CHR_COLOR = 'CHCLR'
-LAYER_SKY = 'SKY'
-LAYER_IDP = 'IDP'
-LAYER_LGT = 'LGT'
-LAYER_AOV = 'AOV'
-
 LAYER_NAMESPACE_SUFFIX = 'RN'
 
 LAYER_IDP_AOV_NAME = 'idp'
-
-LAYER_LIST_OF_ALL = [
-    LAYER_MASTER,
-    LAYER_BG_COLOR,
-    LAYER_CHR_COLOR,
-    LAYER_SKY,
-    LAYER_IDP,
-    LAYER_LGT,
-    LAYER_AOV,
-]
 
 BG_OBJECT_SELECTOR = '*:SET'
 LGT_OBJECT_SELECTOR = 'LGT{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
@@ -66,16 +48,6 @@ SKY_OBJECT_SELECTOR = 'SKY{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
 CHR_OBJECT_SELECTOR = '*:CHR'
 PRO_OBJECT_SELECTOR = '*:PRO'
 CHRLGT_OBJECT_SELECTOR = 'CHRLGT*{}:*'.format(LAYER_NAMESPACE_SUFFIX)
-
-# layer order [reversed]
-RENDER_LAYER_RULES = [
-    # layer name ,  layer select pattern
-    [LAYER_LGT, [LGT_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    [LAYER_SKY, [SKY_OBJECT_SELECTOR]],
-    [LAYER_CHR_COLOR, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    # [LAYER_IDP, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]],
-]
 
 # [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]
 
@@ -104,14 +76,6 @@ KEY_FROM = 'from'
 KEY_TO = 'to'
 KEY_RENDER_LAYER_NAME = 'layer_name'
 KEY_NAMESPACE_NAME = 'namespace_name'
-
-REPLACE_RULES = [
-    {KEY_FROM: 'anim', KEY_TO: 'render'},
-    # {'chclr': 'add_char/props'},
-    # {'light': 'config_file'},  # just a maya file
-    # {'sky': 'config_file'},  # just a maya file
-    # {'aov': 'config_file'},  # just a maya file
-]
 
 KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
@@ -523,25 +487,7 @@ class SceneHelperForRedshift(SceneHelper):
         )
         return idp_node_name
 
-    # todo extract to SceneHelperForRedshift
-    def process_all_render_layer(self):
-        # disable masterLayer
-        maya_mel.eval('renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";')
-        # process layers
-        for render_layer_select_rule in RENDER_LAYER_RULES:
-            layer_name = render_layer_select_rule[0]
-            select_pattern_list = render_layer_select_rule[1]
-            self.debug('--------------', layer_name)
-            # if layer_name == LAYER_IDP:
-            for select_pattern in select_pattern_list:
-                self.set_render_layer_object_pattern_for_maya_old(
-                    object_pattern=select_pattern, render_layer_name=layer_name
-                )
-                # if layer_name == LAYER_IDP:
-                #     self.process_redshift_idp(layer_name)
-
     def process_redshift_idp(self, layer_name):
-
         #   Puzzle Matte , rename to idp
         #       CHCLR -> [aov]  , id : 1 [R]
         #       BGCLR -> Puzzle Matte , id : 2 [G]

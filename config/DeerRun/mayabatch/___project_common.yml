@@ -106,7 +106,7 @@ layer_setting:
         selector_list: []
 
         character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
-        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
+#        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
 
         ['castsShadows', 1],

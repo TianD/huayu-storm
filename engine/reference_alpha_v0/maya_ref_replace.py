@@ -157,7 +157,7 @@ class SceneHelper(LogHelper):
 
     def list_with_pattern_for_shape_override(self, object_pattern):
         self.debug('[ ready to get  shape_str_list ]', object_pattern)
-        selected_items = maya_cmds.ls(object_pattern)
+        selected_items = self.list_with_pattern(object_pattern)
         shape_str_list = []
         for item in selected_items:
             shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh") or []
@@ -172,7 +172,8 @@ class SceneHelper(LogHelper):
                 return self.get_reference_node_list(reference_item)
         return []
 
-    def list_with_node_list_for_shape_override(self, node_list):
+    def list_with_reference_pattern_for_shape_override(self, reference_pattern):
+        node_list = self.list_with_reference_pattern(reference_pattern)
         self.debug('[ ready to get  shape_str_list ]', node_list)
         shape_str_list = []
         for item in node_list:
@@ -757,20 +758,22 @@ class ReferenceExporter(ReferenceHelper):
                             __current_selector_key_list, selector_dict_with_ref_path
                         )
 
-                        for current_select_pattern in current_select_pattern_list_with_ref_path:
+                        for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
                             self.scene_helper.set_render_layer_object_pattern_for_maya_old_with_ref_pattern(
-                                reference_pattern=current_select_pattern, render_layer_name=current_layer_name
+                                reference_pattern=current_select_pattern_with_ref_path,
+                                render_layer_name=current_layer_name
                             )
 
                         # ------------ no ref path -------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
-                        current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                        current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
                             __current_selector_key_list, selector_dict
                         )
 
-                        for current_select_pattern in current_select_pattern_list:
+                        for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
                             self.scene_helper.set_render_layer_object_pattern_for_maya_old(
-                                object_pattern=current_select_pattern, render_layer_name=current_layer_name
+                                object_pattern=current_select_pattern_with_ref_path,
+                                render_layer_name=current_layer_name
                             )
 
                         # ----------------- DEBUG PART ---------------------------------------
@@ -795,7 +798,7 @@ class ReferenceExporter(ReferenceHelper):
 
                         # set primaryVisibility for objects
                         character_override_selector_list = \
-                            current_render_layer_setting.get('character_override_selector_list', [])
+                            current_render_layer_setting.get('character_override_selector_list_with_ref_path', [])
                         # get all attr list : primaryVisibility -> 0 , other -> 1
                         character_override_attr_list = \
                             current_render_layer_setting.get('character_override_attr_list', [])
@@ -804,14 +807,16 @@ class ReferenceExporter(ReferenceHelper):
                         if character_override_selector_list and character_override_attr_list:
                             self.debug('[get layer] => ', current_layer_name)
 
-                            current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                            current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
                                 character_override_selector_list, selector_dict
                             )
 
                             character_str_list = []
-                            for current_select_pattern in current_select_pattern_list:
+                            for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
                                 character_str_list += \
-                                    self.scene_helper.list_with_pattern_for_shape_override(current_select_pattern)
+                                    self.scene_helper.list_with_reference_pattern_for_shape_override(
+                                        current_select_pattern_with_ref_path
+                                    )
 
                             self.debug('[get character_str_list] => ', character_str_list)
                             if character_str_list:

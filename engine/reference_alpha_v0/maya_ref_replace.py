@@ -843,9 +843,6 @@ class ReferenceExporter(ReferenceHelper):
                 output_scene_file_name = output_file_name
                 self.submit_to_deadline(project_name, output_scene_file_name)
 
-    def process_all_render_layer(self):
-        return self.scene_helper.process_all_render_layer()
-
     def process_camera(self):
         current_camera = self.scene_helper.get_current_camera()
         self.scene_helper.set_renderable_camera(current_camera)

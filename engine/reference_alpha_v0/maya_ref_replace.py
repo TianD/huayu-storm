@@ -148,6 +148,13 @@ class SceneHelper(LogHelper):
     def list_with_pattern(self, object_pattern):
         return maya_cmds.ls(object_pattern)
 
+    # ------- reference part ----------
+    def get_reference_list(self):
+        return pymel_core.listReferences()
+
+    def get_reference_node_list(self, reference_node):
+        return reference_node.nodes()
+
     def list_with_pattern_for_shape_override(self, object_pattern):
         self.debug('[ ready to get  shape_str_list ]', object_pattern)
         selected_items = maya_cmds.ls(object_pattern)
@@ -157,6 +164,13 @@ class SceneHelper(LogHelper):
             shape_str_list += shapes
         self.debug('[ shape_str_list ]', shape_str_list)
         return shape_str_list
+
+    def list_with_reference_pattern(self, reference_pattern):
+        reference_list = self.get_reference_list()
+        for reference_item in reference_list:
+            if reference_pattern in reference_item.path:
+                return self.get_reference_node_list(reference_item)
+        return []
 
     def list_with_node_list_for_shape_override(self, node_list):
         self.debug('[ ready to get  shape_str_list ]', node_list)
@@ -413,6 +427,24 @@ class SceneHelper(LogHelper):
         except Exception as e:
             self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
 
+    def set_render_layer_object_pattern_for_maya_old_with_ref_pattern(self, reference_pattern='', render_layer_name=''):
+        """
+        :param reference_pattern:
+            p*:PRO to select pro
+            c*:CHR to select character
+        :param render_layer_name:
+        :return:
+        """
+        render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
+
+        # as use *:* this like , if not found , error happened , so try/except to avoid this
+
+        try:
+            selected = self.list_with_reference_pattern(reference_pattern)
+            render_layer.addMembers(selected)
+        except Exception as e:
+            self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
+
     def load_render_plugin(self, plugin_name):
         pymel_core.loadPlugin(plugin_name, quiet=True)
         pymel_core.pluginInfo(plugin_name, edit=True, autoload=True)
@@ -650,6 +682,13 @@ class ReferenceExporter(ReferenceHelper):
 
         for file_name, file_render_setting_dict in layer_file_setting_formatted.items():
             # get selector dict
+            # ------------ with ref path -------------
+            current_key = 'common_setting.object_selector_with_ref_path'
+            selector_dict_with_ref_path = self.config_helper.get_json_value_with_key_path(
+                current_key, {}, file_render_setting_dict
+            )
+
+            # ------------ no ref path -------------
             current_key = 'common_setting.object_selector'
             selector_dict = self.config_helper.get_json_value_with_key_path(
                 current_key, {}, file_render_setting_dict
@@ -711,6 +750,19 @@ class ReferenceExporter(ReferenceHelper):
                         )
 
                         ###### --------------------- add objects to layer --------------------
+                        # ------------ with ref path -------------
+                        __current_selector_key_list = current_render_layer_setting.get('selector_list_with_ref_path',
+                                                                                       [])
+                        current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
+                            __current_selector_key_list, selector_dict_with_ref_path
+                        )
+
+                        for current_select_pattern in current_select_pattern_list_with_ref_path:
+                            self.scene_helper.set_render_layer_object_pattern_for_maya_old_with_ref_pattern(
+                                reference_pattern=current_select_pattern, render_layer_name=current_layer_name
+                            )
+
+                        # ------------ no ref path -------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
                         current_select_pattern_list = self.get_pattern_list_from_selector_list(
                             __current_selector_key_list, selector_dict

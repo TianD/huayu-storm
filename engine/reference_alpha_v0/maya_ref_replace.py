@@ -158,6 +158,22 @@ class SceneHelper(LogHelper):
         self.debug('[ shape_str_list ]', shape_str_list)
         return shape_str_list
 
+    def list_with_node_list_for_shape_override(self, node_list):
+        self.debug('[ ready to get  shape_str_list ]', node_list)
+        shape_str_list = []
+        for item in node_list:
+            if isinstance(item, pymel_core.nodetypes.Mesh):
+                shape_str_list.append(item.name())
+
+            shapes = \
+                [
+                    relative_item.name()
+                    for relative_item in pymel_core.listRelatives(item, ad=True, c=True, type="mesh")
+                ]
+            shape_str_list += shapes
+        self.debug('[ shape_str_list ]', shape_str_list)
+        return shape_str_list
+
     def scene_format_dict(self):
         return \
             {

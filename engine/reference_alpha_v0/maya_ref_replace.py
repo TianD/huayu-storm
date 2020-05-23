@@ -38,27 +38,9 @@ from LogHelper import LogHelper
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
-LAYER_MASTER = 'masterLayer'
-LAYER_BG_COLOR = 'BGCLR'
-LAYER_CHR_COLOR = 'CHCLR'
-LAYER_SKY = 'SKY'
-LAYER_IDP = 'IDP'
-LAYER_LGT = 'LGT'
-LAYER_AOV = 'AOV'
-
 LAYER_NAMESPACE_SUFFIX = 'RN'
 
 LAYER_IDP_AOV_NAME = 'idp'
-
-LAYER_LIST_OF_ALL = [
-    LAYER_MASTER,
-    LAYER_BG_COLOR,
-    LAYER_CHR_COLOR,
-    LAYER_SKY,
-    LAYER_IDP,
-    LAYER_LGT,
-    LAYER_AOV,
-]
 
 BG_OBJECT_SELECTOR = '*:SET'
 LGT_OBJECT_SELECTOR = 'LGT{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
@@ -66,16 +48,6 @@ SKY_OBJECT_SELECTOR = 'SKY{}*:*'.format(LAYER_NAMESPACE_SUFFIX)
 CHR_OBJECT_SELECTOR = '*:CHR'
 PRO_OBJECT_SELECTOR = '*:PRO'
 CHRLGT_OBJECT_SELECTOR = 'CHRLGT*{}:*'.format(LAYER_NAMESPACE_SUFFIX)
-
-# layer order [reversed]
-RENDER_LAYER_RULES = [
-    # layer name ,  layer select pattern
-    [LAYER_LGT, [LGT_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    [LAYER_SKY, [SKY_OBJECT_SELECTOR]],
-    [LAYER_CHR_COLOR, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    [LAYER_BG_COLOR, [BG_OBJECT_SELECTOR] + [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, CHRLGT_OBJECT_SELECTOR]],
-    # [LAYER_IDP, [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]],
-]
 
 # [CHR_OBJECT_SELECTOR, PRO_OBJECT_SELECTOR, BG_OBJECT_SELECTOR]
 
@@ -104,14 +76,6 @@ KEY_FROM = 'from'
 KEY_TO = 'to'
 KEY_RENDER_LAYER_NAME = 'layer_name'
 KEY_NAMESPACE_NAME = 'namespace_name'
-
-REPLACE_RULES = [
-    {KEY_FROM: 'anim', KEY_TO: 'render'},
-    # {'chclr': 'add_char/props'},
-    # {'light': 'config_file'},  # just a maya file
-    # {'sky': 'config_file'},  # just a maya file
-    # {'aov': 'config_file'},  # just a maya file
-]
 
 KEY_LAYER_PROCESS_FUNC = 'key_replace_func'
 KEY_REPLACE_PARAMS = 'key_replace_params'
@@ -148,12 +112,43 @@ class SceneHelper(LogHelper):
     def list_with_pattern(self, object_pattern):
         return maya_cmds.ls(object_pattern)
 
+    # ------- reference part ----------
+    def get_reference_list(self):
+        return pymel_core.listReferences()
+
+    def get_reference_node_list(self, reference_node):
+        return reference_node.nodes()
+
     def list_with_pattern_for_shape_override(self, object_pattern):
         self.debug('[ ready to get  shape_str_list ]', object_pattern)
-        selected_items = maya_cmds.ls(object_pattern)
+        selected_items = self.list_with_pattern(object_pattern)
         shape_str_list = []
         for item in selected_items:
             shapes = maya_cmds.listRelatives(item, ad=True, c=True, type="mesh") or []
+            shape_str_list += shapes
+        self.debug('[ shape_str_list ]', shape_str_list)
+        return shape_str_list
+
+    def list_with_reference_pattern(self, reference_pattern):
+        reference_list = self.get_reference_list()
+        for reference_item in reference_list:
+            if reference_pattern in reference_item.path:
+                return self.get_reference_node_list(reference_item)
+        return []
+
+    def list_with_reference_pattern_for_shape_override(self, reference_pattern):
+        node_list = self.list_with_reference_pattern(reference_pattern)
+        self.debug('[ ready to get  shape_str_list ]', node_list)
+        shape_str_list = []
+        for item in node_list:
+            if isinstance(item, pymel_core.nodetypes.Mesh):
+                shape_str_list.append(item.name())
+
+            shapes = \
+                [
+                    relative_item.name()
+                    for relative_item in pymel_core.listRelatives(item, ad=True, c=True, type="mesh")
+                ]
             shape_str_list += shapes
         self.debug('[ shape_str_list ]', shape_str_list)
         return shape_str_list
@@ -397,6 +392,24 @@ class SceneHelper(LogHelper):
         except Exception as e:
             self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
 
+    def set_render_layer_object_pattern_for_maya_old_with_ref_pattern(self, reference_pattern='', render_layer_name=''):
+        """
+        :param reference_pattern:
+            p*:PRO to select pro
+            c*:CHR to select character
+        :param render_layer_name:
+        :return:
+        """
+        render_layer = self.__get_render_layer_with_auto_create(render_layer_name)
+
+        # as use *:* this like , if not found , error happened , so try/except to avoid this
+
+        try:
+            selected = self.list_with_reference_pattern(reference_pattern)
+            render_layer.addMembers(selected)
+        except Exception as e:
+            self.debug('[-] error happened when add objects to render_layer, {} '.format(e))
+
     def load_render_plugin(self, plugin_name):
         pymel_core.loadPlugin(plugin_name, quiet=True)
         pymel_core.pluginInfo(plugin_name, edit=True, autoload=True)
@@ -474,25 +487,7 @@ class SceneHelperForRedshift(SceneHelper):
         )
         return idp_node_name
 
-    # todo extract to SceneHelperForRedshift
-    def process_all_render_layer(self):
-        # disable masterLayer
-        maya_mel.eval('renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";')
-        # process layers
-        for render_layer_select_rule in RENDER_LAYER_RULES:
-            layer_name = render_layer_select_rule[0]
-            select_pattern_list = render_layer_select_rule[1]
-            self.debug('--------------', layer_name)
-            # if layer_name == LAYER_IDP:
-            for select_pattern in select_pattern_list:
-                self.set_render_layer_object_pattern_for_maya_old(
-                    object_pattern=select_pattern, render_layer_name=layer_name
-                )
-                # if layer_name == LAYER_IDP:
-                #     self.process_redshift_idp(layer_name)
-
     def process_redshift_idp(self, layer_name):
-
         #   Puzzle Matte , rename to idp
         #       CHCLR -> [aov]  , id : 1 [R]
         #       BGCLR -> Puzzle Matte , id : 2 [G]
@@ -535,42 +530,12 @@ class SceneHelperForRedshift(SceneHelper):
         super(SceneHelperForRedshift, self).load_render_plugin(plugin_name)
 
 
-class ReferenceHelper(LogHelper):
-
+class ReferenceExporter(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger=logger)
         self.scene_helper = SceneHelperForRedshift(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
-    def __reference_filter(self):
-        return []
-
-    def get_reference_list(self, reference_filter=[]):
-        return pymel_core.listReferences()
-
-    def post_reference(self, reference_source, reference_target):
-        return
-
-    def __get_reference_file_path_with_rule(self, reference_source, rule):
-        # get replaced file name
-        new_file_path = ''
-        replace_from = rule.get(KEY_FROM, '')
-        replace_to = rule.get(KEY_TO, '')
-        replace_func = rule.get(KEY_LAYER_PROCESS_FUNC, None)
-
-        if replace_func:
-            print(rule)
-            new_file_path = replace_func()
-        else:
-            if replace_from and replace_to:
-                new_file_path = \
-                    self.scene_helper.get_file_path_with_replace_on_file_base_name(
-                        reference_source, replace_from, replace_to
-                    )
-        return new_file_path
-
-
-class ReferenceExporter(ReferenceHelper):
     def format_json_dict_with_format_dict(self, json_dict, format_dict):
         yaml_string = yaml.dump(json_dict)
         yaml_string = yaml_string.format(**format_dict)
@@ -634,6 +599,13 @@ class ReferenceExporter(ReferenceHelper):
 
         for file_name, file_render_setting_dict in layer_file_setting_formatted.items():
             # get selector dict
+            # ------------ with ref path -------------
+            current_key = 'common_setting.object_selector_with_ref_path'
+            selector_dict_with_ref_path = self.config_helper.get_json_value_with_key_path(
+                current_key, {}, file_render_setting_dict
+            )
+
+            # ------------ no ref path -------------
             current_key = 'common_setting.object_selector'
             selector_dict = self.config_helper.get_json_value_with_key_path(
                 current_key, {}, file_render_setting_dict
@@ -695,14 +667,29 @@ class ReferenceExporter(ReferenceHelper):
                         )
 
                         ###### --------------------- add objects to layer --------------------
+                        # ------------ with ref path -------------
+                        __current_selector_key_list = current_render_layer_setting.get('selector_list_with_ref_path',
+                                                                                       [])
+                        current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
+                            __current_selector_key_list, selector_dict_with_ref_path
+                        )
+
+                        for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
+                            self.scene_helper.set_render_layer_object_pattern_for_maya_old_with_ref_pattern(
+                                reference_pattern=current_select_pattern_with_ref_path,
+                                render_layer_name=current_layer_name
+                            )
+
+                        # ------------ no ref path -------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
-                        current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                        current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
                             __current_selector_key_list, selector_dict
                         )
 
-                        for current_select_pattern in current_select_pattern_list:
+                        for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
                             self.scene_helper.set_render_layer_object_pattern_for_maya_old(
-                                object_pattern=current_select_pattern, render_layer_name=current_layer_name
+                                object_pattern=current_select_pattern_with_ref_path,
+                                render_layer_name=current_layer_name
                             )
 
                         # ----------------- DEBUG PART ---------------------------------------
@@ -727,7 +714,7 @@ class ReferenceExporter(ReferenceHelper):
 
                         # set primaryVisibility for objects
                         character_override_selector_list = \
-                            current_render_layer_setting.get('character_override_selector_list', [])
+                            current_render_layer_setting.get('character_override_selector_list_with_ref_path', [])
                         # get all attr list : primaryVisibility -> 0 , other -> 1
                         character_override_attr_list = \
                             current_render_layer_setting.get('character_override_attr_list', [])
@@ -736,14 +723,16 @@ class ReferenceExporter(ReferenceHelper):
                         if character_override_selector_list and character_override_attr_list:
                             self.debug('[get layer] => ', current_layer_name)
 
-                            current_select_pattern_list = self.get_pattern_list_from_selector_list(
+                            current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
                                 character_override_selector_list, selector_dict
                             )
 
                             character_str_list = []
-                            for current_select_pattern in current_select_pattern_list:
+                            for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
                                 character_str_list += \
-                                    self.scene_helper.list_with_pattern_for_shape_override(current_select_pattern)
+                                    self.scene_helper.list_with_reference_pattern_for_shape_override(
+                                        current_select_pattern_with_ref_path
+                                    )
 
                             self.debug('[get character_str_list] => ', character_str_list)
                             if character_str_list:
@@ -769,9 +758,6 @@ class ReferenceExporter(ReferenceHelper):
                 # -------------------------------- submit file to deadline --------------
                 output_scene_file_name = output_file_name
                 self.submit_to_deadline(project_name, output_scene_file_name)
-
-    def process_all_render_layer(self):
-        return self.scene_helper.process_all_render_layer()
 
     def process_camera(self):
         current_camera = self.scene_helper.get_current_camera()

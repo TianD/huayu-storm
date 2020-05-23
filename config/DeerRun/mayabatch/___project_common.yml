@@ -75,13 +75,24 @@ common_setting:
     # 匹配场景镜头
     episode_scene_shot_regex: 'DR_EP([0-9]+)_Q([0-9]+)_S([0-9]+_?[0-9]+)'
     # todo change to use reference path : '/characters/' , '/xxx/'
+    object_selector_with_ref_path:
+        #----------- reference usually pro/chr/set ----------
+        bg_object_selector: '/bg/'
+        #        lgt_object_selector: '/lgt/'
+        #        sky_object_selector: '/sky/'
+        chr_object_selector: '/characters/'
+        pro_object_selector: '/pro/'
+        #        chrlgt_object_selector: '/chrlgt/'
+
+
     object_selector:
-        bg_object_selector: '*:SET'
+        #        bg_object_selector: '*:SET'
         lgt_object_selector: 'LGT*:*'
         sky_object_selector: 'SKY*:*'
-        chr_object_selector: '*:*CHR'
-        pro_object_selector: '*:*PRO'
+        #        chr_object_selector: '*:*CHR'
+        #        pro_object_selector: '*:*PRO'
         chrlgt_object_selector: 'CHLGT*:*'
+
     import_file:
         # [ "import prefix" , "file path" ]
         - [ "LGT" , "E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/LGT.mb" ]
@@ -91,8 +102,11 @@ common_setting:
 
 layer_setting:
     -   layer_name: masterLayer
+        selector_list_with_ref_path: []
         selector_list: []
-        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
+
+        character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
+#        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
 
         ['castsShadows', 1],

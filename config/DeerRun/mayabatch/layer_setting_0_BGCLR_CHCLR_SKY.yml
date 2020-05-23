@@ -2,8 +2,11 @@ basic_config: ___project_common.yml
 output_file_name: 'E:/codeLib/___test___/my_proj/py_scripts/pipeline_code/project/EP{episode:03}_Q{sequence:03}_S{shot:03}_BGCLR.mb'
 layer_setting:
     -   layer_name: BGCLR
+        selector_list_with_ref_path: ['bg_object_selector','chr_object_selector','pro_object_selector','chrlgt_object_selector']
         selector_list: ['bg_object_selector','chr_object_selector','pro_object_selector','chrlgt_object_selector']
-        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
+
+        character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
+#        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
 
         ['primaryVisibility', 0],

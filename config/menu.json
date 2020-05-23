@@ -1,0 +1,8 @@
+[{
+    "label": "自定义菜单1",
+    "command": "C:/Program Files (x86)/Netease/CloudMusic/cloudmusic.exe"
+},
+{
+    "label": "自定义菜单2",
+    "command": "python"
+}]

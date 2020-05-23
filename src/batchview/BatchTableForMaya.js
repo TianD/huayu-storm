@@ -71,6 +71,17 @@ class BatchTableForMaya extends Component {
         this.props.set_mayabatch_items(file_list)
     }
     
+    async playAll() {
+        let shots = this.props.mayabatch_items;
+        let new_shots = [];
+        for (let i = 0; i < shots.length; i++) {
+            await api.maya_layer_process(shots[i]).then((response) => {
+                new_shots.push({ ...shots[i], ...response.data })
+            })
+        }
+        this.props.set_mayabatch_items(new_shots)
+    }
+
     removeThis(record, index) {
         let file_list = this.props.mayabatch_items;
         file_list.splice(record.key, 1);

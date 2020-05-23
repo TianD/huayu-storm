@@ -80,7 +80,7 @@ def _format_template_path(template_code, **shot_info):
 @app.route('/api/get_project_list')
 def get_project_list():
     project_list = os.listdir(config_dir)
-    result = [{'value': project} for project in project_list]
+    result = [{'value': project} for project in project_list if os.path.isdir(os.path.join(config_dir, project))]
     return json.dumps(result)
 
 

@@ -106,7 +106,7 @@ class Overview extends Component {
                     <List
                         itemLayout={'horizontal'}
                         dataSource={shots}
-                        grid={{ gutter: 36, lg: 4, md: 3, sm: 1, xs: 1 }}
+                        grid={{ gutter: 36, lg: 5, md: 3, sm: 1, xs: 1 }}
                         renderItem={
                             item => (
                                 <List.Item>

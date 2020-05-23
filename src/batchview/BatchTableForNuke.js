@@ -146,14 +146,13 @@ class BatchTableForNuke extends Component {
     }
 
     render() {
-        console.log(this.props.nukebatch_items)
         return (
             <div>
                 <Row>
                     <Col span={6}>
                         <Select
                             options={this.props.project_list}
-                            defaultValue={this.props.overview_project_filters}
+                            defaultValue={this.props.nukebatch_project_filters}
                             onChange={(value) => this.change_project(value)}
                             style={{ margin: 12, width: 140 }}
                         />
@@ -161,7 +160,7 @@ class BatchTableForNuke extends Component {
                     <Col span={6} >
                         <Cascader
                             options={this.props.shot_list}
-                            defaultValue={this.props.nukebatch_filters}
+                            defaultValue={this.props.nukebatch_shot_filters}
                             onChange={(value) => { this.filterShots(value) }}
                             style={{ margin: 12 }} />
                     </Col>

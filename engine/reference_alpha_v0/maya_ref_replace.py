@@ -327,12 +327,15 @@ class SceneHelper(LogHelper):
 
             # for py2
             if sys.version_info.major == 3:
-                unicode = str
-
-            if isinstance(attr_value, str) or isinstance(attr_value, unicode):
-                attr_type = 'string'
+                if isinstance(attr_value, str) or isinstance(attr_value):
+                    attr_type = 'string'
+                else:
+                    attr_type = ''
             else:
-                attr_type = ''
+                if isinstance(attr_value, str) or isinstance(attr_value, unicode):
+                    attr_type = 'string'
+                else:
+                    attr_type = ''
 
             if attr_type:
                 kwargs = {'type': attr_type}

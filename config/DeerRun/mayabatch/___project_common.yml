@@ -77,11 +77,11 @@ common_setting:
     # todo change to use reference path : '/characters/' , '/xxx/'
     object_selector_with_ref_path:
         #----------- reference usually pro/chr/set ----------
-        bg_object_selector: '/bg/'
+        bg_object_selector: '/sets/'
         #        lgt_object_selector: '/lgt/'
         #        sky_object_selector: '/sky/'
         chr_object_selector: '/characters/'
-        pro_object_selector: '/pro/'
+        pro_object_selector: '/props/'
         #        chrlgt_object_selector: '/chrlgt/'
 
 

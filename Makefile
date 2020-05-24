@@ -110,6 +110,10 @@ _archive_electron_app:
 					huayu-storm-win32-x64 \
 					-x!huayu-storm-win32-x64/locales \
 					-x!huayu-storm-win32-x64/resources/app/cache_dir/* \
+					-x!huayu-storm-win32-x64/resources/app/.idea \
+					-x!huayu-storm-win32-x64/resources/app/nodejs_bin \
+					-x!huayu-storm-win32-x64/resources/app/*.7z \
+					-x!huayu-storm-win32-x64/resources/app/Makefile \
 					-sfx7z.sfx ;\
 		'
 

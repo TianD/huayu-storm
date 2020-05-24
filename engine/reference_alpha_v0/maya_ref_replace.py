@@ -1,6 +1,7 @@
 # coding=utf8
 import os
 import re
+import sys
 from collections import OrderedDict
 
 import maya.cmds as maya_cmds
@@ -324,7 +325,11 @@ class SceneHelper(LogHelper):
                 if script_content:
                     attr_value = self.get_value_with_exec(script_content)
 
-            if isinstance(attr_value, str):
+            # for py2
+            if sys.version_info.major == 3:
+                unicode = str
+
+            if isinstance(attr_value, str) or isinstance(attr_value, unicode):
                 attr_type = 'string'
             else:
                 attr_type = ''

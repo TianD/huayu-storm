@@ -134,7 +134,7 @@ class SceneHelper(LogHelper):
         return_list = []
         for reference_item in reference_list:
             if reference_pattern in reference_item.path:
-                return_list.append(reference_item)
+                return_list += reference_item.nodes()
         return return_list
 
     def list_with_reference_pattern_for_shape_override(self, reference_pattern):

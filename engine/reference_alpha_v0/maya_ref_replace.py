@@ -683,11 +683,11 @@ class ReferenceExporter(LogHelper):
 
                         # ------------ no ref path -------------
                         __current_selector_key_list = current_render_layer_setting.get('selector_list', [])
-                        current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
+                        current_select_pattern_list = self.get_pattern_list_from_selector_list(
                             __current_selector_key_list, selector_dict
                         )
 
-                        for current_select_pattern_with_ref_path in current_select_pattern_list_with_ref_path:
+                        for current_select_pattern_with_ref_path in current_select_pattern_list:
                             self.scene_helper.set_render_layer_object_pattern_for_maya_old(
                                 object_pattern=current_select_pattern_with_ref_path,
                                 render_layer_name=current_layer_name

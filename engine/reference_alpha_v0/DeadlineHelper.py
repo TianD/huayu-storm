@@ -9,6 +9,7 @@ from utils.ConfigHelper import ConfigHelper
 
 # jobInfo.job
 JOB_INFO_FORMAT_STRING = """
+BatchName={scene_file_name_of_origin}
 Name={scene_name}
 UserName={submit_user_name}
 Frames={frame_range}
@@ -103,6 +104,8 @@ class DeadlineHelper(LogHelper):
         episode, sequence, shot = \
             self.get_episode_sequence_shot_from_filename(episode_scene_shot_regex, scene_file_path_of_origin)
 
+        scene_file_name_of_origin = self.path_and_file_helper.get_base_name(scene_file_path_of_origin)
+
         format_dict = {
             'project_file_name': self.path_and_file_helper.get_path_to_slash(scene_file_path_of_origin),
             'episode': episode or 1,
@@ -163,6 +166,7 @@ class DeadlineHelper(LogHelper):
         self.__file_base_name = self.path_and_file_helper.get_file_path_md5(scene_file_path)
         deadline_parameter_dict = {
             'scene_name': self.path_and_file_helper.get_base_name(scene_file_path),
+            'scene_file_name_of_origin': scene_file_name_of_origin,
             'scene_file_path': scene_file_path,
             'project_dir': project_dir,
             'maya_version': maya_version,

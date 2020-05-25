@@ -453,14 +453,51 @@ class SceneHelper(LogHelper):
             ]
         )
 
-        # if render_name == RENDER_ARNOLD:
         # ---------- ensure arnold nodes created ---------------
+        if render_name == RENDER_ARNOLD:
+            self.__manually_create_arnold_nodes()
+
+    def __manually_ensure_render_loaded(self):
+        # if render_name == RENDER_ARNOLD:
         # Deletes the render settings window UI completely
         if maya_cmds.window("unifiedRenderGlobalsWindow", exists=True):
             maya_cmds.deleteUI("unifiedRenderGlobalsWindow")
 
         # Remake the render settings UI
         maya_mel.eval('unifiedRenderGlobalsWindow;')
+
+    def __manually_create_arnold_nodes(self):
+        default_render_globals = pymel_core.PyNode("defaultRenderGlobals")
+        default_render_globals.currentRenderer.set("arnold")
+
+        # auto create nodes
+        try:
+            options = pymel_core.PyNode('defaultArnoldRenderOptions')
+        except:
+            options = pymel_core.createNode(
+                'aiOptions', name='defaultArnoldRenderOptions', skipSelect=True, shared=True
+            )
+
+        try:
+            filterNode = pymel_core.PyNode('defaultArnoldFilter')
+        except:
+            filterNode = pymel_core.createNode(
+                'aiAOVFilter', name='defaultArnoldFilter', skipSelect=True, shared=True
+            )
+
+        try:
+            driverNode = pymel_core.PyNode('defaultArnoldDriver')
+        except:
+            driverNode = pymel_core.createNode(
+                'aiAOVDriver', name='defaultArnoldDriver', skipSelect=True, shared=True
+            )
+
+        try:
+            resolution = pymel_core.PyNode('defaultResolution')
+        except:
+            resolution = pymel_core.createNode(
+                'resolution', name='defaultResolution', skipSelect=True, shared=True
+            )
 
 
 class SceneHelperForRedshift(SceneHelper):

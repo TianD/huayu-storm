@@ -456,6 +456,8 @@ class SceneHelper(LogHelper):
         # ---------- ensure arnold nodes created ---------------
         if render_name == RENDER_ARNOLD:
             self.__manually_create_arnold_nodes()
+        elif render_name == RENDER_REDSHIFT:
+            self.__manually_create_redshift_nodes()
 
     def __manually_ensure_render_loaded(self):
         # if render_name == RENDER_ARNOLD:
@@ -472,30 +474,56 @@ class SceneHelper(LogHelper):
 
         # auto create nodes
         try:
-            options = pymel_core.PyNode('defaultArnoldRenderOptions')
+            pymel_core.PyNode('defaultArnoldRenderOptions')
         except:
-            options = pymel_core.createNode(
+            pymel_core.createNode(
                 'aiOptions', name='defaultArnoldRenderOptions', skipSelect=True, shared=True
             )
 
         try:
-            filterNode = pymel_core.PyNode('defaultArnoldFilter')
+            pymel_core.PyNode('defaultArnoldFilter')
         except:
-            filterNode = pymel_core.createNode(
+            pymel_core.createNode(
                 'aiAOVFilter', name='defaultArnoldFilter', skipSelect=True, shared=True
             )
 
         try:
-            driverNode = pymel_core.PyNode('defaultArnoldDriver')
+            pymel_core.PyNode('defaultArnoldDriver')
         except:
-            driverNode = pymel_core.createNode(
+            pymel_core.createNode(
                 'aiAOVDriver', name='defaultArnoldDriver', skipSelect=True, shared=True
             )
 
         try:
-            resolution = pymel_core.PyNode('defaultResolution')
+            pymel_core.PyNode('defaultResolution')
         except:
-            resolution = pymel_core.createNode(
+            pymel_core.createNode(
+                'resolution', name='defaultResolution', skipSelect=True, shared=True
+            )
+
+    def __manually_create_redshift_nodes(self):
+        default_render_globals = pymel_core.PyNode("defaultRenderGlobals")
+        default_render_globals.currentRenderer.set("redshift")
+
+        # auto create nodes
+        try:
+            pymel_core.PyNode('RedshiftOptions')
+        except:
+            pymel_core.createNode(
+                'RedshiftOptions', name='redshiftOptions', skipSelect=True, shared=True
+            )
+
+        try:
+            pymel_core.PyNode('defaultRedshiftPostEffects')
+        except:
+            pymel_core.createNode(
+                'RedshiftPostEffects', name='defaultRedshiftPostEffects', skipSelect=True, shared=True
+            )
+
+        try:
+            pymel_core.PyNode('defaultResolution')
+        except:
+            pymel_core.createNode(
                 'resolution', name='defaultResolution', skipSelect=True, shared=True
             )
 

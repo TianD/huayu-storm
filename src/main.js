@@ -59,8 +59,8 @@ function createWindow() {
   })
 
   // 并且为你的应用加载index.html
-  // win.loadFile('./build/index.html')
-  win.loadURL('http://localhost:3000/');
+  win.loadFile('./build/index.html')
+  // win.loadURL('http://localhost:3000/');
 
   // 打开开发者工具
   win.webContents.openDevTools()

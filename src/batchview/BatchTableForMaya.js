@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Select, Row, Col } from 'antd';
+import { Table, Button, Select, Row, Col, Upload } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import {set_mayabatch_filters, set_mayabatch_items} from '../actions/mayabatch';
 import api from '../api'
+
+const { Dragger } = Upload;
 
 const {remote } = window.electron;
 
@@ -91,16 +93,13 @@ class BatchTableForMaya extends Component {
         this.props.set_mayabatch_items(new_file_list)
     }
 
-    async upload(e) {
-        let result = await remote.dialog.showOpenDialog({
-            properties: ['openFile', 'multiSelections'],
-        });
+    upload(result) {
         let file_list = [];
-        for (let i = 0; i < result.filePaths.length; i++) {
+        for (let i = 0; i < result.length; i++) {
             let file_data = {
                 key: i,
                 id: i + 1,
-                name: result.filePaths[i],
+                name: result[i],
                 project: this.props.mayabatch_filters,
                 status: 'Ready',
             }
@@ -123,6 +122,18 @@ class BatchTableForMaya extends Component {
         this.props.set_mayabatch_filters(value)
     }
 
+    beforeUpload(filetype, filepromise) {
+        let result = filepromise.map((item)=>(item.path))
+        this.upload(result)
+    }
+    
+    async onClick(e) {
+        let result = await remote.dialog.showOpenDialog({
+            properties: ['openFile', 'multiSelections'],
+        });
+        this.upload(result.filePaths);
+    }
+
     render() {
         return (
             <div>
@@ -133,13 +144,18 @@ class BatchTableForMaya extends Component {
                             defaultValue={this.props.mayabatch_filters}
                             onChange={(value)=>{this.change_project(value)}}
                             style={{ margin: 12, width: 140 }} />
-                            <Button onClick={(e)=>{this.upload(e)}} style={{ margin: 12 }}>选择文件</Button>
+                            <Button onClick={(e)=>{this.onClick(e)}} style={{ margin: 12 }}>选择文件</Button>
                     </Col>
                     <Col span={6} offset={12}>
                         <Button style={{ margin: 12 }} onClick={()=>{this.clearlist()}}>清空</Button>
                         <Button style={{ margin: 12 }}>全部开始</Button>
                     </Col>
                 </Row>
+                <Dragger
+                showUploadList={false}
+                multiple={true}
+                openFileDialogOnClick={false}
+                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}>
                 <Table
                     tableLayout={"fixed"}
                     dataSource={this.props.mayabatch_items}
@@ -148,6 +164,8 @@ class BatchTableForMaya extends Component {
                     size="small"
                     bordered
                 />
+                </Dragger>
+
             </div>
         )
     }

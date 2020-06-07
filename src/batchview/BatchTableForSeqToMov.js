@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Select, Col, Row } from 'antd';
+import { Table, Button, Select, Col, Row, Upload } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import { set_seq2movbatch_filters, set_seq2movbatch_items } from '../actions/seq2movbatch';
 import api from '../api'
 
+const { Dragger } = Upload;
 const {remote } = window.electron;
 
 function mapStateToProps(state) {
@@ -91,12 +92,9 @@ class BatchTableForSeqToMov extends Component {
         this.props.set_seq2movbatch_items(new_file_list)
     }
 
-    async upload(e) {
-        let dirs = await remote.dialog.showOpenDialog({
-            properties: ['openDirectory', 'multiSelections'],
-        });
+    async upload(dirs) {
         let result;
-        await api.file_collections(dirs.filePaths).then((response)=>{
+        await api.file_collections(dirs).then((response)=>{
             result = response.data
         })
         let file_list = [];
@@ -127,6 +125,18 @@ class BatchTableForSeqToMov extends Component {
         this.props.set_seq2movbatch_items([])
     }
 
+    beforeUpload(filetype, filepromise) {
+        let result = filepromise.map((item)=>(item.path))
+        this.upload(result)
+    }
+
+    async onClick(e) {
+        let dirs = await remote.dialog.showOpenDialog({
+            properties: ['openDirectory', 'multiSelections'],
+        });
+        this.upload(dirs.filePaths);
+    }
+
     render() {
         return (
             <div>
@@ -137,13 +147,18 @@ class BatchTableForSeqToMov extends Component {
                             defaultValue={this.props.seq2movbatch_filters}
                             onChange={(value) => this.change_project(value)}
                             style={{ margin: 12, width: 140 }} />
-                            <Button onClick={(e)=>{this.upload(e)}} style={{ margin: 12 }}>选择文件</Button>
+                            <Button onClick={(e)=>{this.onClick(e)}} style={{ margin: 12 }}>选择文件</Button>
                     </Col>
                     <Col span={6} offset={12}>
                         <Button onClick={()=>{this.clearlist()}} style={{ margin: 12 }}>清空</Button>
                         <Button style={{ margin: 12 }} onClick={()=>this.playAll()}>全部开始</Button>
                     </Col>
                 </Row>
+                <Dragger
+                showUploadList={false}
+                multiple={true}
+                openFileDialogOnClick={false}
+                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}>
                 <Table
                     tableLayout={"fixed"}
                     dataSource={this.props.seq2movbatch_items}
@@ -152,6 +167,7 @@ class BatchTableForSeqToMov extends Component {
                     size="small"
                     bordered
                 />
+                </Dragger>
             </div>
         )
     }

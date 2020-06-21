@@ -7,6 +7,10 @@ import logging.handlers
 import os
 import sys
 
+import inspect
+import traceback
+
+
 # Set up logger with appropriate handler
 LOG_FILENAME = os.path.join(os.environ['appdata'], 'maya', os.path.basename(sys.argv[0]) + '.log')
 
@@ -48,8 +52,20 @@ class LogHelper(object):
         self.logger = logger
 
     def _log(self, log_type, info):
-        print_func = getattr(self.logger, log_type, print)
-        print_func(info)
+        current_stack = '' #' '.join(self.__get_stack().splitlines())
+        print_func = getattr(self.logger, log_type, self.__print)
+        print_func(info + ' ==> stack detail:' + current_stack)
+
+    def __print(self, content):
+        print(content)
+
+    def __get_stack(self):
+        try:
+            frame = inspect.currentframe()
+            stack_trace = traceback.format_stack(frame)
+            return '\n'.join(stack_trace)
+        except:
+            return ''
 
     def __combine_args_kwargs(self, *args, **kwargs):
         return_string = ''

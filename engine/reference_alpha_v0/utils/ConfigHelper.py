@@ -134,12 +134,12 @@ class ConfigHelper(LogHelper):
         json_string = json_string.format(**format_dict)
         return yaml.load(json_string)
 
-    def get_all_config(self):
+    def get_all_config(self, project_list):
         config_dir_root = self.path_and_file_helper.join_file_path(
             __file__, '../../../../config',
             **{PathAndFileHelper.KEY_IS_GET_ABSOLUTE_PATH: True}
         )
-        project_list = self.path_and_file_helper.list_dir(config_dir_root, only_dir=True)
+        # project_list = self.path_and_file_helper.list_dir(config_dir_root, only_dir=True)
 
         all_layer_setting_dict = OrderedDict()
         return_all_layer_setting_dict = OrderedDict()

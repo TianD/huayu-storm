@@ -91,7 +91,7 @@ class DeadlineHelper(LogHelper):
         return episode, sequence, shot
 
     def load_submit_parameter(self, project_name, scene_file_path_of_origin, scene_file_path):
-        all_config = self.config_helper.get_all_config()
+        all_config = self.config_helper.get_all_config([project_name])
 
         current_project_config_dict = all_config.get(project_name, {})
         layer_config = list(current_project_config_dict.values())[0]

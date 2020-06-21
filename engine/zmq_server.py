@@ -23,7 +23,7 @@ if __name__ == '__main__':
             message = socket.recv_json()
             if not message:
                 continue
-            app_logger.debug(message)
+            # app_logger.debug(message)
             cmd = message.get('format_command')
             view = message.get('view')
             key = message.get('key')

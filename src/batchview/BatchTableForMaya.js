@@ -148,7 +148,7 @@ class BatchTableForMaya extends Component {
                     </Col>
                     <Col span={6} offset={12}>
                         <Button style={{ margin: 12 }} onClick={()=>{this.clearlist()}}>清空</Button>
-                        <Button style={{ margin: 12 }}>全部开始</Button>
+                        <Button style={{ margin: 12 }} onClick={()=>{this.playAll()}}>全部开始</Button>
                     </Col>
                 </Row>
                 <Dragger

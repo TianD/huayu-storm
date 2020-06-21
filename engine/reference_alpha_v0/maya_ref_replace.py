@@ -30,12 +30,8 @@ def represent_ordereddict(dumper, data):
 
 yaml.add_representer(OrderedDict, represent_ordereddict)
 
-# todo remove reload
-import LogHelper
 
-reload(LogHelper)
-
-from LogHelper import LogHelper
+from LogHelper import LogHelper,app_logger
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
@@ -158,9 +154,9 @@ class SceneHelper(LogHelper):
     def scene_format_dict(self):
         return \
             {
-                'episode': int(self.episode),
-                'sequence': int(self.sequence),
-                'shot': int(self.shot),
+                'episode': self.episode,
+                'sequence': self.sequence,
+                'shot': self.shot,
             }
 
     def get_episode_sequence_shot_from_filename(self):
@@ -430,6 +426,9 @@ class SceneHelper(LogHelper):
         render_layer.setCurrent()
 
     def save_as(self, file_name):
+        self.debug('save as , %s.' % file_name)
+        if not os.path.isdir(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name))
         maya_cmds.file(rename=file_name)
         maya_cmds.file(force=True, save=True)
 
@@ -649,8 +648,8 @@ class ReferenceExporter(LogHelper):
     def process_all_config(self, project_name):
         current_scene_file_name = self.scene_helper.get_current_scene_name()
 
-        layer_file_setting = self.config_helper.get_all_config().get(project_name, {})
-
+        layer_file_setting = self.config_helper.get_all_config([project_name]).get(project_name, {})
+        self.debug(list(layer_file_setting.keys()))
         layer_file_setting_formatted = OrderedDict()
         # format with regex
         for file_name, file_render_setting_dict in layer_file_setting.items():
@@ -709,6 +708,7 @@ class ReferenceExporter(LogHelper):
             self.process_camera()
             # -------------------------------- process all layer -------------------------
             output_file_name = file_render_setting_dict.get('output_file_name', '')
+            self.debug('output_file_name, %s' % output_file_name)
 
             # ---------------------- get maya_info.json path -----------------------------
             current_key = 'common_setting.maya_file_info_file_content_script'
@@ -800,7 +800,7 @@ class ReferenceExporter(LogHelper):
                             self.debug('[get layer] => ', current_layer_name)
 
                             current_select_pattern_list_with_ref_path = self.get_pattern_list_from_selector_list(
-                                character_override_selector_list, selector_dict
+                                character_override_selector_list, selector_dict_with_ref_path
                             )
 
                             character_str_list = []
@@ -853,8 +853,6 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print('[-] set debug failed')
     import traceback
-
-    from LogHelper import app_logger
 
     try:
         ref_exporter = ReferenceExporter(logger=app_logger)

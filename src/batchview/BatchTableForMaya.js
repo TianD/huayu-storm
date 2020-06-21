@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Select, Row, Col, Upload } from 'antd';
+import { Table, Button, Select, Row, Col } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import {set_mayabatch_filters, set_mayabatch_items} from '../actions/mayabatch';
 import api from '../api'
 
-const { Dragger } = Upload;
+// const { Dragger } = Upload;
 
 const {remote } = window.electron;
 
@@ -151,11 +151,11 @@ class BatchTableForMaya extends Component {
                         <Button style={{ margin: 12 }} onClick={()=>{this.playAll()}}>全部开始</Button>
                     </Col>
                 </Row>
-                <Dragger
+                {/* <Dragger
                 showUploadList={false}
                 multiple={true}
                 openFileDialogOnClick={false}
-                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}>
+                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}> */}
                 <Table
                     tableLayout={"fixed"}
                     dataSource={this.props.mayabatch_items}
@@ -164,7 +164,7 @@ class BatchTableForMaya extends Component {
                     size="small"
                     bordered
                 />
-                </Dragger>
+                {/* </Dragger> */}
 
             </div>
         )

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Select, Col, Row, Upload } from 'antd';
+import { Table, Button, Select, Col, Row } from 'antd';
 import { PlayCircleTwoTone, RestTwoTone } from '@ant-design/icons';
 import { set_seq2movbatch_filters, set_seq2movbatch_items } from '../actions/seq2movbatch';
 import api from '../api'
 
-const { Dragger } = Upload;
+// const { Dragger } = Upload;
 const {remote } = window.electron;
 
 function mapStateToProps(state) {
@@ -154,11 +154,11 @@ class BatchTableForSeqToMov extends Component {
                         <Button style={{ margin: 12 }} onClick={()=>this.playAll()}>全部开始</Button>
                     </Col>
                 </Row>
-                <Dragger
+                {/* <Dragger
                 showUploadList={false}
                 multiple={true}
                 openFileDialogOnClick={false}
-                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}>
+                beforeUpload={(filetype, filepromise)=>this.beforeUpload(filetype, filepromise)}> */}
                 <Table
                     tableLayout={"fixed"}
                     dataSource={this.props.seq2movbatch_items}
@@ -167,7 +167,7 @@ class BatchTableForSeqToMov extends Component {
                     size="small"
                     bordered
                 />
-                </Dragger>
+                {/* </Dragger> */}
             </div>
         )
     }

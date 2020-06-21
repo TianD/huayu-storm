@@ -1,0 +1,226 @@
+render_type: redshift
+render_plugin_name: redshift4maya.mll
+common_setting:
+  # for deadline to submit scene file
+  project_dir: 'N:/project/SZSS_ZGYJ/render'
+  output_dir: 'N:/project/SZSS_ZGYJ/render/Template/data/lights/render/images'
+  maya_version: '2016'
+  deadline_command_bin_path: "C:/tools/Thinkbox/Deadline10/bin/deadlinecommand.exe"
+  # for make maya render layer file / deadline get file [frame start/end]
+  maya_bin_path: 'C:/tools/Autodesk/Maya2016/bin/maya.exe'
+  maya_batch_bin_path: 'C:/tools/Autodesk/Maya2016/bin/mayabatch.exe'
+
+
+
+  ###############  maya frame start / end file for deadline #######################
+  #   {project_file_name} => z:/xxx/anim_xx.mb # input file name
+  #   {temp_dir_name} => app relative dir , set in PathAndFileHelper.py
+
+  # this path MUST same as
+  #   maya_file_info_file_content_script -> maya_file_info_file_path
+  maya_file_info_file_path:
+    script: |
+      import json
+      ################ config maya info path #####################
+      import os
+      project_file_base_name = os.path.basename('{project_file_name}')
+      maya_file_info_file_path = os.path.join(
+          '{temp_dir_name}'    , 'cache_dir/maya_config_json' ,
+          project_file_base_name + '_maya_info.json'
+      )
+
+      # check file exists or not
+      if not os.path.isfile(maya_file_info_file_path):
+          # ensure dir exists
+          maya_file_info_dir_path = os.path.dirname(maya_file_info_file_path)
+          if not os.path.isdir(maya_file_info_dir_path):
+              os.makedirs(maya_file_info_dir_path)
+
+          maya_info_dict = dict()
+          maya_info_dict['frame_start'] = 1
+
+          maya_info_dict['frame_end'] = 2
+
+          with open( maya_file_info_file_path , 'w' ) as f:
+              f.write( json.dumps(maya_info_dict) )
+
+      return_result = maya_file_info_file_path.replace('\\','/')
+
+  maya_file_info_file_content_script:
+    script: |
+      import json
+      ################ config maya info path #####################
+      import os
+      project_file_base_name = os.path.basename('{project_file_name}')
+      maya_file_info_file_path = os.path.join(
+          '{temp_dir_name}'    , 'cache_dir/maya_config_json' ,
+          project_file_base_name + '_maya_info.json'
+      )
+
+      # check file exists or not
+      if not os.path.isfile(maya_file_info_file_path):
+          # ensure dir exists
+          maya_file_info_dir_path = os.path.dirname(maya_file_info_file_path)
+          if not os.path.isdir(maya_file_info_dir_path):
+              os.makedirs(maya_file_info_dir_path)
+
+          maya_info_dict = dict()
+          frame_start = int(maya_cmds.playbackOptions(q=True,animationStartTime=True))
+          maya_info_dict['frame_start'] = frame_start
+
+          frame_end = int(maya_cmds.playbackOptions(q=True,animationEndTime=True))
+          maya_info_dict['frame_end'] = frame_end
+
+          with open( maya_file_info_file_path , 'w' ) as f:
+              f.write( json.dumps(maya_info_dict) )
+
+
+  # 匹配场景镜头
+  episode_scene_shot_regex: 'EP([0-9A-Za-z]+)_SC([0-9A-Za-z]+)_CUT([0-9A-Za-z]+)_(.)*'
+
+  object_selector_with_ref_path:
+      #----------- reference usually pro/chr/set ----------
+      bg_object_selector: '/Scenes/'
+      #        lgt_object_selector: '/lgt/'
+      #        sky_object_selector: '/sky/'
+      chr_object_selector: '/Character/'
+      pro_object_selector: '/Props/'
+      #        chrlgt_object_selector: '/chrlgt/'
+
+
+  object_selector:
+      #        bg_object_selector: '*:SET'
+      # lgt_object_selector: 'LGT*:*'
+      # sky_object_selector: 'SKY*:*'
+      #        chr_object_selector: '*:*CHR'
+      #        pro_object_selector: '*:*PRO'
+      chrlgt_object_selector: 'CHLGT*:*'
+
+  import_file:
+    # [ "import prefix" , "file path" ]
+    - [ "CHLGT" , "N:/project/SZSS_ZGYJ/render/Template/data/lights/EP10A/LIGHT_EP10A_SC01A_CH_LIGHT_NAL.mb" ]
+    # - [ "SKY" , "Z:/Production/DeerRun/light/sky/Sky.mb" ]
+    # - [ "CHLGT" , "Z:/Production/DeerRun/light/colr/CHlight.mb" ]
+    - [ "AOV" , "N:/project/SZSS_ZGYJ/render/Template/data/render_templates/render.mb" ]
+
+layer_setting:
+  - layer_name: masterLayer
+    selector_list_with_ref_path: []
+    selector_list: []
+    character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
+    character_override_attr_list: [
+
+    ['castsShadows', 1],
+    ['receiveShadows', 1],
+    ['holdOut' ,0],
+    ['motionBlur', 1],
+    ['primaryVisibility', 1],
+    ['smoothShading', 1],
+    ['visibleInReflections', 1],
+    ['visibleInRefractions', 1],
+    ['doubleSided', 1],
+
+    ]
+    render_setting:
+      "defaultRenderLayer.renderable": 0
+      ### common setting [tab]
+      #       file output [row layout ]
+      #           file_name_prefix: ""
+      "defaultRenderGlobals.ifp": "EP{episode}/SC{sequence}/CUT{shot}/<RenderLayer>/<Scene>_<RenderLayer>"
+      #           image format: ""
+      "redshiftOptions.imageFormat": 1 #0,1,2,3,4   { 1: OpenEXR }
+      #           bits per channel: ""
+      "redshiftOptions.exrBits": 16 #16,32
+      #           compression: default
+      "redshiftOptions.exrCompression": 0 #0,1,2,3,4
+      #           force combine beauty and AOVS into single file:
+      "redshiftOptions.exrMultipart": 0 #0,1 only valid for exr
+      # Force combine beauty and AOVs into single file
+      "redshiftOptions.exrForceMultilayer": 1
+      #           animation:
+      "defaultRenderGlobals.animation": 1
+      #           start frame:a
+      "defaultRenderGlobals.fs":
+        script: |
+          import maya.cmds as maya_cmds
+          return_result = maya_cmds.playbackOptions(q=True,animationStartTime=True)
+      #           end frame:
+      "defaultRenderGlobals.ef":
+        script: |
+          import maya.cmds as maya_cmds
+          return_result = maya_cmds.playbackOptions(q=True,animationEndTime=True)
+      #           by frame:
+      "defaultRenderGlobals.bfs":
+        script: |
+          return_result = 1
+      # camera
+      "__script_for_camera__":
+        script: | # set camera
+          import maya.cmds as mc
+          cameras = mc.ls(type='camera')
+          for cam in cameras:
+              mc.setAttr(cam+'.renderable', 0)
+          camera = mc.ls('EP*_SC*_CUT*_*', type='camera')
+          if camera:
+              mc.setAttr(camera[0]+'.renderable', 1)
+      #           frame padding:
+      "defaultRenderGlobals.extensionPadding": 4
+      #       renderable camera [row layout]
+      #           renderable camera:
+      # todo select in file , no need here
+      # "perspShape.renderable": 1 # "perspShape.rnd"
+      #       resolution [row layout]
+      #           presets: # this change defaultResolution.width / height /device aspect ratio / pixel aspect ratio
+      # { hd 1080 : 1920 1080 1.778 1.00 }
+      "defaultResolution.width": 1920
+      "defaultResolution.height": 1080
+      "defaultResolution.deviceAspectRatio": 1.778
+      "defaultResolution.pixelAspect": 1.00
+      #       misc [row layout]
+      #           enable default light
+      "defaultRenderGlobals.enableDefaultLight": 0
+      ### output [tab]
+      #       unified sampling [row layout]
+      #           min samples:
+      "redshiftOptions.unifiedMinSamples": 64
+      #           max samples:
+      "redshiftOptions.unifiedMaxSamples": 128
+      #           adaptive error threshold:
+      "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.010
+      #       motion bluer [row layout]
+      #           enable:
+      #"redshiftOptions.motionBlurEnable": 0 # {0: disable , 1: enable}
+      #           Sampling Overrides
+      "redshiftOptions.lightSamplesOverrideReplace": 1024
+      ### opt [tab]
+      #       maximum trace depth [row layout]
+      #           reflection:
+      #"redshiftOptions.reflectionMaxTraceDepth": 4
+      #           refraction:
+      #"redshiftOptions.refractionMaxTraceDepth": 6
+      #           combined:
+      #"redshiftOptions.combinedMaxTraceDepth": 6
+      ### GI [tab]
+      #       general [row layout]
+      #           primary gi engine:
+      "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4
+      #           secondary gi engine:
+      "redshiftOptions.secondaryGIEngine": 0
+      "redshiftOptions.conserveGIReflectionEnergy": 1
+      #       brute force gi [row layout]
+      #           num rays:
+      "redshiftOptions.bruteForceGINumRays": 128
+      ### AOV [tab]
+      #       general [row layout]
+      #           mode:
+      #"redshiftOptions.aovGlobalEnableMode": 0 #0,1
+      ### System [tab]
+      #       Material Override [row layout]
+      #           enable:
+      #"redshiftOptions.materialOverrideEnable": 0 #0,1
+      ### Memory [tab]
+      "redshiftOptions.automaticMemoryManagement": 1
+      "redshiftOptions.percentageOfGPUMemoryToUse": 90
+      "redshiftOptions.maxNumGPUMBForIrradiancePointCloudHierarchy": 128
+      "redshiftOptions.maxNumGPUMBForForICPHierarchy": 128
+      "redshiftOptions.maxNumCPUMBForTextureCache": 4096

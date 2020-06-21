@@ -1,0 +1,228 @@
+basic_config: ___project_common.yml
+output_file_name: 'N:/project/SZSS_ZGYJ/render/Template/data/lights/render/ZGYJ_EP{episode}_SC{sequence}_CUT{shot}_BGCLR.mb'
+layer_setting:
+    -   layer_name: BG_COL
+        selector_list_with_ref_path: ['bg_object_selector','chr_object_selector','pro_object_selector']
+        selector_list: ['bg_object_selector','chr_object_selector','pro_object_selector']
+
+        character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
+        character_override_attr_list: [
+
+        ['primaryVisibility', 0],
+
+        ]
+        render_setting:
+            ### output [tab]wos
+            #       unified sampling [row layout]
+            #           min samples:
+            "redshiftOptions.unifiedMinSamples": 16
+            #           max samples:
+            "redshiftOptions.unifiedMaxSamples": 256
+            #           adaptive error threshold:
+            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 1: photon map }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 2: irradiance point cloud }
+            #       brute force gi [row layout]
+            #           num rays:
+            "redshiftOptions.bruteForceGINumRays": 512
+    -   layer_name: CH_COL
+        selector_list_with_ref_path: ['chr_object_selector','pro_object_selector']
+        selector_list: ['chr_object_selector','pro_object_selector','chrlgt_object_selector']
+        render_setting:
+            ### output [tab]
+            #       unified sampling [row layout]
+            #           min samples:
+            "redshiftOptions.unifiedMinSamples": 128
+            #           max samples:
+            "redshiftOptions.unifiedMaxSamples": 256
+            #           adaptive error threshold:
+            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.005
+            #           Sampling Overrides
+            "redshiftOptions.lightSamplesOverrideEnable": 1
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 4 #0,1,2,3,4   { 4: brute force }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+            #       brute force gi [row layout]
+            #           num rays:
+            "redshiftOptions.bruteForceGINumRays": 512
+            ### opt [tab]
+            #       maximum trace depth [row layout]
+            #           reflection:
+            # "redshiftOptions.reflectionMaxTraceDepth": 4
+            #           refraction:
+            # "redshiftOptions.refractionMaxTraceDepth": 6
+            #           combined:
+            # "redshiftOptions.combinedMaxTraceDepth": 6
+    -   layer_name: CH_LGT
+        selector_list_with_ref_path: ['lgt_object_selector','chr_object_selector']
+        selector_list: ['lgt_object_selector','chr_object_selector']
+        render_setting:
+            ### output [tab]
+            #       unified sampling [row layout]
+            #           min samples:
+            # "redshiftOptions.unifiedMinSamples": 32
+            #           max samples:
+            # "redshiftOptions.unifiedMaxSamples": 256
+            #           adaptive error threshold:
+            # "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
+            ### AOV [tab]
+            #       general [row layout]
+            #           mode:
+            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4   { 4: brute force }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+            #       brute force gi [row layout]
+            #           num rays:
+            #"redshiftOptions.bruteForceGINumRays": 512
+            ### System [tab]
+            #       Material Override [row layout]
+            #           enable:
+            "redshiftOptions.materialOverrideEnable": 1 #0,1
+    -   layer_name: BG_LGT
+        selector_list_with_ref_path: ['lgt_object_selector','bg_object_selector']
+        selector_list: ['lgt_object_selector','bg_object_selector']
+        render_setting:
+            ### AOV [tab]
+            #       general [row layout]
+            #           mode:
+            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4   { 4: brute force }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+            #       brute force gi [row layout]
+            #           num rays:
+            #"redshiftOptions.bruteForceGINumRays": 512
+            ### System [tab]
+            #       Material Override [row layout]
+            #           enable:
+            "redshiftOptions.materialOverrideEnable": 1 #0,1
+    -   layer_name: MASK
+        selector_list: ['chr_object_selector','pro_object_selector','bg_object_selector']
+        render_setting:
+            ### output [tab]
+            #       unified sampling [row layout]
+            #           min samples:
+            # "redshiftOptions.unifiedMinSamples": 16
+            #           max samples:
+            # "redshiftOptions.unifiedMaxSamples": 256
+            #           adaptive error threshold:
+            # "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
+            "defaultRenderGlobals.enableDefaultLight": 0
+            ### opt [tab]
+            #       maximum trace depth [row layout]
+            #           reflection:
+            # "redshiftOptions.reflectionMaxTraceDepth": 0
+            #           refraction:
+            # "redshiftOptions.refractionMaxTraceDepth": 0
+            #           combined:
+            # "redshiftOptions.combinedMaxTraceDepth": 0
+            ### GI [tab]
+            #       general [row layout]
+            #           primary gi engine:
+            "redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4   { 4: brute force }
+            #           secondary gi engine:
+            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+            ### AOV [tab]
+            #       general [row layout]
+            #           mode:
+            # "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+            #       AOV Browser [row layout]
+            #           Active AOVS [column]
+            #               [x] crypto_asset
+            #               [x] crypto_material
+            #               [x] crypto_object
+            #       AOVs [row layout]
+            "__script_for_add_aov__":
+                script: | # add AOVs`````
+                    import maya.mel as mel
+                    import maya.cmds as mc
+                    BG_IDP11 = mel.eval('rsCreateAov -type "Puzzle Matte"')
+                    mc.setAttr(BG_IDP11+".name", 'BG_IDP11' ,type="string" )
+                    mc.setAttr(BG_IDP11+".redId", 11)
+                    mc.setAttr(BG_IDP11+".greenId", 12)
+                    mc.setAttr(BG_IDP11+".blueId", 13)
+                    BG_IDP12 = mel.eval('rsCreateAov -type "Puzzle Matte"')
+                    mc.setAttr(BG_IDP12+".name", 'BG_IDP12' ,type="string" )
+                    mc.setAttr(BG_IDP12+".redId", 14)
+                    mc.setAttr(BG_IDP12+".greenId", 15)
+                    mc.setAttr(BG_IDP12+".blueId", 16)
+                    BG_IDP13 = mel.eval('rsCreateAov -type "Puzzle Matte"')
+                    mc.setAttr(BG_IDP13+".name", 'BG_IDP13' ,type="string" )
+                    mc.setAttr(BG_IDP13+".redId", 17)
+                    mc.setAttr(BG_IDP13+".greenId", 18)
+                    mc.setAttr(BG_IDP13+".blueId", 19)
+                    BG_IDP14 = mel.eval('rsCreateAov -type "Puzzle Matte"')
+                    mc.setAttr(BG_IDP14 +".name", 'BG_IDP14' ,type="string")
+                    mc.setAttr(BG_IDP14+".redId", 20)
+                    mc.setAttr(BG_IDP14+".greenId", 21)
+                    mc.setAttr(BG_IDP14+".blueId", 22)
+                    BG_IDP15 = mel.eval('rsCreateAov -type "Puzzle Matte"')
+                    mc.setAttr(BG_IDP14 +".name", 'BG_IDP15' ,type="string")
+                    mc.setAttr(BG_IDP14+".redId", 23)
+                    mc.setAttr(BG_IDP14+".greenId", 24)
+                    mc.setAttr(BG_IDP14+".blueId", 25)
+            ### System [tab]
+            #       Material Override [row layout]
+            #           enable:
+            # "redshiftOptions.materialOverrideEnable": 1 #0,1    
+    # -   layer_name: SKY
+    #     selector_list: ['sky_object_selector']
+    #     render_setting:
+    #         ### output [tab]
+    #         #       unified sampling [row layout]
+    #         #           min samples:
+    #         "redshiftOptions.unifiedMinSamples": 32
+    #         #           max samples:
+    #         "redshiftOptions.unifiedMaxSamples": 256
+    #         #           adaptive error threshold:
+    #         "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.030
+    #         ### AOV [tab]
+    #         #       general [row layout]
+    #         #           mode:
+    #         "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+#    -   layer_name: IDP
+#        render_setting:
+#            ### output [tab]
+#            #       unified sampling [row layout]
+#            #           min samples:
+#            "redshiftOptions.unifiedMinSamples": 16
+#            #           max samples:
+#            "redshiftOptions.unifiedMaxSamples": 256
+#            #           adaptive error threshold:
+#            "redshiftOptions.unifiedAdaptiveErrorThreshold": 0.003
+#            ### opt [tab]
+#            #       maximum trace depth [row layout]
+#            #           reflection:
+#            "redshiftOptions.reflectionMaxTraceDepth": 0
+#            #           refraction:
+#            "redshiftOptions.refractionMaxTraceDepth": 0
+#            #           combined:
+#            "redshiftOptions.combinedMaxTraceDepth": 0
+#            ### GI [tab]
+#            #       general [row layout]
+#            #           primary gi engine:
+#            "redshiftOptions.primaryGIEngine": 0 #0,1,2,3,4   { 4: brute force }
+#            #           secondary gi engine:
+#            "redshiftOptions.secondaryGIEngine": 0 #  { 4: brute force }
+#            ### AOV [tab]
+#            #       general [row layout]
+#            #           mode:
+#            "redshiftOptions.aovGlobalEnableMode": 0 #0,1
+#            ### System [tab]
+#            #       Material Override [row layout]
+#            #           enable:
+#            "redshiftOptions.materialOverrideEnable": 1 #0,1

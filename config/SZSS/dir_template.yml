@@ -1,0 +1,23 @@
+lr:
+  dir: Z:/Production/DeerRun/lr/{episode}
+  file: dr_{episode}_{sequence}_{shot}_lr_{layer}_c001.mb
+compositing:
+  dir: Z:/Production/DeerRun/compositing/{episode}/{sequence}/{shot}
+  file: dr_{episode}_{sequence}_{shot}_cp_c001.1001.tiff
+images:
+#  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{episode}/image/dr_{episode}_{sequence}_{shot}_{layer}_lr_{version}/{layer}
+  dir: Z:/output/DR_{episode}_{sequence}_{shot}_{layer}/{layer}
+#  file: dr_{episode}_{sequence}_{shot}_{parent_layer}_lr_{version}_{layer}.%04d.exr
+  file: DR_{episode}_{sequence}_{shot}_{layer}_{layer}.%04d.exr
+mov:
+  dir: E:/huayu-storm/TTT/mov/{episode}/{sequence}/{shot}
+  file: ttt_{episode}_{sequence}_{shot}_cp_{version}.mov
+nuke:
+  dir: Z:/Projects/DeerRun/Production/Render/Compositing/KS/{episode}/nuke
+  file: dr_{episode}_{sequence}_{shot}_cp_c001.nk
+anim:
+  dir: Z:/Production/DeerRun/an/{episode}/sequence_{sequence}/scene_{shot}/anim
+  file: DR_{epsidoe}_{sequence}_{shot}_an_c{version}.mb
+nuke_template:
+  dir: F:/project
+  file: "nuke_template.nk"

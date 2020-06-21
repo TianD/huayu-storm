@@ -1,0 +1,3 @@
+input_file_template: compositing
+output_file_template: mov
+ffmpeg_cmd: "{ffmpeg_exe} -i {input_file} -vcodec libx264 -o {output_file}"

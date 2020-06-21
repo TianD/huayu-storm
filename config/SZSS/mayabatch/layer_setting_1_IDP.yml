@@ -1,0 +1,44 @@
+basic_config: ___project_common.yml
+# override keys
+render_type: arnold
+render_plugin_name: mtoa.mll
+
+output_file_name: 'N:/project/SZSS_ZGYJ/render/Template/data/lights/render/ZGYJ_EP{episode}_SC{sequence}_CUT{shot}_IDP.mb'
+layer_setting:
+    -   layer_name: IDP
+        selector_list_with_ref_path: ['chr_object_selector','pro_object_selector']
+        render_setting:
+            ### common setting [tab]
+            #       file output [row layout ]
+#                       [x] Merge AOVs
+            #
+            "defaultArnoldDriver.exrTiled": 1
+            "defaultArnoldDriver.mergeAOVs": 1
+            # Arnold Renderer
+            "defaultArnoldRenderOptions.AASamples": 5
+            "defaultArnoldRenderOptions.GIDiffuseSamples": 0
+            "defaultArnoldRenderOptions.GISpecularSamples": 0
+            "defaultArnoldRenderOptions.GITransmissionSamples": 0
+            "defaultArnoldRenderOptions.GISssSamples": 0
+            "defaultArnoldRenderOptions.GIVolumeSamples": 2
+            ### AOVs [tab]
+            #       AOV Browser [row layout]
+            #           Active AOVS [column]
+            #               [x] crypto_asset
+            #               [x] crypto_material
+            #               [x] crypto_object
+            #       AOVs [row layout]
+            # "__script_for_add_aov__":
+            #     script: | # add AOVs`````
+            #         import maya.cmds as cmds
+            #         import mtoa.aovs as aovs
+            #         aovs.AOVInterface().addAOV('crypto_asset' )
+            #         aovs.AOVInterface().addAOV('crypto_material' )
+            #         aovs.AOVInterface().addAOV('crypto_object' )
+            #           [x] crypto_asset      rgb  exr gaussian
+            #           [x] crypto_material   rgb  exr gaussian
+            #           [x] crypto_object     rgb  exr gaussian
+            ### Diagnostics
+            #       Error Handling [row layout]
+            #           [ ]Abort On Error
+            "defaultArnoldRenderOptions.abortOnError": 0

@@ -1,7 +1,7 @@
 basic_config: ___project_common.yml
 # override keys
-render_type: arnold
-render_plugin_name: mtoa.mll
+#render_type: arnold
+#render_plugin_name: mtoa.mll
 
 output_file_name: 'N:/project/SZSS_ZGYJ/render/Template/data/lights/render/ZGYJ_EP{episode}_SC{sequence}_CUT{shot}_IDP.mb'
 layer_setting:
@@ -10,17 +10,17 @@ layer_setting:
         render_setting:
             ### common setting [tab]
             #       file output [row layout ]
-#                       [x] Merge AOVs
+            #                       [x] Merge AOVs
             #
-            "defaultArnoldDriver.exrTiled": 1
-            "defaultArnoldDriver.mergeAOVs": 1
+            #            "defaultArnoldDriver.exrTiled": 1
+            #            "defaultArnoldDriver.mergeAOVs": 1
             # Arnold Renderer
-            "defaultArnoldRenderOptions.AASamples": 5
-            "defaultArnoldRenderOptions.GIDiffuseSamples": 0
-            "defaultArnoldRenderOptions.GISpecularSamples": 0
-            "defaultArnoldRenderOptions.GITransmissionSamples": 0
-            "defaultArnoldRenderOptions.GISssSamples": 0
-            "defaultArnoldRenderOptions.GIVolumeSamples": 2
+            #            "defaultArnoldRenderOptions.AASamples": 5
+            #            "defaultArnoldRenderOptions.GIDiffuseSamples": 0
+            #            "defaultArnoldRenderOptions.GISpecularSamples": 0
+            #            "defaultArnoldRenderOptions.GITransmissionSamples": 0
+            #            "defaultArnoldRenderOptions.GISssSamples": 0
+            #            "defaultArnoldRenderOptions.GIVolumeSamples": 2
             ### AOVs [tab]
             #       AOV Browser [row layout]
             #           Active AOVS [column]
@@ -41,4 +41,19 @@ layer_setting:
             ### Diagnostics
             #       Error Handling [row layout]
             #           [ ]Abort On Error
-            "defaultArnoldRenderOptions.abortOnError": 0
+            #            "defaultArnoldRenderOptions.abortOnError": 0
+            # redshift aov
+            "__idp_aov__":
+                redshift_matte:
+                    -   selector_with_ref_path: bg_object_selector
+                        redshift_id: 1
+                        redshift_matte: 1 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: redId
+                    -   selector_with_ref_path: chr_object_selector
+                        redshift_id: 2
+                        redshift_matte: 2 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: greenId
+                    -   selector_with_ref_path: pro_object_selector
+                        redshift_id: 3
+                        redshift_matte: 3 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: blueId

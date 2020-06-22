@@ -30,8 +30,7 @@ def represent_ordereddict(dumper, data):
 
 yaml.add_representer(OrderedDict, represent_ordereddict)
 
-
-from LogHelper import LogHelper,app_logger
+from LogHelper import LogHelper, app_logger
 from utils.PathAndFileHelper import PathAndFileHelper
 from utils.ConfigHelper import ConfigHelper
 
@@ -62,12 +61,12 @@ REDSHIFT_MATTE_ATTR_GREEN = 'blueId'
 
 REDSHIFT_OBJECT_ID_NODE_ID_ATTR = 'objectId'
 
-LAYER_IDP_CONFIG = \
-    [
-        [CHR_OBJECT_SELECTOR, REDSHIFT_ID_1, REDSHIFT_MATTE_RED, REDSHIFT_MATTE_ATTR_RED],
-        [PRO_OBJECT_SELECTOR, REDSHIFT_ID_2, REDSHIFT_MATTE_GREEN, REDSHIFT_MATTE_ATTR_BLUE],
-        [BG_OBJECT_SELECTOR, REDSHIFT_ID_3, REDSHIFT_MATTE_BLUE, REDSHIFT_MATTE_ATTR_GREEN],
-    ]
+# LAYER_IDP_CONFIG = \
+#     [
+#         [CHR_OBJECT_SELECTOR, REDSHIFT_ID_1, REDSHIFT_MATTE_RED, REDSHIFT_MATTE_ATTR_RED],
+#         [PRO_OBJECT_SELECTOR, REDSHIFT_ID_2, REDSHIFT_MATTE_GREEN, REDSHIFT_MATTE_ATTR_BLUE],
+#         [BG_OBJECT_SELECTOR, REDSHIFT_ID_3, REDSHIFT_MATTE_BLUE, REDSHIFT_MATTE_ATTR_GREEN],
+#     ]
 
 KEY_FROM = 'from'
 KEY_TO = 'to'
@@ -562,7 +561,7 @@ class SceneHelperForRedshift(SceneHelper):
         )
         return idp_node_name
 
-    def process_redshift_idp(self, layer_name):
+    def process_redshift_idp(self, layer_name, redshift_matte_config_list):
         #   Puzzle Matte , rename to idp
         #       CHCLR -> [aov]  , id : 1 [R]
         #       BGCLR -> Puzzle Matte , id : 2 [G]
@@ -578,11 +577,13 @@ class SceneHelperForRedshift(SceneHelper):
         self.set_render_layer_to_current(layer_name)
         idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
 
-        for config in LAYER_IDP_CONFIG:
-            selector = config[0]
-            object_id = config[1]
-            matte_color = config[2]
-            aov_attr = config[3]
+        # todo get layer idp config from yaml config
+        for config in redshift_matte_config_list:
+            # todo , convert selector to reference selector
+            selector = config.get('selector_with_ref_path')
+            object_id = config.get('redshift_object_id')
+            matte_color = config.get('redshift_matte_color')
+            aov_attr = config.get('redshift_matte_attr')
             self.select_with_clear(selector)
             # create object id node with add objects
             maya_mel.eval('redshiftCreateObjectIdNode()')

@@ -44,16 +44,16 @@ layer_setting:
             #            "defaultArnoldRenderOptions.abortOnError": 0
             # redshift aov
             "__idp_aov__":
-                redshift_matte:
+                redshift_matte_config:
                     -   selector_with_ref_path: bg_object_selector
-                        redshift_id: 1
-                        redshift_matte: 1 # 1: red , 2: green , 3: blue
+                        redshift_object_id: 1
+                        redshift_matte_color: 1 # 1: red , 2: green , 3: blue
                         redshift_matte_attr: redId
                     -   selector_with_ref_path: chr_object_selector
-                        redshift_id: 2
-                        redshift_matte: 2 # 1: red , 2: green , 3: blue
+                        redshift_object_id: 2
+                        redshift_matte_color: 2 # 1: red , 2: green , 3: blue
                         redshift_matte_attr: greenId
                     -   selector_with_ref_path: pro_object_selector
-                        redshift_id: 3
-                        redshift_matte: 3 # 1: red , 2: green , 3: blue
+                        redshift_object_id: 3
+                        redshift_matte_color: 3 # 1: red , 2: green , 3: blue
                         redshift_matte_attr: blueId

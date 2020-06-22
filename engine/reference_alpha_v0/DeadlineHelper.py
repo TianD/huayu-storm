@@ -57,6 +57,7 @@ class DeadlineHelper(LogHelper):
         self.__deadline_command_bin_path = ''
         self.__maya_bin_path = ''
         self.__maya_batch_bin_path = ''
+        self.__idp_render_for_deadline = ''
 
     NAME_SPLITTER = '_'
 
@@ -99,6 +100,14 @@ class DeadlineHelper(LogHelper):
         episode_scene_shot_regex = \
             self.config_helper.get_json_value_with_key_path(
                 'common_setting.episode_scene_shot_regex', '', layer_config
+            )
+
+        self.__idp_render_for_deadline = \
+            self.config_helper.get_json_value_with_key_path(
+                'common_setting.idp_render_for_deadline', '', layer_config
+            ) or \
+            self.config_helper.get_json_value_with_key_path(
+                'render_name_for_deadline', '', layer_config
             )
 
         episode, sequence, shot = \
@@ -199,11 +208,11 @@ class DeadlineHelper(LogHelper):
 
         self.path_and_file_helper.write_content_to_file(self.__job_info_file_path, self.__get_job_info())
 
-        # todo force set to arnold when IDP
-
+        # force set to arnold when IDP
         plugin_info = self.__get_plugin_info()
-        if 'IDP' in plugin_info:
-            plugin_info = plugin_info.replace('Renderer=File', 'Renderer=Arnold')
+        plugin_info = plugin_info.replace('Renderer=File', 'Renderer={}'.format(
+            self.__idp_render_for_deadline
+        ))
         self.path_and_file_helper.write_content_to_file(self.__plugin_info_file_path, plugin_info)
 
     def submit_to_deadline(self):

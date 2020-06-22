@@ -1,5 +1,7 @@
 render_type: redshift
 render_plugin_name: redshift4maya.mll
+render_name_for_deadline: Redshift
+
 common_setting:
     # for deadline to submit scene file
     project_dir: 'z:/DeerRun'
@@ -14,6 +16,9 @@ common_setting:
     ###############  maya frame start / end file for deadline #######################
     #   {project_file_name} => z:/xxx/anim_xx.mb # input file name
     #   {temp_dir_name} => app relative dir , set in PathAndFileHelper.py
+
+    # idp render for deadline , default is
+    idp_render_for_deadline: Arnold # Arnold , Redshift
 
     # this path MUST same as
     #   maya_file_info_file_content_script -> maya_file_info_file_path
@@ -106,7 +111,7 @@ layer_setting:
         selector_list: []
 
         character_override_selector_list_with_ref_path: [ 'chr_object_selector','pro_object_selector' ]
-#        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
+        #        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
 
         ['castsShadows', 1],

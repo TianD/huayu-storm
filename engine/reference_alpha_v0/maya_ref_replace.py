@@ -212,6 +212,75 @@ class SceneHelper(LogHelper):
         new_file_base_name = file_base_name.replace(src_string, dst_string)
         return self.path_and_file_helper.join_file_path(file_dir_name, new_file_base_name)
 
+    def create_idp_with_type_and_name(self, name=''):
+        """
+        :param type: "Puzzle Matte"
+        :param name:
+        :return:
+        """
+        # create rsObjectId node
+        #   redshift menu => [ Redshift -> Object Properties -> Create Redshift Object Id Node for Selection ]
+        #   in render setting -> AOV -> AOVs -> (select) Puzzle Matte , rename to : idp
+        #                     -> AOV -> Processing -> Puzzle Matte ->
+        #                                       Mode: Object ID , Red ID : 1 , Green ID : 2 , Blue ID : 3
+        #                                       [ ]Reflect/Refract IDs
+        maya_mel.eval('rsCreateAov -type  "{node_type}"'.format(node_type="Puzzle Matte"))
+        idp_node_name = maya_cmds.ls(type='RedshiftAOV')[-1]
+        self.debug('---------------', idp_node_name)
+        # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                [idp_node_name + '.name', name]
+            ]
+        )
+        # mode: 1 => object id mode
+        self.set_attr_with_command_param_list_batch_list(
+            [
+                [idp_node_name + '.mode', 1]
+            ]
+        )
+        return idp_node_name
+
+    def process_redshift_idp(self, redshift_matte_config_list):
+        #   Puzzle Matte , rename to idp
+        #       CHCLR -> [aov]  , id : 1 [R]
+        #       BGCLR -> Puzzle Matte , id : 2 [G]
+        #       PRO -> Puzzle Matte , id : 3 [B]
+        #           rsCreateAov -type  "Puzzle Matte";
+        #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
+        #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
+        #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
+        #           setAttr "rsAov_PuzzleMatte.mode" 1;
+        #           setAttr "rsAov_PuzzleMatte.redId" 1;
+        #           setAttr "rsAov_PuzzleMatte.greenId" 2;
+        #           setAttr "rsAov_PuzzleMatte.blueId" 3;
+        idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
+
+        # todo get layer idp config from yaml config
+        for config in redshift_matte_config_list:
+            # todo , convert selector to reference selector
+            selector = config.get('selector_with_ref_path')
+            object_id = config.get('redshift_object_id')
+            matte_color = config.get('redshift_matte_color')
+            aov_attr = config.get('redshift_matte_attr')
+            self.select_with_clear(selector)
+            # create object id node with add objects
+            maya_mel.eval('redshiftCreateObjectIdNode()')
+            # get object_id node
+            object_id_node_name = maya_cmds.ls(type="RedshiftObjectId")[-1]
+            self.set_attr_with_command_param_list_batch_list(
+                [
+                    ['{}.{}'.format(object_id_node_name, REDSHIFT_OBJECT_ID_NODE_ID_ATTR), object_id]
+                ]
+            )
+
+            # set idp object id for color
+            self.set_attr_with_command_param_list_batch_list(
+                [
+                    ['{}.{}'.format(idp_node_name, aov_attr), object_id]
+                ]
+            )
+
     def __set_override_for_render_layer_for_maya_new(self, attr_key, attr_value, input_render_layer_name='',
                                                      create_if_not_existed=True):
         # layer_name_input = layer_name_input  # "renderSetupLayer2"
@@ -270,6 +339,7 @@ class SceneHelper(LogHelper):
                     )
 
     KEY_SCRIPT = 'script'
+    KEY_REDSHIFT_MATTE_CONFIG = 'redshift_matte_config'
     KEY_RETURN_VALUE = 'return_result'
 
     def get_value_with_exec(self, code):
@@ -316,9 +386,24 @@ class SceneHelper(LogHelper):
             self.debug('[ready to set ] => ', attr_key, attr_value)
 
             if isinstance(attr_value, dict) or isinstance(attr_value, OrderedDict):
-                script_content = attr_value.get(SceneHelper.KEY_SCRIPT, '')
-                if script_content:
-                    attr_value = self.get_value_with_exec(script_content)
+                # only one or zero will execute
+                current_key = SceneHelper.KEY_SCRIPT
+                if [current_key] in list(attr_value.keys()):
+                    script_content = attr_value.get(current_key, '')
+                    if script_content:
+                        attr_value = self.get_value_with_exec(script_content)
+
+                current_key = SceneHelper.KEY_REDSHIFT_MATTE_CONFIG
+                if [current_key] in list(attr_value.keys()):
+                    script_content = attr_value.get(current_key, '')
+                    redshift_matte_config_list = script_content
+                    self.process_redshift_idp(redshift_matte_config_list)
+                    self.debug(
+                        '[ set attr ] => {} {} {} , type => {} '.format(
+                            attr_key, redshift_matte_config_list, {}, type(attr_value)
+                        )
+                    )
+                    return
 
             # for py2
             if sys.version_info.major == 3:
@@ -531,76 +616,6 @@ class SceneHelperForRedshift(SceneHelper):
         super(SceneHelperForRedshift, self).__init__(logger=logger)
         self.load_render_plugin()
         self.set_current_render(RENDER_REDSHIFT)
-
-    def create_idp_with_type_and_name(self, name=''):
-        """
-        :param type: "Puzzle Matte"
-        :param name:
-        :return:
-        """
-        # create rsObjectId node
-        #   redshift menu => [ Redshift -> Object Properties -> Create Redshift Object Id Node for Selection ]
-        #   in render setting -> AOV -> AOVs -> (select) Puzzle Matte , rename to : idp
-        #                     -> AOV -> Processing -> Puzzle Matte ->
-        #                                       Mode: Object ID , Red ID : 1 , Green ID : 2 , Blue ID : 3
-        #                                       [ ]Reflect/Refract IDs
-        maya_mel.eval('rsCreateAov -type  "{node_type}"'.format(node_type="Puzzle Matte"))
-        idp_node_name = maya_cmds.ls(type='RedshiftAOV')[-1]
-        self.debug('---------------', idp_node_name)
-        # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
-        self.set_attr_with_command_param_list_batch_list(
-            [
-                [idp_node_name + '.name', name]
-            ]
-        )
-        # mode: 1 => object id mode
-        self.set_attr_with_command_param_list_batch_list(
-            [
-                [idp_node_name + '.mode', 1]
-            ]
-        )
-        return idp_node_name
-
-    def process_redshift_idp(self, layer_name, redshift_matte_config_list):
-        #   Puzzle Matte , rename to idp
-        #       CHCLR -> [aov]  , id : 1 [R]
-        #       BGCLR -> Puzzle Matte , id : 2 [G]
-        #       PRO -> Puzzle Matte , id : 3 [B]
-        #           rsCreateAov -type  "Puzzle Matte";
-        #           # get node with ls , set ls(type='RedshiftAOV')[0].name => idp
-        #           # >>>> cmds.setAttr(cmds.ls(type='RedshiftAOV')[0]+'.name' , 'dddd',type='string')
-        #           # setAttr -type "string" rsAov_PuzzleMatte.name "idp";
-        #           setAttr "rsAov_PuzzleMatte.mode" 1;
-        #           setAttr "rsAov_PuzzleMatte.redId" 1;
-        #           setAttr "rsAov_PuzzleMatte.greenId" 2;
-        #           setAttr "rsAov_PuzzleMatte.blueId" 3;
-        self.set_render_layer_to_current(layer_name)
-        idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
-
-        # todo get layer idp config from yaml config
-        for config in redshift_matte_config_list:
-            # todo , convert selector to reference selector
-            selector = config.get('selector_with_ref_path')
-            object_id = config.get('redshift_object_id')
-            matte_color = config.get('redshift_matte_color')
-            aov_attr = config.get('redshift_matte_attr')
-            self.select_with_clear(selector)
-            # create object id node with add objects
-            maya_mel.eval('redshiftCreateObjectIdNode()')
-            # get object_id node
-            object_id_node_name = maya_cmds.ls(type="RedshiftObjectId")[-1]
-            self.set_attr_with_command_param_list_batch_list(
-                [
-                    ['{}.{}'.format(object_id_node_name, REDSHIFT_OBJECT_ID_NODE_ID_ATTR), object_id]
-                ]
-            )
-
-            # set idp object id for color
-            self.set_attr_with_command_param_list_batch_list(
-                [
-                    ['{}.{}'.format(idp_node_name, aov_attr), object_id]
-                ]
-            )
 
     def load_render_plugin(self, plugin_name=PLUGIN_REDSHIFT):
         super(SceneHelperForRedshift, self).load_render_plugin(plugin_name)

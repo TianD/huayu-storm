@@ -19,7 +19,7 @@ common_setting:
     #   {temp_dir_name} => app relative dir , set in PathAndFileHelper.py
 
 
-    # idp render for deadline , default is
+    # idp render for deadline , default is render_name_for_deadline
     #idp_render_for_deadline: Arnold # Arnold , Redshift
 
 

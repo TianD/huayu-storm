@@ -94,6 +94,8 @@ class SceneHelper(LogHelper):
         self.sequence = ''
         self.shot = ''
         self.camera_regex = ''
+
+        self.object_selector_with_ref_path_dict = {}
         # fill epsiode/sequence/shot
         # self.get_episode_sequence_shot_from_filename()
 
@@ -206,12 +208,7 @@ class SceneHelper(LogHelper):
             else:
                 maya_cmds.setAttr(renderable_attr, False)
 
-    def get_file_path_with_replace_on_file_base_name(self, file_path, src_string, dst_string):
-        file_base_name = self.path_and_file_helper.get_base_name(file_path)
-        file_dir_name = self.path_and_file_helper.get_dir_name(file_path)
-        new_file_base_name = file_base_name.replace(src_string, dst_string)
-        return self.path_and_file_helper.join_file_path(file_dir_name, new_file_base_name)
-
+    # idp for redshift
     def create_idp_with_type_and_name(self, name=''):
         """
         :param type: "Puzzle Matte"
@@ -241,7 +238,12 @@ class SceneHelper(LogHelper):
         )
         return idp_node_name
 
-    def process_redshift_idp(self, redshift_matte_config_list):
+    def get_object_shapes_with_ref_path(self, ref_path):
+        ref_path_pattern = self.object_selector_with_ref_path_dict.get(ref_path)
+        selected = self.list_with_reference_pattern_for_shape_override(ref_path_pattern)
+        return selected
+
+    def process_redshift_idp(self, redshift_matte_config_list, selector_dict):
         #   Puzzle Matte , rename to idp
         #       CHCLR -> [aov]  , id : 1 [R]
         #       BGCLR -> Puzzle Matte , id : 2 [G]
@@ -256,10 +258,8 @@ class SceneHelper(LogHelper):
         #           setAttr "rsAov_PuzzleMatte.blueId" 3;
         idp_node_name = self.create_idp_with_type_and_name(name=LAYER_IDP_AOV_NAME)
 
-        # todo get layer idp config from yaml config
         for config in redshift_matte_config_list:
-            # todo , convert selector to reference selector
-            selector = config.get('selector_with_ref_path')
+            selector = self.get_object_shapes_with_ref_path(config.get('selector_with_ref_path'))
             object_id = config.get('redshift_object_id')
             matte_color = config.get('redshift_matte_color')
             aov_attr = config.get('redshift_matte_attr')
@@ -280,6 +280,12 @@ class SceneHelper(LogHelper):
                     ['{}.{}'.format(idp_node_name, aov_attr), object_id]
                 ]
             )
+
+    def get_file_path_with_replace_on_file_base_name(self, file_path, src_string, dst_string):
+        file_base_name = self.path_and_file_helper.get_base_name(file_path)
+        file_dir_name = self.path_and_file_helper.get_dir_name(file_path)
+        new_file_base_name = file_base_name.replace(src_string, dst_string)
+        return self.path_and_file_helper.join_file_path(file_dir_name, new_file_base_name)
 
     def __set_override_for_render_layer_for_maya_new(self, attr_key, attr_value, input_render_layer_name='',
                                                      create_if_not_existed=True):
@@ -611,20 +617,10 @@ class SceneHelper(LogHelper):
             )
 
 
-class SceneHelperForRedshift(SceneHelper):
-    def __init__(self, logger=None):
-        super(SceneHelperForRedshift, self).__init__(logger=logger)
-        self.load_render_plugin()
-        self.set_current_render(RENDER_REDSHIFT)
-
-    def load_render_plugin(self, plugin_name=PLUGIN_REDSHIFT):
-        super(SceneHelperForRedshift, self).load_render_plugin(plugin_name)
-
-
 class ReferenceExporter(LogHelper):
     def __init__(self, logger=None):
         LogHelper.__init__(self, logger=logger)
-        self.scene_helper = SceneHelperForRedshift(logger=logger)
+        self.scene_helper = SceneHelper(logger=logger)
         self.config_helper = ConfigHelper(logger=logger)
 
     def format_json_dict_with_format_dict(self, json_dict, format_dict):
@@ -695,6 +691,8 @@ class ReferenceExporter(LogHelper):
             selector_dict_with_ref_path = self.config_helper.get_json_value_with_key_path(
                 current_key, {}, file_render_setting_dict
             )
+
+            self.scene_helper.object_selector_with_ref_path_dict = selector_dict_with_ref_path
 
             # ------------ no ref path -------------
             current_key = 'common_setting.object_selector'

@@ -280,6 +280,11 @@ def maya_layer_process():
     maya_batch_bin = r"C:\Program Files\Autodesk\Maya2017\bin\mayabatch.exe"
     project_name = shot_info.get('project_name', 'DeerRun')
 
+    mayabatch_config_path = os.path.join(config_dir, project_name, 'mayabatch/___project_common.yml')
+    with open(mayabatch_config_path, 'r') as f:
+        config = yaml.load(f)
+        maya_batch_bin = config.get('common_setting', {}).get('maya_batch_bin_path')
+
     command = r"""
         import sys
         import os

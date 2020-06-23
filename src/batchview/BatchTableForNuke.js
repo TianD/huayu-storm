@@ -109,7 +109,7 @@ class BatchTableForNuke extends Component {
         let shots = this.props.nukebatch_items;
         let new_shots = [];
         for (let i = 0; i < shots.length; i++) {
-            setTimeout(()=>{}, 3000)
+            setTimeout(()=>{}, 1000)
             await api.nuke_setup_process(shots[i]).then((response) => {
                 new_shots.push({ ...shots[i], ...response.data })
             })

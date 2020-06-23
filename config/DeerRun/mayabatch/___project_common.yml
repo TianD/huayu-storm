@@ -114,6 +114,7 @@ layer_setting:
         #        character_override_selector_list: [ 'chr_object_selector','pro_object_selector' ]
         character_override_attr_list: [
 
+        {'smooth_preview': 3 }, # make object smooth
         ['castsShadows', 1],
         ['receiveShadows', 1],
         ['holdOut' ,0],

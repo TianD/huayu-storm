@@ -829,13 +829,19 @@ class ReferenceExporter(LogHelper):
                                 command_list = []
 
                                 for character_override_attr in character_override_attr_list:
-                                    attr_name = character_override_attr[0]
-                                    attr_value = character_override_attr[1]
+                                    if isinstance(character_override_attr, dict):
+                                        if character_override_attr.get('smooth_preview'):
+                                            self.scene_helper.select_with_clear(character_str_list)
+                                            maya_cmds.displaySmoothness(du=3, dv=3, pw=16, ps=4, po=3)
 
-                                    command_list += [
-                                        ['{}.{}'.format(character_str, attr_name), attr_value]
-                                        for character_str in character_str_list
-                                    ]
+                                    else:
+                                        attr_name = character_override_attr[0]
+                                        attr_value = character_override_attr[1]
+
+                                        command_list += [
+                                            ['{}.{}'.format(character_str, attr_name), attr_value]
+                                            for character_str in character_str_list
+                                        ]
 
                                 self.debug('[ command_list ]', command_list)
 

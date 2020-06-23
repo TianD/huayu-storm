@@ -61,8 +61,8 @@ layer_setting:
             #           combined:
             # "redshiftOptions.combinedMaxTraceDepth": 6
     -   layer_name: CH_LGT
-        selector_list_with_ref_path: ['lgt_object_selector','chr_object_selector']
-        selector_list: ['lgt_object_selector','chr_object_selector']
+        selector_list_with_ref_path: ['lgt_object_selector','chr_object_selector', 'pro_object_selector']
+        selector_list: ['lgt_object_selector','chr_object_selector', 'pro_object_selector']
         render_setting:
             ### output [tab]
             #       unified sampling [row layout]
@@ -146,35 +146,54 @@ layer_setting:
             #               [x] crypto_material
             #               [x] crypto_object
             #       AOVs [row layout]
+            "__idp_aov__":
+                redshift_matte_config:
+                    -   selector_with_ref_path: bg_object_selector
+                        redshift_object_id: 1
+                        redshift_matte_color: 1 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: redId
+                    -   selector_with_ref_path: chr_object_selector
+                        redshift_object_id: 2
+                        redshift_matte_color: 2 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: greenId
+                    -   selector_with_ref_path: pro_object_selector
+                        redshift_object_id: 3
+                        redshift_matte_color: 3 # 1: red , 2: green , 3: blue
+                        redshift_matte_attr: blueId
             "__script_for_add_aov__":
                 script: | # add AOVs`````
                     import maya.mel as mel
                     import maya.cmds as mc
                     BG_IDP11 = mel.eval('rsCreateAov -type "Puzzle Matte"')
                     mc.setAttr(BG_IDP11+".name", 'BG_IDP11' ,type="string" )
+                    mc.setAttr(BG_IDP11+".mode", 1)
                     mc.setAttr(BG_IDP11+".redId", 11)
                     mc.setAttr(BG_IDP11+".greenId", 12)
                     mc.setAttr(BG_IDP11+".blueId", 13)
                     BG_IDP12 = mel.eval('rsCreateAov -type "Puzzle Matte"')
                     mc.setAttr(BG_IDP12+".name", 'BG_IDP12' ,type="string" )
+                    mc.setAttr(BG_IDP12+".mode", 1)
                     mc.setAttr(BG_IDP12+".redId", 14)
                     mc.setAttr(BG_IDP12+".greenId", 15)
                     mc.setAttr(BG_IDP12+".blueId", 16)
                     BG_IDP13 = mel.eval('rsCreateAov -type "Puzzle Matte"')
                     mc.setAttr(BG_IDP13+".name", 'BG_IDP13' ,type="string" )
+                    mc.setAttr(BG_IDP13+".mode", 1)
                     mc.setAttr(BG_IDP13+".redId", 17)
                     mc.setAttr(BG_IDP13+".greenId", 18)
                     mc.setAttr(BG_IDP13+".blueId", 19)
                     BG_IDP14 = mel.eval('rsCreateAov -type "Puzzle Matte"')
                     mc.setAttr(BG_IDP14 +".name", 'BG_IDP14' ,type="string")
+                    mc.setAttr(BG_IDP14+".mode", 1)
                     mc.setAttr(BG_IDP14+".redId", 20)
                     mc.setAttr(BG_IDP14+".greenId", 21)
                     mc.setAttr(BG_IDP14+".blueId", 22)
                     BG_IDP15 = mel.eval('rsCreateAov -type "Puzzle Matte"')
-                    mc.setAttr(BG_IDP14 +".name", 'BG_IDP15' ,type="string")
-                    mc.setAttr(BG_IDP14+".redId", 23)
-                    mc.setAttr(BG_IDP14+".greenId", 24)
-                    mc.setAttr(BG_IDP14+".blueId", 25)
+                    mc.setAttr(BG_IDP15 +".name", 'BG_IDP15' ,type="string")
+                    mc.setAttr(BG_IDP15+".mode", 1)
+                    mc.setAttr(BG_IDP15+".redId", 23)
+                    mc.setAttr(BG_IDP15+".greenId", 24)
+                    mc.setAttr(BG_IDP15+".blueId", 25)
             ### System [tab]
             #       Material Override [row layout]
             #           enable:

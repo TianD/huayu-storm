@@ -1,7 +1,7 @@
 basic_config: ___project_common.yml
 # override keys
-#render_type: arnold
-#render_plugin_name: mtoa.mll
+render_type: arnold
+render_plugin_name: mtoa.mll
 
 output_file_name: 'N:/project/SZSS_ZGYJ/render/Template/data/lights/render/ZGYJ_EP{episode}_SC{sequence}_CUT{shot}_IDP.mb'
 layer_setting:
@@ -43,17 +43,3 @@ layer_setting:
             #           [ ]Abort On Error
             #            "defaultArnoldRenderOptions.abortOnError": 0
             # redshift aov
-            "__idp_aov__":
-                redshift_matte_config:
-                    -   selector_with_ref_path: bg_object_selector
-                        redshift_object_id: 1
-                        redshift_matte_color: 1 # 1: red , 2: green , 3: blue
-                        redshift_matte_attr: redId
-                    -   selector_with_ref_path: chr_object_selector
-                        redshift_object_id: 2
-                        redshift_matte_color: 2 # 1: red , 2: green , 3: blue
-                        redshift_matte_attr: greenId
-                    -   selector_with_ref_path: pro_object_selector
-                        redshift_object_id: 3
-                        redshift_matte_color: 3 # 1: red , 2: green , 3: blue
-                        redshift_matte_attr: blueId

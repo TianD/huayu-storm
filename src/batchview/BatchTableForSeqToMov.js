@@ -76,6 +76,7 @@ class BatchTableForSeqToMov extends Component {
         let files = this.props.seq2movbatch_items;
         let new_files = [];
         for (let i = 0; i < files.length; i++) {
+            setTimeout(()=>{}, 3000)
             await api.seq2mov_process(files[i]).then((response) => { 
                 new_files.push({ ...files[i], ...response.data }) 
             })
